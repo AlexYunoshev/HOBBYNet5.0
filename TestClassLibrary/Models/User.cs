@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -12,5 +13,6 @@ namespace Domain.Models
         public string PhotoPath { get; set; }
         public Location Location { get; set; }
         public Account Account { get; set; }
+        public List<User> FriendsList { get; set; }
     }
 }
