@@ -1,4 +1,5 @@
-﻿using Geolocation;
+﻿using Domain.Interfaces;
+using Geolocation;
 
 namespace Domain.Modelds
 {
@@ -7,5 +8,6 @@ namespace Domain.Modelds
         public int Id { get; set; }
         public Coordinate Longitude { get; set; }
         public Coordinate Latitude { get; set; }
+        public string Name { get; set; }
     }
 }

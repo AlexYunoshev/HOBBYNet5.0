@@ -1,4 +1,6 @@
-﻿namespace Domain.Modelds
+﻿using Domain.Interfaces;
+
+namespace Domain.Modelds
 {
     public class User : IEntity<int>
     {
