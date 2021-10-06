@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Domain.Models
 {
-    public class Account : IEntity<int>
+    public class AccountFeed : IEntity<int>
     {
         public int Id { get; set; }
-        public List<Hobby> HobbyList { get; set; }
         public User User { get; set; }
-        public AccountFeed AccountFeed { get; set; }
+        public Account Account { get; set; }
+        public List<Post> PostsList { get; set; }
     }
 }

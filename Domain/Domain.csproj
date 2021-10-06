@@ -4,4 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Geolocation">
+      <HintPath>..\Geolocation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

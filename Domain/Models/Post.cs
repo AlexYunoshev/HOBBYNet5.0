@@ -6,7 +6,7 @@ namespace Domain.Models
     public class Post : IEntity<int>
     {
         public int Id { get; set; }
-        public Feed Feed { get; set; }
+        public AccountFeed AccountFeed { get; set; }
         public List<Hobby> HobbyTegsList { get; set; }
         public string Caption { get; set; }
         public string Description { get; set; }
