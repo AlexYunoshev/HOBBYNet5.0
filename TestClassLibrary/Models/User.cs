@@ -1,6 +1,6 @@
 ﻿using Domain.Interfaces;
 
-namespace Domain.Modelds
+namespace Domain.Models
 {
     public class User : IEntity<int>
     {

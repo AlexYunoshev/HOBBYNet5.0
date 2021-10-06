@@ -1,7 +1,7 @@
 ﻿using Domain.Interfaces;
 using Geolocation;
 
-namespace Domain.Modelds
+namespace Domain.Models
 {
     public class Location : IEntity<int>
     {
