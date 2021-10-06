@@ -1,31 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Domain.Models.Account" BaseTypeListCollapsed="true">
-    <Position X="13.5" Y="5" Width="1.5" />
+    <Position X="19.75" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIADAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
       <FileName>Models\Account.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="HobbyList" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.Comment" BaseTypeListCollapsed="true">
-    <Position X="11.75" Y="4.75" Width="1.5" />
+    <Position X="15.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAADAAIAAAAAAAAAAAAAAAAACAAAAAAAAAAACAAAAAA=</HashCode>
       <FileName>Models\Comment.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+      <Property Name="Post" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="LikesList" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.AccountFeed" BaseTypeListCollapsed="true">
-    <Position X="13.5" Y="1" Width="1.5" />
+    <Position X="21.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAADAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>Models\AccountFeed.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+      <Property Name="Account" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="PostsList" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.Hobby" BaseTypeListCollapsed="true">
-    <Position X="17" Y="1" Width="1.5" />
+    <Position X="23" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Hobby.cs</FileName>
@@ -33,7 +53,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.Like" BaseTypeListCollapsed="true">
-    <Position X="11.75" Y="3" Width="1.5" />
+    <Position X="17" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Like.cs</FileName>
@@ -41,7 +61,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.Location" BaseTypeListCollapsed="true">
-    <Position X="11.75" Y="1" Width="1.5" />
+    <Position X="14" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAEAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Location.cs</FileName>
@@ -49,15 +69,20 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.Post" BaseTypeListCollapsed="true">
-    <Position X="15.25" Y="4" Width="1.5" />
+    <Position X="19.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIACAAIAAAAgAAQAAAAAAAAAAAAAAAAACAAAAAAAAIA=</HashCode>
       <FileName>Models\Post.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CommentsList" />
+      <Property Name="HobbyTegsList" />
+      <Property Name="LikesList" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.User" BaseTypeListCollapsed="true">
-    <Position X="15.25" Y="1" Width="1.5" />
+    <Position X="17.25" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAEAAACAACAQAAAIAQAAAAAAAAAAAAAAAAAAAAEg=</HashCode>
       <FileName>Models\User.cs</FileName>
@@ -65,15 +90,21 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Domain.Models.MainFeed" BaseTypeListCollapsed="true">
-    <Position X="13.5" Y="3" Width="1.5" />
+    <Position X="14" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAADAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\MainFeed.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="User" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="PostsList" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Interface Name="Domain.Interfaces.IEntity&lt;T&gt;">
-    <Position X="10" Y="1" Width="1.5" />
+    <Position X="15.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Interfaces\IEntity.cs</FileName>
