@@ -14,6 +14,7 @@ namespace Domain.Models
         public string PhotoPath { get; set; }
         public Location Location { get; set; }
         public List<Post> PostsList { get; set; }
+        public List<Hobby> HobbyList { get; set; }
         //public List<User> FriendsList { get; set; }
     }
 }
