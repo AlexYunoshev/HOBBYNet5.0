@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Geolocation">
-      <HintPath>..\Geolocation.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Geolocation" Version="1.2.1" />
   </ItemGroup>
 
 </Project>

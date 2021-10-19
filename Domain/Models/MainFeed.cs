@@ -8,6 +8,6 @@ namespace Domain.Models
     {
         public int Id { get; set; }
         public User User { get; set; }
-        public List<Post> PostsList { get; set; }
+        //public List<Post> PostsList { get; set; }
     }
 }
