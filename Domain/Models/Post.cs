@@ -10,7 +10,7 @@ namespace Domain.Models
         public string Description { get; set; }
         public string PhotoPath { get; set; }
         public List<Hobby> HobbyList { get; set; }
-        public List<Like> LikesList { get; set; }
-        public List<Comment> CommentsList { get; set; }
+        //public List<Like> LikesList { get; set; }
+        //public List<Comment> CommentsList { get; set; }
     }
 }
