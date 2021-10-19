@@ -14,5 +14,16 @@ namespace DataAccess.Context
         public DbSet<MainFeed> MainFeeds { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public HobbyNetContext(DbContextOptions<HobbyNetContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
+ 
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+           
+        //}
     }
 }
