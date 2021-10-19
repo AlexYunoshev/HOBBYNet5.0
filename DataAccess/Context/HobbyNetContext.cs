@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Models;
+using Domain.Interfaces;
 
 namespace DataAccess.Context
 {
@@ -20,10 +21,5 @@ namespace DataAccess.Context
             Database.EnsureCreated();
         }
 
- 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-           
-        //}
     }
 }
