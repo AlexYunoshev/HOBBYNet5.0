@@ -12,7 +12,7 @@ namespace Domain.Models
         public string PhoneNumber { get; set; }
         public string PhotoPath { get; set; }
         public Location Location { get; set; }
-        public Account Account { get; set; }
         public List<User> FriendsList { get; set; }
+        public List<Post> PostsList { get; set; }
     }
 }
