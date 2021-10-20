@@ -22,12 +22,12 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> PostTodoItem(User user)
+        public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(User), user);
+            return CreatedAtAction(nameof(User), new { id = user.Id }, user);
         }
 
         // GET: api/TodoItems/5
