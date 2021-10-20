@@ -11,10 +11,10 @@ namespace DataAccess.Context
 {
     public class HobbyNetContext : DbContext
     {
-        public DbSet<Hobby> Hobbies { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<MainFeed> MainFeeds { get; set; }
-        public DbSet<Post> Posts { get; set; }
+       // public DbSet<Hobby> Hobbies { get; set; }
+       // public DbSet<Location> Locations { get; set; }
+       // public DbSet<MainFeed> MainFeeds { get; set; }
+       // public DbSet<Post> Posts { get; set; }
         public DbSet<User> Users { get; set; }
         
         public HobbyNetContext(DbContextOptions<HobbyNetContext> options) : base(options)
