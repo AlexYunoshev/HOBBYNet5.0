@@ -7,8 +7,8 @@ namespace Domain.Models
     {
         public int Id { get; set; }
         //public Coordinate Coordinate { get; set; }
-        public double CoordinateX { get; set; }
-        public double CoordinateY { get; set; }
+        public double CoordinateLongitude { get; set; }
+        public double CoordinateLatitude { get; set; }
         public string Name { get; set; }
     }
 }
