@@ -6,26 +6,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Models;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DataAccess.Context
 {
-    public class HobbyNetContext : DbContext
+    public class HobbyNetContext : IdentityDbContext<User>
     {
        // public DbSet<Hobby> Hobbies { get; set; }
        // public DbSet<Location> Locations { get; set; }
        // public DbSet<MainFeed> MainFeeds { get; set; }
        // public DbSet<Post> Posts { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         
         public HobbyNetContext(DbContextOptions<HobbyNetContext> options) : base(options)
         {
-            //Database.EnsureCreated();
+           Database.EnsureCreated();
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-           //modelBuilder.Entity<User>().OwnsOne(v => v.Location);
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //   //modelBuilder.Entity<User>().OwnsOne(v => v.Location);
+        //}
 
     }
 }
