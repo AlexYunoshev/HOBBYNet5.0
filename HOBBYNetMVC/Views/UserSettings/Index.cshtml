@@ -1,14 +1,8 @@
 ﻿@model Domain.Models.User
+
 <p>@User.Identity.Name</p>
-<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="73d76c8f-0e48-42c9-82df-d03bf61906be">Сменить пароль</a>
-
-
-
-
-
-
-
-
+<p>@Model.Id</p>
+<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id='@Model.Id'>Сменить пароль</a>
 
 
 

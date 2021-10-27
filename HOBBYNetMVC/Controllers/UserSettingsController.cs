@@ -22,7 +22,8 @@ namespace HOBBYNetMVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+           
+            return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
         }
 
 
