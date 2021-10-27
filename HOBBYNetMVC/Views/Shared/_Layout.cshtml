@@ -24,22 +24,28 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
-                        </li>
+
 
                     </ul>
 
                     @if (User.Identity.IsAuthenticated)
                     {
-
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserSettings" asp-action="Index">User Settings</a>
+                            </li>
+                        </ul>
+                      
 
                         <form method="post" asp-controller="Account" asp-action="Logout">
                             <ul class="navbar-nav flex-grow-1">
                                 @*<li> <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>*@
                                 <li> <input class="nav-link text-dark" type="submit" value="Logout" /></li>
                             </ul>
-                           
+
                         </form>
                     }
                     else

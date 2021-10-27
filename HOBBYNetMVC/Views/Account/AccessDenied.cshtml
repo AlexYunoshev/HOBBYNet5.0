@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<Domain.Models.User>
-@{
-    ViewBag.Title = "Доступ запрещен";
-}
 
-<h1 class="display-4">Доступ пользователю @User.Identity.Name запрещен</h1>
+
+<h3 class="text-danger">Доступ пользователю @User.Identity.Name запрещен</h3>
+<p class="text-danger">Необходимо иметь права администратора для просмотра этой страницы</p>
