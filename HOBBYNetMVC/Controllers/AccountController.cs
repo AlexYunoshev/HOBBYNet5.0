@@ -24,6 +24,13 @@ namespace HOBBYNetMVC.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {

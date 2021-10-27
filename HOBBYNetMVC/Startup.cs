@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +33,25 @@ namespace HOBBYNetMVC
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<HobbyNetContext>();
+           // services.AddAuthorization(options =>
+           //options.AddPolicy("admin",
+           //    policy => policy.RequireClaim("Manager")));
             services.AddControllersWithViews();
+
+           // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
+           //.AddRazorPagesOptions(options =>
+           //{
+           //    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+           //    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+           //});
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                //options.LoginPath = $"/Identity/Account/Login";
+                //options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Account/AccessDenied";
+               
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
