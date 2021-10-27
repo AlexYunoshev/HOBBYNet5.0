@@ -1,8 +1,42 @@
-﻿@if (User.Identity.IsAuthenticated)
-{
-    @model IEnumerable<Domain.Models.User>
-<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="94f25fb8-4da1-4813-8894-244e3a55d088">Сменить пароль</a>
-    @*<form method="post" asp-controller="Home" asp-action="Index">
+﻿@model Domain.Models.User
+<p>@User.Identity.Name</p>
+<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="73d76c8f-0e48-42c9-82df-d03bf61906be">Сменить пароль</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@var user = Model.First(m => m.UserName == User.Identity.Name);*@
+
+
+@*<form method="post" asp-controller="Home" asp-action="Index">
         @model HOBBYNetMVC.Models.UserSettings.IndexModel
         <ul class="navbar-nav flex-grow-1">
             <li> <a class="nav-link text-dark" asp-area="" asp-controller="UserSettings" asp-action="Index">Name</a></li>
@@ -22,5 +56,5 @@
         </div>
         <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
     </form>*@
-}
+
 

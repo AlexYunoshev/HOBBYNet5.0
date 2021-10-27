@@ -9,12 +9,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HOBBYNetMVC.Models.UserSettings
 {
-    public partial class IndexModel : PageModel
+    public partial class IndexViewModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public IndexModel(
+        public IndexViewModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager)
         {
