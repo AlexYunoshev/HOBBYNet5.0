@@ -67,5 +67,42 @@ namespace HOBBYNetMVC.Controllers
             }
             return View(model);
         }
+
+
+
+
+        public async Task<IActionResult> ChangePhoneNumber(string id)
+        {
+            User user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ChangePhoneNumberViewModel model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userManager.FindByIdAsync(model.Id);
+                if (user != null)
+                {
+
+
+                    user.PhoneNumber = model.PhoneNumber;
+                    await _userManager.UpdateAsync(user);
+                    return RedirectToAction("Index");
+
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
+                }
+            }
+            return View(model);
+        }
     }
 }
