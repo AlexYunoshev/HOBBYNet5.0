@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
@@ -25,6 +26,7 @@ namespace HOBBYNetMVC.Controllers
             return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
         }
 
+        [HttpGet]
         public async Task<IActionResult> ChangePassword(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -32,7 +34,7 @@ namespace HOBBYNetMVC.Controllers
             {
                 return NotFound();
             }
-            ChangePasswordViewModel model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
+            var model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
             return View(model);
         }
 
@@ -66,35 +68,32 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> ChangePhoneNumber(string id)
         {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user == null || loginUserId != id)
             {
                 return NotFound();
             }
-            ChangePhoneNumberViewModel model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email, PhoneNumber = user.PhoneNumber };
+            var model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email, PhoneNumber = user.PhoneNumber };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberViewModel model)
         {
-            if (ModelState.IsValid)
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ModelState.IsValid && model.Id == loginUserId)
             {
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
                 {
-
-
                     user.PhoneNumber = model.PhoneNumber;
                     await _userManager.UpdateAsync(user);
                     return RedirectToAction("Index");
 
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
                 }
             }
             return View(model);
