@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
@@ -20,7 +21,7 @@ namespace HOBBYNetMVC.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult Index() {
             if (!User.IsInRole("admin"))
             {
