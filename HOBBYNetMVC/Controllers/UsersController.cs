@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.DTO;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,11 @@ namespace HOBBYNetMVC.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return View(_userManager.Users.ToList());
+            var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
+            return View(output);
+            //var output2 = _userManager.Users.ToList();
+            //return View(_userManager.Users.ToList());
+
         } 
 
   
