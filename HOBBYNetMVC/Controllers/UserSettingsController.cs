@@ -78,7 +78,7 @@ namespace HOBBYNetMVC.Controllers
             {
                 return NotFound();
             }
-            ChangePhoneNumberViewModel model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email };
+            ChangePhoneNumberViewModel model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email, PhoneNumber = user.PhoneNumber };
             return View(model);
         }
 
