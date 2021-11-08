@@ -22,10 +22,8 @@ namespace HOBBYNetMVC.Controllers
 
         public IActionResult Index()
         {
-           
             return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
         }
-
 
         public async Task<IActionResult> ChangePassword(string id)
         {
@@ -67,9 +65,6 @@ namespace HOBBYNetMVC.Controllers
             }
             return View(model);
         }
-
-
-
 
         public async Task<IActionResult> ChangePhoneNumber(string id)
         {
