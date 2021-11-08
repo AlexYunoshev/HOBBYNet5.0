@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
@@ -61,8 +62,9 @@ namespace HOBBYNetMVC.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user == null || loginUserId != id)
             {
                 return NotFound();
             }
@@ -73,7 +75,8 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (ModelState.IsValid)
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ModelState.IsValid && model.Id == loginUserId)
             {
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
