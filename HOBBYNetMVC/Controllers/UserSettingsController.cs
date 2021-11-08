@@ -81,10 +81,11 @@ namespace HOBBYNetMVC.Controllers
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
                 {
-                    user.PhoneNumber = model.PhoneNumber;
-                    await _userManager.UpdateAsync(user);
-                    return RedirectToAction("Index");
-
+                    IdentityResult result = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index");
+                    }
                 }
             }
             return View(model);
