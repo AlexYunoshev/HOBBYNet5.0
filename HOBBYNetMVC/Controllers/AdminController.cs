@@ -62,9 +62,9 @@ namespace HOBBYNetMVC.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            if (user == null)// || loginUserId != id)
             {
                 return NotFound();
             }
@@ -75,8 +75,8 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (ModelState.IsValid && model.Id == loginUserId)
+            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ModelState.IsValid)// && model.Id == loginUserId)
             {
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
@@ -108,9 +108,9 @@ namespace HOBBYNetMVC.Controllers
             //var feature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
             //return View("~/Views/Shared/Error.cshtml", feature?.Error);
             //return RedirectToAction("Error", "Shared");
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user != null || loginUserId != id)
+            if (user != null)// || loginUserId != id)
             {
                 var result = await _userManager.DeleteAsync(user);
                 result = await _userManager.DeleteAsync(user);
