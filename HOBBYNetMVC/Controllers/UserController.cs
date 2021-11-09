@@ -26,17 +26,13 @@ namespace HOBBYNetMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Friends()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (loginUserId == null)
             {
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
-         
-            //var users = _context.Users.ToList();
-            //var friendsList = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId || x.FriendUserId == loginUserId).ToList();
-            //var friendsList0 = _context.FriendsList.Include(x => x.FriendUser).ToList();
 
             var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId).ToList();
             var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId).ToList();
@@ -44,21 +40,5 @@ namespace HOBBYNetMVC.Controllers
             friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
             return View(friendsList);
         }
-
-
-        [HttpGet]
-        public async Task<IActionResult> Friends(string id)
-        {
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //User user = await _userManager.FindByIdAsync(id);
-            //if (user == null || loginUserId != id)
-            //{
-            //    return NotFound();
-            //}
-            //var model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
-            return View();
-        }
-
-       
     }
 }

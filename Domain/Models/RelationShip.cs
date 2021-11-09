@@ -9,6 +9,6 @@ namespace Domain.Models
     public enum RelationShips
     {
         Friend,
-        NotFriend
+        Waiting
     }
 }
