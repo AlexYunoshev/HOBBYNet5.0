@@ -110,18 +110,44 @@ namespace HOBBYNetMVC.Controllers
 
 
         [HttpPost]
-        public IActionResult FriendRequests(string userId)
+        public IActionResult FriendRequests(string acceptUserId, string declineUserId)
         {
+          
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (loginUserId == null)
             {
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
-            var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == userId && x.FriendUserId == loginUserId).First();
-            friends.RelationShips = RelationShips.Friend;
-            _context.SaveChanges();
-            return RedirectToAction("Friends", "User");
+            if(acceptUserId != null)
+            {
+                var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == acceptUserId && x.FriendUserId == loginUserId).First();
+                friends.RelationShips = RelationShips.Friend;
+                _context.SaveChanges();
+                return RedirectToAction("Friends", "User");
+            }
+
+            else
+            {
+                var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == declineUserId && x.FriendUserId == loginUserId).FirstOrDefault();
+                if (friends == null)
+                {
+                    friends = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == declineUserId && x.MainUserId == loginUserId).FirstOrDefault();
+                }
+                if (friends == null)
+                {
+                    return View("~/Views/Shared/ErrorPage.cshtml");
+                }
+                _context.Remove(friends);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "User");
+            }
+            //return View("~/Views/Shared/ErrorPage.cshtml");
+            //var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == acceptUserId && x.FriendUserId == loginUserId).First();
+            //friends.RelationShips = RelationShips.Friend;
+            //_context.SaveChanges();
+            //return RedirectToAction("Friends", "User");
+
         }
 
 
