@@ -9,12 +9,12 @@ namespace Domain.Models
 {
     public class Friends
     {
-        public int MainUserId { get; set; }
+        public string MainUserId { get; set; }
 
         [ForeignKey("MainUserId")]
         public User MainUser { get; set; }
 
-        public int FriendUserId { get; set; }
+        public string FriendUserId { get; set; }
 
         [ForeignKey("FriendUserId")]
         public User FriendUser { get; set; }

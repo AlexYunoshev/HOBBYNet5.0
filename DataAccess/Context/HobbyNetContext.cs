@@ -31,6 +31,8 @@ namespace DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Friends>()
             .HasKey(f => new { f.MainUserId, f.FriendUserId });
 
