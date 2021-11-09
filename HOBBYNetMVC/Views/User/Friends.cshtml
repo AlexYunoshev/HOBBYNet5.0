@@ -5,12 +5,28 @@
 
 <h1>Hi, @User.Identity.Name</h1>
 
-<p>Friends list:</p>
+<h3>Friends list:</h3>
 
-<ul>
-    @foreach (var user in Model)
-    {
-        @*<li>@user.MainUser.UserName, @user.FriendUser.UserName</li>*@
-        <li>@user.Id, @user.FirstName, @user.LastName</li>
-    }
-</ul>
+<form asp-action="Friends" method="post">
+
+    <table border="2" cellpadding="2" cellspacing="2">
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th></th>
+        </tr>
+
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>
+                    <button type="submit" class="btn btn-sm btn-danger" name="userId" value="@user.Id">Удалить</button>
+                </td>
+            </tr>
+        }
+    </table>
+</form>
