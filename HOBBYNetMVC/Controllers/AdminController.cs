@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 namespace HOBBYNetMVC.Controllers
 {
     [Authorize(Roles = "admin")]
-    public class UsersController : Controller
+    public class AdminController : Controller
     {
         UserManager<User> _userManager;
 
-        public UsersController(UserManager<User> userManager)
+        public AdminController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
