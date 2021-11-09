@@ -2,6 +2,7 @@
 using Domain.Models.DTO;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -32,7 +33,6 @@ namespace HOBBYNetMVC.Controllers
             return View(output);
             //var output2 = _userManager.Users.ToList();
             //return View(_userManager.Users.ToList());
-
         } 
 
   
@@ -105,12 +105,20 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
+            //var feature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
+            //return View("~/Views/Shared/Error.cshtml", feature?.Error);
+            //return RedirectToAction("Error", "Shared");
             User user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
+                var result = await _userManager.DeleteAsync(user);
+                result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            return RedirectToAction("Index");
+            return View("~/Views/Shared/ErrorPage.cshtml");      
         }
     }
 }
