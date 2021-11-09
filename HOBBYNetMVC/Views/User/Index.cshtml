@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Domain.Models.User>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Hi, @User.Identity.Name</h1>
+
+<p>Users list:</p>
+
+<ul>
+    @foreach (var user in Model)
+    {
+        @*<li>@user.MainUser.UserName, @user.FriendUser.UserName</li>*@
+        <li>@user.Id, @user.FirstName, @user.LastName <a class="btn btn-sm btn-primary" asp-action="AddFriend" asp-route-id="@user.Id">Добавить в друзья</a></li>
+    }
+</ul>
