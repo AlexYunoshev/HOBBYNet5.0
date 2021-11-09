@@ -35,6 +35,7 @@ namespace HOBBYNetMVC.Controllers
             }
 
             var users = _context.Users.ToList();
+            users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
             return View(users);
         }
 
@@ -47,15 +48,15 @@ namespace HOBBYNetMVC.Controllers
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
-            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId).ToList();
-            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId).ToList();
+            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
+            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
             var friendsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
             friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
             return View(friendsList);
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddFriend(string id)
+        public async Task<IActionResult> AddFriendRequest(string id)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (loginUserId == null)
@@ -65,16 +66,11 @@ namespace HOBBYNetMVC.Controllers
 
             User mainUser = await _userManager.FindByIdAsync(loginUserId);
             User friendUser = await _userManager.FindByIdAsync(id);
-            Friends friends = new Friends { MainUser = mainUser, FriendUser = friendUser };
+            Friends friends = new Friends { MainUser = mainUser, FriendUser = friendUser , RelationShips = RelationShips.Waiting};
             _context.FriendsList.Add(friends);
             _context.SaveChanges();
             var users = _context.Users.ToList();
-            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId).ToList();
-            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId).ToList();
-            var friendsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
-            friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
-            return View("Friends",friendsList);
-            
+            return View("Index",users);  
         }
 
 

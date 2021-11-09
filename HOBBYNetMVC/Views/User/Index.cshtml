@@ -6,12 +6,24 @@
 
 <h1>Hi, @User.Identity.Name</h1>
 
-<p>Users list:</p>
+<h3>All users list:</h3>
 
-<ul>
-    @foreach (var user in Model)
-    {
-        @*<li>@user.MainUser.UserName, @user.FriendUser.UserName</li>*@
-        <li>@user.Id, @user.FirstName, @user.LastName <a class="btn btn-sm btn-primary" asp-action="AddFriend" asp-route-id="@user.Id">Добавить в друзья</a></li>
-    }
-</ul>
+<table border="2" cellpadding="2" cellspacing="2">
+    <tr>
+        <th>Id</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th></th>
+    </tr>
+        @foreach (var user in Model)
+        {
+           <tr>
+               <td>@user.Id</td>
+               <td>@user.FirstName</td>
+               <td>@user.LastName</td>
+               <td>@user.Email</td>
+               <td><a class="btn btn-sm btn-primary" asp-action="AddFriendRequest" asp-route-id="@user.Id">Добавить в друзья</a></td>
+           </tr>
+        }
+</table>
