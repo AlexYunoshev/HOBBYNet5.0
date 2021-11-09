@@ -31,7 +31,14 @@ namespace HOBBYNetMVC
             services.AddDbContext<HobbyNetContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.Password.RequiredLength = 5;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false;               
+            })
                 .AddEntityFrameworkStores<HobbyNetContext>();
            // services.AddAuthorization(options =>
            //options.AddPolicy("admin",
