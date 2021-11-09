@@ -108,8 +108,9 @@ namespace HOBBYNetMVC.Controllers
             //var feature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
             //return View("~/Views/Shared/Error.cshtml", feature?.Error);
             //return RedirectToAction("Error", "Shared");
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user != null)
+            if (user != null || loginUserId != id)
             {
                 var result = await _userManager.DeleteAsync(user);
                 result = await _userManager.DeleteAsync(user);
