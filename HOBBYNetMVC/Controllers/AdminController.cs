@@ -113,7 +113,7 @@ namespace HOBBYNetMVC.Controllers
             if (user != null)// || loginUserId != id)
             {
                 var result = await _userManager.DeleteAsync(user);
-                result = await _userManager.DeleteAsync(user);
+                //result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");

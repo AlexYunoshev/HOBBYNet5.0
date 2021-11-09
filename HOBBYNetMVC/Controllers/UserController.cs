@@ -34,6 +34,21 @@ namespace HOBBYNetMVC.Controllers
                 return View("~/Views/Shared/ErrorPage.cshtml");
             }
 
+            //var users2 = _context.Users.Join(_context.FriendsList, u => u.Id, f => f.MainUserId, (u, f) => new 
+            //{ Id = u.Id, FirstName = u.FirstName, LastName = u.LastName, Email = u.Email, Friend = f.FriendUser}).ToList();
+
+            //var users3 = (from user in _context.Users
+            //             join friendList in _context.FriendsList on user.Id equals friendList.MainUserId
+            //             select new
+            //             {
+            //                 Id = user.Id,
+            //                 FirstName = user.FirstName,
+            //                 LastName = user.LastName,
+            //                 Email = user.Email,
+            //                 Friend = friendList.FriendUser
+            //             }).ToList();
+            //var users4 = (from user in _context.Users from f in _context.FriendsList select new { user, f }).ToList();
+
             var users = _context.Users.ToList();
             users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
             return View(users);
@@ -55,6 +70,48 @@ namespace HOBBYNetMVC.Controllers
             return View(friendsList);
         }
 
+
+        [HttpGet]
+        public IActionResult FriendsRequests()
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (loginUserId == null)
+            {
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
+
+            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
+            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
+            var friendsRequestsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
+            //var friendsRequestsList = friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList();
+            return View(friendsRequestsList);
+        }
+
+
+        [HttpGet]
+        public IActionResult AcceptFriendRequest(string id)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (loginUserId == null)
+            {
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
+
+            var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == id && x.FriendUserId == loginUserId).First();
+            friends.RelationShips = RelationShips.Friend;
+            _context.SaveChanges();
+            RedirectToAction("Friends", "User");
+            //return View("~/Views/Shared/ErrorPage.cshtml");
+   
+            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
+            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
+            var friendsRequestsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
+            return View("Friends", friendsRequestsList);
+
+        }
+
+
+        
         [HttpGet]
         public async Task<IActionResult> AddFriendRequest(string id)
         {
@@ -70,6 +127,7 @@ namespace HOBBYNetMVC.Controllers
             _context.FriendsList.Add(friends);
             _context.SaveChanges();
             var users = _context.Users.ToList();
+            users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
             return View("Index",users);  
         }
 

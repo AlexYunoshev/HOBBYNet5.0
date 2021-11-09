@@ -36,7 +36,6 @@ namespace DataAccess.Context
             modelBuilder.Entity<Friends>()
             .HasKey(f => new { f.MainUserId, f.FriendUserId });
 
-
             modelBuilder.Entity<Friends>()
                 .HasOne(f => f.MainUser)
                 .WithMany(mu => mu.MainUserFriends)
