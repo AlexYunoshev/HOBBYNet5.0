@@ -18,5 +18,7 @@ namespace Domain.Models
 
         [ForeignKey("FriendUserId")]
         public User FriendUser { get; set; }
+
+        public RelationShips RelationShips { get; set; }
     }
 }
