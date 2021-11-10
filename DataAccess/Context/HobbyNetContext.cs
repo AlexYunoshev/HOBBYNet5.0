@@ -17,6 +17,8 @@ namespace DataAccess.Context
 
         public DbSet<Location> Locations { get; set; }
         public DbSet<Friends> FriendsList { get; set; }
+        public DbSet<Hobby> Hobbies { get; set; }
+        public DbSet<SubHobby> SubHobbies { get; set; }
 
         // public DbSet<Hobby> Hobbies { get; set; }
         // public DbSet<MainFeed> MainFeeds { get; set; }

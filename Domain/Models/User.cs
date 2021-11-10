@@ -15,6 +15,9 @@ namespace Domain.Models
 
         public virtual ICollection<Friends> MainUserFriends { get; set; }
         public virtual ICollection<Friends> Friends { get; set; }
+
+
+        public List<SubHobby> SubHobbies { get; set; } = new List<SubHobby>();
         //public RelationShips RelationShips { get; set; }
 
 
