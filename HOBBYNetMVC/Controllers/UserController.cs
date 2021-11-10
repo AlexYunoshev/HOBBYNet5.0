@@ -18,14 +18,12 @@ namespace HOBBYNetMVC.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly HobbyNetContext _context;
         private readonly UserService _userService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, HobbyNetContext context, UserService userService)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _context = context;
             _userService = userService;
         }
 
