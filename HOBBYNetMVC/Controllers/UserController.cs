@@ -1,6 +1,8 @@
-﻿using DataAccess.Context;
+﻿using BusinessLogic.Services;
+using DataAccess.Context;
 using Domain.Models;
 using Domain.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,152 +19,79 @@ namespace HOBBYNetMVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly HobbyNetContext _context;
+        private readonly UserService _userService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, HobbyNetContext context)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, HobbyNetContext context, UserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _userService = userService;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Index()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
-            var users = _context.Users.ToList();
-            users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
-            return View(users);
+            return View(_userService.GetUsersList(loginUserId));
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Friends()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
-            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
-            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
-            var friendsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
-            friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
-            return View(friendsList);
+            return View(_userService.GetFriendsList(loginUserId));
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Friends(string userId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
-            var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == userId && x.FriendUserId == loginUserId).FirstOrDefault();
-            if (friends == null) {
-                friends = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == userId && x.MainUserId == loginUserId).FirstOrDefault();
-            }
-            if (friends == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-            _context.Remove(friends);
-            _context.SaveChanges();
-
+            if (_userService.RemoveUserFromFriends(loginUserId, userId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
             return RedirectToAction("Friends");
-
-            //var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
-            //var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Friend).ToList();
-            //var friendsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
-            //friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
-            //return View(friendsList);
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult FriendRequests()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
-            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
-            var requestsToUser = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
-
-            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == loginUserId && x.RelationShips == RelationShips.Waiting).ToList();
-            var requestsFromUser = friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList();
-
-            //var friendsRequestsList = friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList();
-            List<List<FriendsList>> friendsRequestsList = new List<List<FriendsList>>();
-            friendsRequestsList.Add(requestsToUser);
-            friendsRequestsList.Add(requestsFromUser);
+            var friendsRequestsList = new List<List<FriendsList>>();
+            friendsRequestsList.Add(_userService.GetFriendRequestsToUser(loginUserId));
+            friendsRequestsList.Add(_userService.GetFriendRequestsFromUser(loginUserId));
             return View(friendsRequestsList);
         }
 
-
+        [Authorize]
         [HttpPost]
+        // accept or decline friend request to me
         public IActionResult FriendRequests(string acceptUserId, string declineUserId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
             if(acceptUserId != null)
             {
-                var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == acceptUserId && x.FriendUserId == loginUserId).First();
-                friends.RelationShips = RelationShips.Friend;
-                _context.SaveChanges();
+                if(_userService.AcceptFriendRequest(loginUserId, acceptUserId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
                 return RedirectToAction("Friends", "User");
             }
-
             else
             {
-                var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == declineUserId && x.FriendUserId == loginUserId).FirstOrDefault();
-                if (friends == null)
-                {
-                    friends = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == declineUserId && x.MainUserId == loginUserId).FirstOrDefault();
-                }
-                if (friends == null)
-                {
-                    return View("~/Views/Shared/ErrorPage.cshtml");
-                }
-                _context.Remove(friends);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "User");
+                if (_userService.RemoveUserFromFriends(loginUserId, declineUserId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
+                return RedirectToAction("FriendRequests", "User");
             }
-            //return View("~/Views/Shared/ErrorPage.cshtml");
-            //var friends = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == acceptUserId && x.FriendUserId == loginUserId).First();
-            //friends.RelationShips = RelationShips.Friend;
-            //_context.SaveChanges();
-            //return RedirectToAction("Friends", "User");
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> AddFriendRequest(string id)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (loginUserId == null)
-            {
-                return View("~/Views/Shared/ErrorPage.cshtml");
-            }
-
             User mainUser = await _userManager.FindByIdAsync(loginUserId);
             User friendUser = await _userManager.FindByIdAsync(id);
-            Friends friends = new Friends { MainUser = mainUser, FriendUser = friendUser , RelationShips = RelationShips.Waiting};
-            _context.FriendsList.Add(friends);
-            _context.SaveChanges();
-            var users = _context.Users.ToList();
-            users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
-            return View("Index",users);  
+            if (_userService.SendFriendRequest(mainUser, friendUser) == false) return View("~/Views/Shared/ErrorPage.cshtml");
+            return RedirectToAction("FriendRequests");
         }
     }
 }
