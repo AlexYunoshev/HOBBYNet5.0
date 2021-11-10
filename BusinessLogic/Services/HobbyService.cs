@@ -24,5 +24,14 @@ namespace BusinessLogic.Services
             var subHobbies = users[0].SubHobbies;
             return subHobbies;
         }
+
+        public bool RemoveHobbyFromList(string currentUserId, int subHobbyId)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.SubHobbies).ThenInclude(s => s.Hobby).FirstOrDefault();
+            var subHobby = user.SubHobbies.Where(sh => sh.Id == subHobbyId).FirstOrDefault();
+            user.SubHobbies.Remove(subHobby);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

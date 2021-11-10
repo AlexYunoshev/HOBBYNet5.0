@@ -32,5 +32,14 @@ namespace HOBBYNetMVC.Controllers
             var hobbies = _hobbyService.GetUserHobbiesList(loginUserId);
             return View(hobbies);
         }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveHobbyFromList(int subHobbyId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (_hobbyService.RemoveHobbyFromList(loginUserId, subHobbyId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
+            return RedirectToAction("Index");
+        }
     }
 }
