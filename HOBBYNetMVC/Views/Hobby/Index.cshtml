@@ -1,0 +1,31 @@
+﻿@model List<Domain.Models.SubHobby>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Hi, @User.Identity.Name</h1>
+
+<h3>Hobbies list:</h3>
+
+<table border="1" cellpadding="2" cellspacing="2">
+    <tr>
+        <th>Hobby</th>
+        <th>Subhobby</th>
+    </tr>
+    @foreach (var subHobby in Model)
+    {
+    <tr>
+        <td>@subHobby.Hobby.Name</td>
+        @if (@subHobby.Name == null)
+        {
+            <td>Не выбрано</td>
+        }
+        else
+        {
+            <td>@subHobby.Name</td>
+        }
+
+    </tr>
+    }
+</table>

@@ -1,9 +1,10 @@
 ﻿@model Domain.Models.DTO.UsersList
 
-<p>@User.Identity.Name</p>
-<p>@Model.Id</p>
+<p>Id: @Model.Id</p>
+<p>Email: @User.Identity.Name</p>
 <a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id='@Model.Id'>Сменить пароль</a>
 <a class="btn btn-sm btn-primary" asp-action="ChangePhoneNumber" asp-route-id='@Model.Id'>Сменить номер телефона</a>
+<a class="btn btn-sm btn-primary" asp-action="Index" asp-controller="Hobby" asp-route-id='@Model.Id'>Мои хобби</a>
 
 
 

@@ -34,6 +34,7 @@ namespace HOBBYNetMVC
                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
             services.AddScoped<UserService>();
+            services.AddScoped<HobbyService>();
             services.AddIdentity<User, IdentityRole>(opt =>
             {
                 opt.Password.RequiredLength = 5;

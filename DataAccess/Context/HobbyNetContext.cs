@@ -19,6 +19,7 @@ namespace DataAccess.Context
         public DbSet<Friends> FriendsList { get; set; }
         public DbSet<Hobby> Hobbies { get; set; }
         public DbSet<SubHobby> SubHobbies { get; set; }
+        //public DbSet<SubHobbyUser> SubHobbyUser { get; set; }
 
         // public DbSet<Hobby> Hobbies { get; set; }
         // public DbSet<MainFeed> MainFeeds { get; set; }
@@ -47,6 +48,21 @@ namespace DataAccess.Context
                 .HasOne(f => f.FriendUser)
                 .WithMany(mu => mu.Friends)
                 .HasForeignKey(f => f.FriendUserId).OnDelete(DeleteBehavior.Restrict);
+
+
+
+            //modelBuilder.Entity<SubHobbyUser>()
+            //.HasKey(h => new { h.SubHobbiesId, h.UsersId });
+
+            //modelBuilder.Entity<SubHobbyUser>()
+            //    .HasOne(f => f.SubHobby)
+            //    .WithMany(mu => mu.)
+            //    .HasForeignKey(f => f.MainUserId).OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Entity<Friends>()
+            //    .HasOne(f => f.FriendUser)
+            //    .WithMany(mu => mu.Friends)
+            //    .HasForeignKey(f => f.FriendUserId).OnDelete(DeleteBehavior.Restrict);
 
             //modelBuilder.Entity<User>().OwnsOne(v => v.Location);
         }
