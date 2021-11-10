@@ -84,7 +84,6 @@ namespace HOBBYNetMVC.Controllers
             //return View(friendsList);
         }
 
-
         [HttpGet]
         public IActionResult FriendRequests()
         {
@@ -104,7 +103,6 @@ namespace HOBBYNetMVC.Controllers
             List<List<FriendsList>> friendsRequestsList = new List<List<FriendsList>>();
             friendsRequestsList.Add(requestsToUser);
             friendsRequestsList.Add(requestsFromUser);
-            int count = friendsRequestsList[0].Count;
             return View(friendsRequestsList);
         }
 
@@ -112,7 +110,6 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public IActionResult FriendRequests(string acceptUserId, string declineUserId)
         {
-          
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (loginUserId == null)
             {
@@ -147,11 +144,8 @@ namespace HOBBYNetMVC.Controllers
             //friends.RelationShips = RelationShips.Friend;
             //_context.SaveChanges();
             //return RedirectToAction("Friends", "User");
-
         }
 
-
-        
         [HttpGet]
         public async Task<IActionResult> AddFriendRequest(string id)
         {
@@ -170,7 +164,5 @@ namespace HOBBYNetMVC.Controllers
             users.Remove(_context.Users.Where(x => x.Id == loginUserId).First());
             return View("Index",users);  
         }
-
-
     }
 }
