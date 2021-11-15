@@ -20,8 +20,8 @@ namespace BusinessLogic.Services
 
         public List<SubHobby> GetUserHobbiesList(string currentUserId)
         {
-            var users = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.SubHobbies).ThenInclude(s => s.Hobby).ToList();
-            var subHobbies = users[0].SubHobbies;
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.SubHobbies).ThenInclude(s => s.Hobby).FirstOrDefault();
+            var subHobbies = user.SubHobbies;
             return subHobbies;
         }
 

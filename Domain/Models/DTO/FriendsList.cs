@@ -8,11 +8,11 @@ namespace Domain.Models.DTO
 {
     public class FriendsList
     {
-        public FriendsList(string FirstName, string LastName, string Id)
+        public FriendsList(string firstName, string lastName, string id)
         {
-            this.FirstName = FirstName;
-            this.LastName = LastName;
-            this.Id = Id;
+            FirstName = firstName;
+            LastName = lastName;
+            Id = id;
         }
 
         public string FirstName { get; set; }

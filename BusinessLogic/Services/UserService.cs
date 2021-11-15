@@ -22,7 +22,8 @@ namespace BusinessLogic.Services
         public List<User> GetUsersList(string currentUserId)
         {
             var users = _context.Users.ToList();
-            users.Remove(_context.Users.Where(x => x.Id == currentUserId).First());
+            //users.Remove(_context.Users.Where(x => x.Id == currentUserId).First());
+            users.RemoveAll(x => x.Id == currentUserId);
             return users;
         }
 

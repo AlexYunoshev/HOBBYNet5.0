@@ -48,7 +48,10 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Friends(string userId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (_userService.RemoveUserFromFriends(loginUserId, userId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
+            if (!_userService.RemoveUserFromFriends(loginUserId, userId))
+            {
+                return View("~/Views/Shared/ErrorPage.cshtml");
+            }
             return RedirectToAction("Friends");
         }
 

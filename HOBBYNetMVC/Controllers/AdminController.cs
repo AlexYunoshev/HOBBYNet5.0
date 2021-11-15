@@ -62,9 +62,8 @@ namespace HOBBYNetMVC.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user == null)// || loginUserId != id)
+            if (user == null)
             {
                 return NotFound();
             }
@@ -75,8 +74,7 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (ModelState.IsValid)// && model.Id == loginUserId)
+            if (ModelState.IsValid)
             {
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
