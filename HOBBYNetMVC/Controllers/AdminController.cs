@@ -23,7 +23,6 @@ namespace HOBBYNetMVC.Controllers
             _userManager = userManager;
         }
 
-        //[Authorize(Roles = "admin")]
         public IActionResult Index() {
             if (!User.IsInRole("admin"))
             {
@@ -31,8 +30,6 @@ namespace HOBBYNetMVC.Controllers
             }
             var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
             return View(output);
-            //var output2 = _userManager.Users.ToList();
-            //return View(_userManager.Users.ToList());
         } 
 
   
@@ -102,16 +99,11 @@ namespace HOBBYNetMVC.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
-        {
-            //var feature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
-            //return View("~/Views/Shared/Error.cshtml", feature?.Error);
-            //return RedirectToAction("Error", "Shared");
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        { 
             User user = await _userManager.FindByIdAsync(id);
-            if (user != null)// || loginUserId != id)
+            if (user != null)
             {
                 var result = await _userManager.DeleteAsync(user);
-                //result = await _userManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
