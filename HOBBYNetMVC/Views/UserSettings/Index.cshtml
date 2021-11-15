@@ -1,8 +1,37 @@
-﻿@if (User.Identity.IsAuthenticated)
-{
-    @model IEnumerable<Domain.Models.User>
-<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="94f25fb8-4da1-4813-8894-244e3a55d088">Сменить пароль</a>
-    @*<form method="post" asp-controller="Home" asp-action="Index">
+﻿@model Domain.Models.DTO.UsersList
+
+<p>Id: @Model.Id</p>
+<p>Email: @User.Identity.Name</p>
+<a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id='@Model.Id'>Сменить пароль</a>
+<a class="btn btn-sm btn-primary" asp-action="ChangePhoneNumber" asp-route-id='@Model.Id'>Сменить номер телефона</a>
+<a class="btn btn-sm btn-primary" asp-action="Index" asp-controller="Hobby" asp-route-id='@Model.Id'>Мои хобби</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@var user = Model.First(m => m.UserName == User.Identity.Name);*@
+
+
+@*<form method="post" asp-controller="Home" asp-action="Index">
         @model HOBBYNetMVC.Models.UserSettings.IndexModel
         <ul class="navbar-nav flex-grow-1">
             <li> <a class="nav-link text-dark" asp-area="" asp-controller="UserSettings" asp-action="Index">Name</a></li>
@@ -22,5 +51,5 @@
         </div>
         <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
     </form>*@
-}
+
 

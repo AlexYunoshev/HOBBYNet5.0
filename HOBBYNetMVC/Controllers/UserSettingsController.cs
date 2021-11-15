@@ -1,10 +1,12 @@
 ﻿using Domain.Models;
+using Domain.Models.DTO;
 using HOBBYNetMVC.Models.UserSettings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
@@ -22,53 +24,71 @@ namespace HOBBYNetMVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
+            return View(output.FirstOrDefault(u => u.Email == User.Identity.Name));
+            //return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> ChangePassword(string id)
         {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            if (user == null || loginUserId != id)
             {
                 return NotFound();
             }
-            ChangePasswordViewModel model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
+            var model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ModelState.IsValid && model.Id == loginUserId)
             {
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
                 {
-                    var _passwordValidator =
-                        HttpContext.RequestServices.GetService(typeof(IPasswordValidator<User>)) as IPasswordValidator<User>;
-                    var _passwordHasher =
-                        HttpContext.RequestServices.GetService(typeof(IPasswordHasher<User>)) as IPasswordHasher<User>;
-
                     IdentityResult result =
-                        await _passwordValidator.ValidateAsync(_userManager, user, model.NewPassword);
+                        await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        user.PasswordHash = _passwordHasher.HashPassword(user, model.NewPassword);
-                        await _userManager.UpdateAsync(user);
                         return RedirectToAction("Index");
                     }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
                 }
-                else
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangePhoneNumber(string id)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userManager.FindByIdAsync(id);
+            if (user == null || loginUserId != id)
+            {
+                return NotFound();
+            }
+            var model = new ChangePhoneNumberViewModel { Id = user.Id, Email = user.Email, PhoneNumber = user.PhoneNumber };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberViewModel model)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (ModelState.IsValid && model.Id == loginUserId)
+            {
+                User user = await _userManager.FindByIdAsync(model.Id);
+                if (user != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Пользователь не найден");
+                    IdentityResult result = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index");
+                    }
                 }
             }
             return View(model);

@@ -1,5 +1,7 @@
+using BusinessLogic.Services;
 using DataAccess.Context;
 using Domain.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,12 +33,34 @@ namespace HOBBYNetMVC
             services.AddDbContext<HobbyNetContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddScoped<UserService>();
+            services.AddScoped<HobbyService>();
+            services.AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.Password.RequiredLength = 5;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false;               
+            })
                 .AddEntityFrameworkStores<HobbyNetContext>();
-           // services.AddAuthorization(options =>
-           //options.AddPolicy("admin",
-           //    policy => policy.RequireClaim("Manager")));
+            // services.AddAuthorization(options =>
+            //options.AddPolicy("admin",
+            //    policy => policy.RequireClaim("Manager")));
+
+            ////////////// auth
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //     .AddCookie(options => //CookieAuthenticationOptions
+            //    {
+            //         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+            //     });
+
+
+
             services.AddControllersWithViews();
+
+
 
            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
            //.AddRazorPagesOptions(options =>

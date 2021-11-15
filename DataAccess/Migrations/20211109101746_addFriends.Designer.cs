@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(HobbyNetContext))]
-    [Migration("20211027120418_updateUser2")]
-    partial class updateUser2
+    [Migration("20211109101746_addFriends")]
+    partial class addFriends
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,42 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Domain.Models.Friends", b =>
+                {
+                    b.Property<string>("MainUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FriendUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("MainUserId", "FriendUserId");
+
+                    b.HasIndex("FriendUserId");
+
+                    b.ToTable("FriendsList");
+                });
+
+            modelBuilder.Entity("Domain.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("CoordinateLatitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("CoordinateLongitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
+                });
 
             modelBuilder.Entity("Domain.Models.User", b =>
                 {
@@ -45,6 +81,9 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -72,6 +111,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("PhotoPath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RelationShips")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -86,6 +128,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -229,6 +273,34 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Models.Friends", b =>
+                {
+                    b.HasOne("Domain.Models.User", "FriendUser")
+                        .WithMany("Friends")
+                        .HasForeignKey("FriendUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.User", "MainUser")
+                        .WithMany("MainUserFriends")
+                        .HasForeignKey("MainUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FriendUser");
+
+                    b.Navigation("MainUser");
+                });
+
+            modelBuilder.Entity("Domain.Models.User", b =>
+                {
+                    b.HasOne("Domain.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -278,6 +350,13 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.User", b =>
+                {
+                    b.Navigation("Friends");
+
+                    b.Navigation("MainUserFriends");
                 });
 #pragma warning restore 612, 618
         }

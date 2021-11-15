@@ -1,31 +1,35 @@
 ﻿using Domain.Models;
+using Domain.Models.DTO;
 using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
 {
-    public class UsersController : Controller
+    [Authorize(Roles = "admin")]
+    public class AdminController : Controller
     {
         UserManager<User> _userManager;
 
-        public UsersController(UserManager<User> userManager)
+        public AdminController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "admin")]
         public IActionResult Index() {
             if (!User.IsInRole("admin"))
             {
                 return RedirectToAction("Index");
             }
-            return View(_userManager.Users.ToList());
+            var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
+            return View(output);
         } 
 
   
@@ -95,13 +99,17 @@ namespace HOBBYNetMVC.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
-        {
+        { 
             User user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            return RedirectToAction("Index");
+            return View("~/Views/Shared/ErrorPage.cshtml");      
         }
     }
 }
