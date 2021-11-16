@@ -1,34 +1,26 @@
-﻿@model List<Domain.Models.SubHobby>
+﻿@model List<Domain.Models.Hobby>
 @{
     ViewData["Title"] = "Index";
 }
 
 
 <h1>Hi, @User.Identity.Name</h1>
-<h1>User id: @Model[0].Users[0].Id</h1>
+
 
 <h3>Hobbies list:</h3>
 <form asp-action="RemoveHobbyFromList" method="post">
     <table border="1" cellpadding="2" cellspacing="2">
         <tr>
             <th>Hobby</th>
-            <th>Subhobby</th>
             <th></th>
         </tr>
-        @foreach (var subHobby in Model)
+        @foreach (var hobby in Model)
         {
             <tr>
-                <td>@subHobby.Hobby.Name</td>
-                @if (@subHobby.Name == null)
-                {
-                    <td>Не выбрано</td>
-                }
-                else
-                {
-                    <td>@subHobby.Name</td>
-                }
+                <td>@hobby.Name</td>
+             
                 <td>
-                    <button type="submit" class="btn btn-sm btn-danger" name="subHobbyId" value="@subHobby.Id">Удалить</button>
+                    <button type="submit" class="btn btn-sm btn-danger" name="subHobbyId" value="@hobby.Id">Удалить</button>
                 </td>
 
             </tr>

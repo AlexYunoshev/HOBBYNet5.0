@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using BusinessLogic.Services;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,9 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //var hobbies = _hobbyService.GetUserHobbiesList(loginUserId);
-            //return View(hobbies);
+
+            var posts = _explorePostsService.GetExplorePosts();
+            return View(posts);
         }
     }
 }

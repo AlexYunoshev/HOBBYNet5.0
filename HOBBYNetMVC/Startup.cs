@@ -35,6 +35,7 @@ namespace HOBBYNetMVC
 
             services.AddScoped<UserService>();
             services.AddScoped<HobbyService>();
+            services.AddScoped<ExplorePostsService>();
             services.AddIdentity<User, IdentityRole>(opt =>
             {
                 opt.Password.RequiredLength = 5;
