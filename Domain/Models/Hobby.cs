@@ -8,7 +8,8 @@ namespace Domain.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public List<SubHobby> SubHobbies { get; set; } = new List<SubHobby>();
+        public List<User> Users { get; set; } = new List<User>();
+        public List<ExplorePost> ExplorePosts { get; set; } = new List<ExplorePost>();
 
         //public int UserId { get; set; }
         //public User User { get; set; }

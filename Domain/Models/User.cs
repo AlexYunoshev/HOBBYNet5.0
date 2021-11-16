@@ -17,8 +17,11 @@ namespace Domain.Models
         public virtual ICollection<Friends> Friends { get; set; }
 
 
-        public List<SubHobby> SubHobbies { get; set; } = new List<SubHobby>();
-        //public RelationShips RelationShips { get; set; }
+        public List<Hobby> Hobbies { get; set; } = new List<Hobby>();
+        public List<ExplorePost> ExplorePosts { get; set; } = new List<ExplorePost>();
+
+        public IList<ExploreLike> ExploreLikes { get; set; }
+        public IList<ExploreComment> ExploreComments { get; set; }
 
 
         //public List<Post> PostsList { get; set; }
