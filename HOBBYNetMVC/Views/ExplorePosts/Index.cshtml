@@ -3,26 +3,112 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .explore-post {
+        padding: 10px;
+        border: solid black 1px;
+        margin: 20px 0;
+    }
 
+    .explore-post p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .explore-post-user {
+        text-align: center;
+        vertical-align: top;
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .explore-post-text {
+        text-align: left;
+        vertical-align: top;
+        display: inline-block;
+        margin: 10px;
+        width: 700px;
+    }
+
+    .explore-post-hobby {
+        text-align: center;
+        margin: 10px;
+        vertical-align: top;
+        display: inline-block;
+        float:right;
+
+    }
+</style>
 
 
 <h3>Explore posts list:</h3>
 
-    <table border="1" cellpadding="2" cellspacing="2">
-        <tr>
-            <th>Id</th>
-            <th>Text</th>
-            <th>User</th>
-            <th>Hobbies</th>
-            <th>Likes: count, user</th>
-            <th>Comments: count, user - text</th>
+@foreach (var post in Model)
+{
+<div class="explore-post">
+    <p>Post id: @post.Id</p>
+    <div class="explore-post-user">
+        <img src="@post.User.PhotoPath" height="100" width="100" />
+        <p>@post.User.FirstName @post.User.LastName</p>
+        <div>
+            <img src="~/images/like.png" height="40" width="40" />
+            @post.ExploreLikes.Count
+            @foreach (var like in post.ExploreLikes)
+            {
 
+                <p>@like.User.FirstName;</p>
+            }
 
+        </div>
+        <div>
+            <img src="~/images/comment.png" height="40" width="40" />
+            @post.ExploreComments.Count
+            @foreach (var comment in post.ExploreComments)
+            {
 
-        </tr>
-        @foreach (var post in Model)
+                <p>@comment.User.FirstName - @comment.Text;</p>
+            }
+        </div>
+    </div>
+
+    <div class="explore-post-text">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+    </div>
+
+    <div class="explore-post-hobby">
+        <img src="~/images/postPhoto.png" height="134" width="160" />
+        @foreach (var hobby in post.Hobbies)
         {
+
+            <p>@hobby.Name</p>
+        }
+    </div>
+</div>
+}
+
+
+
+
+
+@*<h3>Explore posts list:</h3>
+
+<table border="1" cellpadding="2" cellspacing="2">
+    <tr>
+        <th>User photo</th>
+        <th>Id</th>
+        <th>Text</th>
+        <th>User</th>
+        <th>Hobbies</th>
+        <th>Likes: count, user</th>
+        <th>Comments: count, user - text</th>
+
+
+
+    </tr>
+    @foreach (var post in Model)
+    {
         <tr>
+            <td><img src="@post.User.PhotoPath" height="100" width="100" /></td>
             <td>@post.Id</td>
             <td>@post.Text</td>
             <td>@post.User.UserName</td>
@@ -56,5 +142,5 @@
                 </div>
             </td>
         </tr>
-        }
-    </table>
+    }
+</table>*@
