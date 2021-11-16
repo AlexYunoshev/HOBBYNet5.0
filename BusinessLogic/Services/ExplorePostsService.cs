@@ -49,6 +49,7 @@ namespace BusinessLogic.Services
                 recommendedPosts[index].AddRange(posts.Where(p => p.Hobbies.Contains(hobby)).ToList());
                 posts.RemoveAll(p => p.Hobbies.Contains(hobby));
                 recommendedPosts[index].RemoveAll(p => p.UserId == userId); // удаляем посты юзера (не рекомендовать ему же его посты).
+                recommendedPosts[index].RemoveAll(p => p.ExploreLikes.Any(l => l.UserId == userId)); // удаляем посты которые уже лайкнул юзер
                 index++;
             }
 
@@ -65,7 +66,7 @@ namespace BusinessLogic.Services
         }
 
 
-        static List<ExplorePost> GetPostsByPage(List<ExplorePost> recommendedPosts, int pageNumber)
+        public List<ExplorePost> GetPostsByPage(List<ExplorePost> recommendedPosts, int pageNumber)
         {
             var recommendedPostsOut = new List<ExplorePost>();
             int fullPagesCount = recommendedPosts.Count / 10;
@@ -81,7 +82,7 @@ namespace BusinessLogic.Services
         }
 
 
-        static List<ExplorePost> GetPostsForRecommendations(List<ExplorePost> explorePostsWithoutRating,
+        public List<ExplorePost> GetPostsForRecommendations(List<ExplorePost> explorePostsWithoutRating,
             Dictionary<Hobby, int> postRatingByHobbies, List<List<ExplorePost>> recommendedPosts)
         {
             var recommendedPostsOut = new List<ExplorePost>();
@@ -96,6 +97,8 @@ namespace BusinessLogic.Services
                 allRecommendedPostsCount += postCount;
             }
 
+
+            List<ExplorePost> recommendedPostsPage = new List<ExplorePost>();
             // робимо прохід по 10 сторінкам. Можна ще зробити while recommendedPosts.count != 0
             for (int counter = 0; counter < 10; counter++)
             {
@@ -113,7 +116,7 @@ namespace BusinessLogic.Services
                         postIndex = 0;
                         if (postIndex < recommendedPosts[indexRecommendedHobbyPostsList].Count)
                         {
-                            recommendedPostsOut.Add(recommendedPosts[indexRecommendedHobbyPostsList][postIndex]);
+                            recommendedPostsPage.Add(recommendedPosts[indexRecommendedHobbyPostsList][postIndex]);
                             recommendedPosts[indexRecommendedHobbyPostsList].RemoveAt(postIndex);
                         }
 
@@ -127,6 +130,9 @@ namespace BusinessLogic.Services
                     }
                     indexRecommendedHobbyPostsList++;
                 }
+                recommendedPostsPage.Reverse();
+                recommendedPostsOut.AddRange(recommendedPostsPage);
+                recommendedPostsPage.Clear();
             }
 
             while (explorePostsWithoutRating.Count != 0)
@@ -141,7 +147,7 @@ namespace BusinessLogic.Services
 
 
         // отримуємо пріорітети хобі у балах. Наприклад: 24, 19, 17, 2
-        static Dictionary<Hobby, int> GetHobbyScores(List<ExploreLike> likes, List<ExploreComment> comments)
+        public Dictionary<Hobby, int> GetHobbyScores(List<ExploreLike> likes, List<ExploreComment> comments)
         {
             var user = likes[0].User;
             var hobbyScores = new Dictionary<Hobby, int>();
@@ -153,11 +159,11 @@ namespace BusinessLogic.Services
                 {
                     if (hobbyScores.ContainsKey(hobby))
                     {
-                        hobbyScores[hobby] += 2;
+                        hobbyScores[hobby] += 1;
                     }
                     else
                     {
-                        hobbyScores.Add(hobby, 2);
+                        hobbyScores.Add(hobby, 1);
                     }
                 }
             }
@@ -170,11 +176,11 @@ namespace BusinessLogic.Services
                 {
                     if (hobbyScores.ContainsKey(hobby))
                     {
-                        hobbyScores[hobby] += 4;
+                        hobbyScores[hobby] += 2;
                     }
                     else
                     {
-                        hobbyScores.Add(hobby, 4);
+                        hobbyScores.Add(hobby, 2);
                     }
                 }
             }
@@ -192,7 +198,7 @@ namespace BusinessLogic.Services
 
         // отримуємо пріорітети хобі у відношенні до 10. Наприклад: 4, 3, 3, 0.
         // Якщо маємо 0, то таке хобі видаляється.
-        static Dictionary<Hobby, int> GetHobbyRatio(Dictionary<Hobby, int> hobbyScores)
+        public Dictionary<Hobby, int> GetHobbyRatio(Dictionary<Hobby, int> hobbyScores)
         {
             int sumScore = 0;
             foreach (int value in hobbyScores.Values)
@@ -206,6 +212,12 @@ namespace BusinessLogic.Services
                 int hobbyScore = (int)Math.Round(value, 0, MidpointRounding.ToEven);
                 if (hobbyScore != 0) { hobbyScores[hobby] = hobbyScore; }
                 else { hobbyScores.Remove(hobby); }
+            }
+            if (hobbyScores.Values.Sum() > 10)
+            {
+                var keyByMinValue = hobbyScores.Aggregate((a, b) => a.Value < b.Value ? a : b).Key;
+                hobbyScores[keyByMinValue] -= (hobbyScores.Values.Sum() - 10);
+                if (hobbyScores[keyByMinValue] == 0) { hobbyScores.Remove(keyByMinValue); }
             }
 
             return hobbyScores;

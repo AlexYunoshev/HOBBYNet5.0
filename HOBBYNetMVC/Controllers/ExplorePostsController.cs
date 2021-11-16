@@ -3,6 +3,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +29,23 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-
             var posts = _explorePostsService.GetExplorePosts();
             return View(posts);
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult RecommendedPosts()
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+          
+            List<ExplorePost> explorePostsWithoutRating;
+            Dictionary<Hobby, int> postRatingByHobbies;
+            var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
+            var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
+            return View(recommendedPostsList);
+        }
+
+        
     }
 }
