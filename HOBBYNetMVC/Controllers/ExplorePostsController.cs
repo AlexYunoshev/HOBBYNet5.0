@@ -46,6 +46,47 @@ namespace HOBBYNetMVC.Controllers
             return View(recommendedPostsList);
         }
 
-        
+        [Authorize]
+        [HttpPost]
+        public IActionResult SetLikeToPost(int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _explorePostsService.SetLikeToPost(postId, loginUserId);
+           
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult SetCommentToPost(int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var post = _explorePostsService.GetExplorePost(postId);
+
+            return View("PostComments", post);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddCommentToPost(string commentText, int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var post = _explorePostsService.GetExplorePost(postId);
+            _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
+            return View("PostComments", post);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveCommentFromPost(int commentId, int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var post = _explorePostsService.GetExplorePost(postId);
+            _explorePostsService.RemoveCommentFromPost(postId, commentId);
+            return View("PostComments", post);
+        }
+
+
+
     }
 }

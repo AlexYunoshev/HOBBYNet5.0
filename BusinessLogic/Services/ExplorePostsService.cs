@@ -216,6 +216,7 @@ namespace BusinessLogic.Services
             if (hobbyScores.Values.Sum() > 10)
             {
                 var keyByMinValue = hobbyScores.Aggregate((a, b) => a.Value < b.Value ? a : b).Key;
+                //var keyByMinValue = hobbyScores.OrderBy(v => v.Value).FirstOrDefault().Key;
                 hobbyScores[keyByMinValue] -= (hobbyScores.Values.Sum() - 10);
                 if (hobbyScores[keyByMinValue] == 0) { hobbyScores.Remove(keyByMinValue); }
             }
@@ -256,6 +257,52 @@ namespace BusinessLogic.Services
             return posts;
         }
 
-       
+        public ExplorePost GetExplorePost(int postId)
+        {
+            var post = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .Where(p => p.Id == postId)
+                .FirstOrDefault();
+                
+            return post;
+        }
+
+        public bool AddCommentToPost(int postId, string userId, string commentText)
+        {
+            var post = GetExplorePost(postId);
+            post.ExploreComments.Add(new ExploreComment() { PostId = postId, UserId = userId, Text = commentText });
+            _context.SaveChanges();
+            return true;
+        }
+
+        public void RemoveCommentFromPost(int postId, int commentId)
+        {
+            var post = GetExplorePost(postId);
+            var comment = post.ExploreComments.Where(c => c.Id == commentId).FirstOrDefault();
+            if (comment != null)
+            {
+                //post.ExploreComments.Remove(comment);
+                _context.ExploreComments.Remove(comment);
+                _context.SaveChanges();
+            }
+        }
+
+        public void SetLikeToPost(int postId, string userId)
+        {
+            var post = GetExplorePost(postId);
+            var like = post.ExploreLikes.Where(l => l.UserId == userId).FirstOrDefault();
+            if (like != null)
+            {
+                post.ExploreLikes.Remove(like);
+            }
+            else
+            {
+                post.ExploreLikes.Add(new ExploreLike() { PostId = postId, UserId = userId });
+            }
+            _context.SaveChanges();
+        }
     }
 }

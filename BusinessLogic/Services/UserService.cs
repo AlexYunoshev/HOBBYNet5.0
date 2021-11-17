@@ -96,7 +96,8 @@ namespace BusinessLogic.Services
             {
                 return false;
             }
-            _context.Remove(friends);
+            _context.FriendsList.Remove(friends);
+            //_context.Remove(friends);
             _context.SaveChanges();
             return true;
         }

@@ -43,109 +43,66 @@
 
 <h3>Explore posts list:</h3>
 
-@foreach (var post in Model)
-{
-<div class="explore-post">
-    <p>Post id: @post.Id</p>
-    <div class="explore-post-user">
-        <img src="@post.User.PhotoPath" height="100" width="100" />
-        <p>@post.User.FirstName @post.User.LastName</p>
-        <div>
-            <img src="~/images/like.png" height="40" width="40" />
-            @post.ExploreLikes.Count
-            @foreach (var like in post.ExploreLikes)
-            {
-
-                <p>@like.User.FirstName;</p>
-            }
-
-        </div>
-        <div>
-            <img src="~/images/comment.png" height="40" width="40" />
-            @post.ExploreComments.Count
-            @foreach (var comment in post.ExploreComments)
-            {
-
-                <p>@comment.User.FirstName - @comment.Text;</p>
-            }
-        </div>
-    </div>
-
-
-
-    @*<div class="explore-post-text">
-        @post.Text
-    </div>*@
-    <div class="explore-post-text">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-    </div>
-
-    <div class="explore-post-hobby">
-        <img src="~/images/postPhoto.png" height="134" width="160" />
-        @foreach (var hobby in post.Hobbies)
-        {
-
-            <p>@hobby.Name</p>
-        }
-    </div>
-</div>
-}
 
 
 
 
-
-@*<h3>Explore posts list:</h3>
-
-<table border="1" cellpadding="2" cellspacing="2">
-    <tr>
-        <th>User photo</th>
-        <th>Id</th>
-        <th>Text</th>
-        <th>User</th>
-        <th>Hobbies</th>
-        <th>Likes: count, user</th>
-        <th>Comments: count, user - text</th>
-
-
-
-    </tr>
     @foreach (var post in Model)
     {
-        <tr>
-            <td><img src="@post.User.PhotoPath" height="100" width="100" /></td>
-            <td>@post.Id</td>
-            <td>@post.Text</td>
-            <td>@post.User.UserName</td>
-            <td>
+        <div class="explore-post">
+            <p>Post id: @post.Id</p>
+            <div class="explore-post-user">
+                <img src="@post.User.PhotoPath" height="100" width="100" />
+                <p>@post.User.FirstName @post.User.LastName</p>
+                <div>
+                    <form asp-action="SetLikeToPost" method="post">
+                        <button type="submit" name="postId" value="@post.Id">
+                            <img src="~/images/like.png" height="40" width="40" />
+                        </button>
+
+                        @post.ExploreLikes.Count
+                        @foreach (var like in post.ExploreLikes)
+                        {
+
+                            <p>@like.User.FirstName;</p>
+                        }
+
+                    </form>
+
+                </div>
+                <div>
+                    <form asp-action="SetCommentToPost" method="get">
+                        <button type="submit" name="postId" value="@post.Id">
+                            <img src="~/images/comment.png" height="40" width="40" />
+                        </button>
+                        @post.ExploreComments.Count
+                        @foreach (var comment in post.ExploreComments)
+                        {
+
+                            @*<p>@comment.User.FirstName - @comment.Text;</p>*@
+                        }
+                    </form>
+                </div>
+            </div>
+
+
+
+            @*<div class="explore-post-text">
+                    @post.Text
+                </div>*@
+            <div class="explore-post-text">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+            </div>
+
+            <div class="explore-post-hobby">
+                <img src="~/images/postPhoto.png" height="134" width="160" />
                 @foreach (var hobby in post.Hobbies)
                 {
 
-                    <span>@hobby.Name;</span>
+                    <p>@hobby.Name</p>
                 }
-            </td>
-
-            <td>
-                <div>@post.ExploreLikes.Count</div>
-                <div>
-                    @foreach (var like in post.ExploreLikes)
-                    {
-
-                        <span>@like.User.FirstName;</span>
-                    }
-                </div>
-            </td>
-
-            <td>
-                <div>@post.ExploreComments.Count</div>
-                <div>
-                    @foreach (var comment in post.ExploreComments)
-                    {
-
-                        <span>@comment.User.FirstName - @comment.Text;</span>
-                    }
-                </div>
-            </td>
-        </tr>
+            </div>
+        </div>
     }
-</table>*@
+
+
