@@ -1,7 +1,7 @@
 ﻿@model Domain.ViewModels.LoginViewModel
 
 <div class="hero">
-    <div class="form-box">
+    <div class="form-box" id="form-box">
         <div class="button-box">
             <div id="btn"></div>
             <button type="button" class="toggle-btn" onclick="login()">Log In</button>
@@ -14,15 +14,20 @@
               asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
             <input type="text" class="input-field" placeholder="Email" required asp-for="Email">
             <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="Password">
-            <input type="checkbox" class="check-box" onclick="ShowPassword()"><span>Show password</span>
+            <div class="show-password">
+                <input type="checkbox" class="check-box" onclick="ShowPassword()">
+                <span>Show password</span>
+            </div>
             <button type="submit" class="submit-btn">Login</button>
         </form>
 
-        <form id="register" class="input-group">
-            <input type="text" class="input-field" placeholder="User id" required>
+        <form id="register" class="input-group" method="post" 
+              asp-controller="Account" asp-action="Register">
+            <input type="text" class="input-field" placeholder="First name" required>
+            <input type="text" class="input-field" placeholder="Last name" required>
             <input type="email" class="input-field" placeholder="Email" required>
-            <input type="text" class="input-field" placeholder="Enter Password" required>
-            <input type="checkbox" class="check-box"><span>I agree to the terms & conditions</span>
+            <input type="text" class="input-field" placeholder="Enter password" required>
+            <input type="text" class="input-field" placeholder="Password confirm" required>
             <button type="submit" class="submit-btn">Register</button>
         </form>
     </div>
@@ -32,17 +37,20 @@
     var x = document.getElementById("login");
     var y = document.getElementById("register");
     var z = document.getElementById("btn");
+    var p = document.getElementById("form-box");
 
     function login() {
         x.style.left = "50px";
         y.style.left = "450px";
         z.style.left = "0";
+        p.style.height = "360px";
     }
 
     function register() {
         x.style.left = "-400px";
         y.style.left = "50px";
         z.style.left = "110px";
+        p.style.height = "485px";
     }
 
     function ShowPassword() {
@@ -57,7 +65,11 @@
 </script>
 
 <style>
-     .hero {
+
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/banner.jpg);
+    }
+    /* .hero {
         height: 100%;
         width: 100%;
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/banner.jpg);
@@ -65,11 +77,11 @@
         background-size: cover;
         background-repeat: no-repeat;
         position: absolute;
-    }
+    }*/
 
     .form-box {
         width: 380px;
-        height: 480px;
+        height: 360px;
         position: relative;
         margin: 6% auto;
         padding: 5px;
@@ -77,6 +89,7 @@
         background-color: rgba(255, 255, 255, 0.75);
         border-radius: 15px;
         overflow: hidden;
+        transition: .5s;
     }
 
     .button-box {
@@ -121,7 +134,7 @@
         }
 
     .input-group {
-        top: 180px;
+        top: 155px;
         position: absolute;
         width: 280px;
         transition: .5s;
@@ -145,6 +158,7 @@
         cursor: pointer;
         display: block;
         margin: auto;
+        margin-top: 30px;
         background: linear-gradient(to right, #ff105f, #ffaf06);
         border: 0;
         outline: none;
@@ -152,14 +166,17 @@
     }
 
     .check-box {
-        margin: 30px 10px 30px 0;
+        margin: 0 10px 0 0;
     }
 
     span {
         color: #777;
-        font-size: 12px;
-        bottom: 68px;
-        position: absolute;
+        font-size: 12px;        
+    }
+
+    .show-password {
+        align-items: center;
+        display: flex;
     }
 
     #login {
