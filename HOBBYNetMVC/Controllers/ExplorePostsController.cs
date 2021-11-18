@@ -62,7 +62,6 @@ namespace HOBBYNetMVC.Controllers
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = _explorePostsService.GetExplorePost(postId);
-
             return View("PostComments", post);
         }
 
@@ -71,8 +70,8 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult AddCommentToPost(string commentText, int postId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var post = _explorePostsService.GetExplorePost(postId);
             _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
+            var post = _explorePostsService.GetExplorePost(postId);
             return View("PostComments", post);
         }
 

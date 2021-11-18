@@ -28,13 +28,18 @@
         @foreach (var comment in Model.ExploreComments)
         {
             <h4>@comment.User.FirstName: @comment.Text.</h4>
-            <form asp-action="RemoveCommentFromPost" method="post">
+            @if (@Model.User.UserName == User.Identity.Name || @comment.User.UserName == User.Identity.Name)
+            {
+                <form asp-action="RemoveCommentFromPost" method="post">
 
-                <button name="postId" value="@Model.Id" type="submit">Remove</button>
-                <input type="hidden" name="commentId" value="@comment.Id" />
+                    <button name="postId" value="@Model.Id" type="submit">Remove</button>
+                    <input type="hidden" name="commentId" value="@comment.Id" />
 
-                <br />
-            </form>
+                    <br />
+                </form>
+            }
+         
+
         }
 
     }

@@ -18,139 +18,55 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-        public List<Hobby> GetUserHobbies(string userId)
+        public List<ExploreLike> GetExploreLikes(string currentUserId)
         {
-            var hobbies = _context.Users.Where(u => u.Id == userId)
-                .Include(u => u.Hobbies)
-                .ThenInclude(h => h.ExplorePosts)
-                .Select(u => u.Hobbies)
+            var likes = _context.ExploreLikes
+                .Where(u => u.UserId == currentUserId)
+                .Include(p => p.Post)
+                .ThenInclude(h => h.Hobbies)
+                .ToList();
+            return likes;
+        }
+
+        public List<ExploreComment> GetExploreComments(string currentUserId)
+        {
+            var comments = _context.ExploreComments
+                .Where(u => u.UserId == currentUserId)
+                .Include(p => p.Post)
+                .ThenInclude(h => h.Hobbies)
+                .ToList();
+            return comments;
+        }
+
+        public List<ExplorePost> GetExplorePosts()
+        {
+            var posts = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .ToList();
+            return posts;
+        }
+
+        public ExplorePost GetExplorePost(int postId)
+        {
+            var post = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .Where(p => p.Id == postId)
                 .FirstOrDefault();
-            return hobbies;
+            return post;
         }
-
-
-        public List<List<ExplorePost>> GetRecommendedPostsList(string userId, out List<ExplorePost> posts, out Dictionary<Hobby, int> hobbyRatio2)
-        {
-            posts = GetExplorePosts();
-            var likes = GetExploreLikes(userId);
-            var comments = GetExploreComments(userId);
-            var hobbyRatio = GetHobbyScores(likes, comments);
-            hobbyRatio = GetHobbyRatio(hobbyRatio);
-            var recommendedPosts = new List<List<ExplorePost>>();
-
-            for (int i = 0; i < hobbyRatio.Count; i++)
-            {
-                recommendedPosts.Add(new List<ExplorePost>());
-            }
-
-            int index = 0;
-            foreach (Hobby hobby in hobbyRatio.Keys)
-            {
-                recommendedPosts[index].AddRange(posts.Where(p => p.Hobbies.Contains(hobby)).ToList());
-                posts.RemoveAll(p => p.Hobbies.Contains(hobby));
-                recommendedPosts[index].RemoveAll(p => p.UserId == userId); // удаляем посты юзера (не рекомендовать ему же его посты).
-                recommendedPosts[index].RemoveAll(p => p.ExploreLikes.Any(l => l.UserId == userId)); // удаляем посты которые уже лайкнул юзер
-                index++;
-            }
-
-            posts.RemoveAll(p => p.UserId == userId); // удаляем посты юзера (не рекомендовать ему же его посты).
-
-            hobbyRatio2 = new Dictionary<Hobby, int>();
-            recommendedPosts.Sort((a, b) => a.Count - b.Count);
-            foreach (List<ExplorePost> explorePosts in recommendedPosts)
-            {
-                hobbyRatio2[explorePosts[0].Hobbies.FirstOrDefault()] = hobbyRatio[explorePosts[0].Hobbies.FirstOrDefault()];
-            }
-
-            return recommendedPosts;
-        }
-
-
-        public List<ExplorePost> GetPostsByPage(List<ExplorePost> recommendedPosts, int pageNumber)
-        {
-            var recommendedPostsOut = new List<ExplorePost>();
-            int fullPagesCount = recommendedPosts.Count / 10;
-            int startIndex = (pageNumber - 1) * 10;
-            int count = 10;
-            if (pageNumber > fullPagesCount)
-            {
-                startIndex = fullPagesCount * 10;
-                count = recommendedPosts.Count - startIndex;
-            }
-            recommendedPostsOut.AddRange(recommendedPosts.GetRange(startIndex, count));
-            return recommendedPostsOut;
-        }
-
-
-        public List<ExplorePost> GetPostsForRecommendations(List<ExplorePost> explorePostsWithoutRating,
-            Dictionary<Hobby, int> postRatingByHobbies, List<List<ExplorePost>> recommendedPosts)
-        {
-            var recommendedPostsOut = new List<ExplorePost>();
-
-            int postOnPageCount;
-            int postIndex;
-            int allRecommendedPostsCount = 0;
-            int indexRecommendedHobbyPostsList = 0;
-
-            foreach (int postCount in postRatingByHobbies.Values)
-            {
-                allRecommendedPostsCount += postCount;
-            }
-
-
-            List<ExplorePost> recommendedPostsPage = new List<ExplorePost>();
-            // робимо прохід по 10 сторінкам. Можна ще зробити while recommendedPosts.count != 0
-            for (int counter = 0; counter < 10; counter++)
-            {
-                indexRecommendedHobbyPostsList = 0;
-                foreach (Hobby hobby in postRatingByHobbies.Keys)
-                {
-                    postOnPageCount = postRatingByHobbies[hobby];
-                    if (postRatingByHobbies.Count == 1)
-                    {
-                        postOnPageCount = recommendedPosts[indexRecommendedHobbyPostsList].Count;
-                    }
-
-                    for (int i = 0; i < postOnPageCount; i++)
-                    {
-                        postIndex = 0;
-                        if (postIndex < recommendedPosts[indexRecommendedHobbyPostsList].Count)
-                        {
-                            recommendedPostsPage.Add(recommendedPosts[indexRecommendedHobbyPostsList][postIndex]);
-                            recommendedPosts[indexRecommendedHobbyPostsList].RemoveAt(postIndex);
-                        }
-
-                        if (postIndex == recommendedPosts[indexRecommendedHobbyPostsList].Count)
-                        {
-                            postRatingByHobbies.Remove(hobby);
-                            recommendedPosts.RemoveAt(indexRecommendedHobbyPostsList);
-                            indexRecommendedHobbyPostsList--;
-                            break;
-                        }
-                    }
-                    indexRecommendedHobbyPostsList++;
-                }
-                recommendedPostsPage.Reverse();
-                recommendedPostsOut.AddRange(recommendedPostsPage);
-                recommendedPostsPage.Clear();
-            }
-
-            while (explorePostsWithoutRating.Count != 0)
-            {
-                recommendedPostsOut.Add(explorePostsWithoutRating[0]);
-                explorePostsWithoutRating.RemoveAt(0);
-            }
-
-            return recommendedPostsOut;
-        }
-
-
 
         // отримуємо пріорітети хобі у балах. Наприклад: 24, 19, 17, 2
-        public Dictionary<Hobby, int> GetHobbyScores(List<ExploreLike> likes, List<ExploreComment> comments)
+        public Dictionary<Hobby, int> GetHobbyScores(List<ExploreLike> likes, List<ExploreComment> comments, string userId)
         {
-            var user = likes[0].User;
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
             var hobbyScores = new Dictionary<Hobby, int>();
+
             foreach (ExploreLike like in likes)
             {
                 var hobbies = like.Post.Hobbies.ToList();
@@ -224,58 +140,128 @@ namespace BusinessLogic.Services
             return hobbyScores;
         }
 
-
-
-        public List<ExploreLike> GetExploreLikes(string currentUserId)
+        public List<List<ExplorePost>> GetRecommendedPostsList
+            (string userId, out List<ExplorePost> posts, out Dictionary<Hobby, int> hobbyRatioOut)
         {
-            var likes = _context.ExploreLikes
-                .Where(u => u.UserId == currentUserId)
-                .Include(p => p.Post)
-                .ThenInclude(h => h.Hobbies)
-                .ToList();
-            return likes;
+            posts = GetExplorePosts();
+            var likes = GetExploreLikes(userId);
+            var comments = GetExploreComments(userId);
+            var hobbyRatio = GetHobbyScores(likes, comments, userId);
+            hobbyRatio = GetHobbyRatio(hobbyRatio);
+            var recommendedPosts = new List<List<ExplorePost>>();
+
+            // видаляємо пости користувача, щоб не рекомендувати йому його ж пости (з іншими хобі)
+            posts.RemoveAll(p => p.UserId == userId);
+
+            // видаляємо пости, які вже лайкнув юзер
+            posts.RemoveAll(p => p.ExploreLikes.Any(l => l.UserId == userId));
+
+            for (int i = 0; i < hobbyRatio.Count; i++)
+            {
+                recommendedPosts.Add(new List<ExplorePost>());
+            }
+
+            int index = 0;
+            foreach (Hobby hobby in hobbyRatio.Keys)
+            {
+                recommendedPosts[index].AddRange(posts.Where(p => p.Hobbies.Contains(hobby)).ToList());
+                posts.RemoveAll(p => p.Hobbies.Contains(hobby));
+                index++;
+            }
+
+            hobbyRatioOut = new Dictionary<Hobby, int>();
+            recommendedPosts.Sort((a, b) => a.Count - b.Count);
+            foreach (List<ExplorePost> explorePosts in recommendedPosts)
+            {
+                hobbyRatioOut[explorePosts[0].Hobbies.FirstOrDefault()] = hobbyRatio[explorePosts[0].Hobbies.FirstOrDefault()];
+            }
+
+            return recommendedPosts;
         }
 
-        public List<ExploreComment> GetExploreComments(string currentUserId)
+        public List<ExplorePost> GetPostsForRecommendations(List<ExplorePost> explorePostsWithoutRating,
+            Dictionary<Hobby, int> postRatingByHobbies, List<List<ExplorePost>> recommendedPosts)
         {
-            var comments = _context.ExploreComments
-                .Where(u => u.UserId == currentUserId)
-                .Include(p => p.Post)
-                .ThenInclude(h => h.Hobbies)
-                .ToList();
-            return comments;
+            var recommendedPostsOut = new List<ExplorePost>();
+
+            int postOnPageCount;
+            int postIndex;
+            int allRecommendedPostsCount = 0;
+            int indexRecommendedHobbyPostsList = 0;
+
+            foreach (int postCount in postRatingByHobbies.Values)
+            {
+                allRecommendedPostsCount += postCount;
+            }
+
+            List<ExplorePost> recommendedPostsPage = new List<ExplorePost>();
+
+            // робимо прохід по 10 сторінкам. Можна ще зробити while recommendedPosts.count != 0
+            for (int counter = 0; counter < 10; counter++)
+            {
+                indexRecommendedHobbyPostsList = 0;
+                foreach (Hobby hobby in postRatingByHobbies.Keys)
+                {
+                    postOnPageCount = postRatingByHobbies[hobby];
+                    if (postRatingByHobbies.Count == 1)
+                    {
+                        postOnPageCount = recommendedPosts[indexRecommendedHobbyPostsList].Count;
+                    }
+
+                    for (int i = 0; i < postOnPageCount; i++)
+                    {
+                        postIndex = 0;
+                        if (postIndex < recommendedPosts[indexRecommendedHobbyPostsList].Count)
+                        {
+                            recommendedPostsPage.Add(recommendedPosts[indexRecommendedHobbyPostsList][postIndex]);
+                            recommendedPosts[indexRecommendedHobbyPostsList].RemoveAt(postIndex);
+                        }
+
+                        if (postIndex == recommendedPosts[indexRecommendedHobbyPostsList].Count)
+                        {
+                            postRatingByHobbies.Remove(hobby);
+                            recommendedPosts.RemoveAt(indexRecommendedHobbyPostsList);
+                            indexRecommendedHobbyPostsList--;
+                            break;
+                        }
+                    }
+                    indexRecommendedHobbyPostsList++;
+                }
+                recommendedPostsPage.Reverse();
+                recommendedPostsOut.AddRange(recommendedPostsPage);
+                recommendedPostsPage.Clear();
+            }
+
+            while (explorePostsWithoutRating.Count != 0)
+            {
+                recommendedPostsOut.Add(explorePostsWithoutRating[0]);
+                explorePostsWithoutRating.RemoveAt(0);
+            }
+
+            return recommendedPostsOut;
         }
 
-        public List<ExplorePost> GetExplorePosts()
+
+        public List<ExplorePost> GetPostsByPage(List<ExplorePost> recommendedPosts, int pageNumber)
         {
-            var posts = _context.ExplorePosts
-                .Include(h => h.Hobbies)
-                .Include(h => h.User)
-                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
-                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
-                .ToList();
-            return posts;
+            var recommendedPostsOut = new List<ExplorePost>();
+            int fullPagesCount = recommendedPosts.Count / 10;
+            int startIndex = (pageNumber - 1) * 10;
+            int count = 10;
+            if (pageNumber > fullPagesCount)
+            {
+                startIndex = fullPagesCount * 10;
+                count = recommendedPosts.Count - startIndex;
+            }
+            recommendedPostsOut.AddRange(recommendedPosts.GetRange(startIndex, count));
+            return recommendedPostsOut;
         }
 
-        public ExplorePost GetExplorePost(int postId)
-        {
-            var post = _context.ExplorePosts
-                .Include(h => h.Hobbies)
-                .Include(h => h.User)
-                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
-                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
-                .Where(p => p.Id == postId)
-                .FirstOrDefault();
-                
-            return post;
-        }
-
-        public bool AddCommentToPost(int postId, string userId, string commentText)
+        public void AddCommentToPost(int postId, string userId, string commentText)
         {
             var post = GetExplorePost(postId);
             post.ExploreComments.Add(new ExploreComment() { PostId = postId, UserId = userId, Text = commentText });
             _context.SaveChanges();
-            return true;
         }
 
         public void RemoveCommentFromPost(int postId, int commentId)
@@ -284,7 +270,6 @@ namespace BusinessLogic.Services
             var comment = post.ExploreComments.Where(c => c.Id == commentId).FirstOrDefault();
             if (comment != null)
             {
-                //post.ExploreComments.Remove(comment);
                 _context.ExploreComments.Remove(comment);
                 _context.SaveChanges();
             }
