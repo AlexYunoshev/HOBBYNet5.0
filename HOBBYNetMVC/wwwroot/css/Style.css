@@ -13,6 +13,7 @@ body {
 }
 
 
+
 h1, h2, h3, h4, h5, h6 {
     padding: 0;
     margin: 0;
@@ -42,7 +43,7 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin: 0 auto 30px;
+    margin: 0 auto;
     padding: 15px;
     justify-content: space-between;
 }
