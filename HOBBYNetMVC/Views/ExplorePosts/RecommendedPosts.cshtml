@@ -1,4 +1,5 @@
-﻿@model List<Domain.Models.ExplorePost>
+﻿@*@model List<Domain.Models.ExplorePost>*@
+@model Domain.ViewModels.ExplorePostsViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -42,7 +43,7 @@
 
 <h3>Recommended posts list:</h3>
 
-@foreach (var post in Model)
+@foreach (var post in Model.Posts)
 {
     <div class="explore-post">
         <p>Post id: @post.Id</p>
@@ -89,62 +90,69 @@
         </div>
     </div>
 }
-
-
-
-
-
-@*<h3>Explore posts list:</h3>
-
-    <table border="1" cellpadding="2" cellspacing="2">
-        <tr>
-            <th>User photo</th>
-            <th>Id</th>
-            <th>Text</th>
-            <th>User</th>
-            <th>Hobbies</th>
-            <th>Likes: count, user</th>
-            <th>Comments: count, user - text</th>
-
-
-
-        </tr>
-        @foreach (var post in Model)
+<div style="text-align: center;">
+    <span>
+        @for (int i = 1; i <= Model.PagesCount; i++)
         {
-            <tr>
-                <td><img src="@post.User.PhotoPath" height="100" width="100" /></td>
-                <td>@post.Id</td>
-                <td>@post.Text</td>
-                <td>@post.User.UserName</td>
-                <td>
-                    @foreach (var hobby in post.Hobbies)
-                    {
-
-                        <span>@hobby.Name;</span>
-                    }
-                </td>
-
-                <td>
-                    <div>@post.ExploreLikes.Count</div>
-                    <div>
-                        @foreach (var like in post.ExploreLikes)
-                        {
-
-                            <span>@like.User.FirstName;</span>
-                        }
-                    </div>
-                </td>
-
-                <td>
-                    <div>@post.ExploreComments.Count</div>
-                    <div>
-                        @foreach (var comment in post.ExploreComments)
-                        {
-
-                            <span>@comment.User.FirstName - @comment.Text;</span>
-                        }
-                    </div>
-                </td>
-            </tr>
+            <a style="font-size:36px; color:black" href="/ExplorePosts/RecommendedPosts?pageNumber=@i">@i</a>
         }
-    </table>*@
+
+    </span>
+</div>
+
+
+
+    @*<h3>Explore posts list:</h3>
+
+        <table border="1" cellpadding="2" cellspacing="2">
+            <tr>
+                <th>User photo</th>
+                <th>Id</th>
+                <th>Text</th>
+                <th>User</th>
+                <th>Hobbies</th>
+                <th>Likes: count, user</th>
+                <th>Comments: count, user - text</th>
+
+
+
+            </tr>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td><img src="@post.User.PhotoPath" height="100" width="100" /></td>
+                    <td>@post.Id</td>
+                    <td>@post.Text</td>
+                    <td>@post.User.UserName</td>
+                    <td>
+                        @foreach (var hobby in post.Hobbies)
+                        {
+
+                            <span>@hobby.Name;</span>
+                        }
+                    </td>
+
+                    <td>
+                        <div>@post.ExploreLikes.Count</div>
+                        <div>
+                            @foreach (var like in post.ExploreLikes)
+                            {
+
+                                <span>@like.User.FirstName;</span>
+                            }
+                        </div>
+                    </td>
+
+                    <td>
+                        <div>@post.ExploreComments.Count</div>
+                        <div>
+                            @foreach (var comment in post.ExploreComments)
+                            {
+
+                                <span>@comment.User.FirstName - @comment.Text;</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>*@

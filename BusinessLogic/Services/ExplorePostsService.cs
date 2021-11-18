@@ -242,19 +242,19 @@ namespace BusinessLogic.Services
         }
 
 
-        public List<ExplorePost> GetPostsByPage(List<ExplorePost> recommendedPosts, int pageNumber)
+        public List<ExplorePost> GetPostsByPage(List<ExplorePost> posts, int pageNumber)
         {
-            var recommendedPostsOut = new List<ExplorePost>();
-            int fullPagesCount = recommendedPosts.Count / 10;
+            var postsOut = new List<ExplorePost>();
+            int fullPagesCount = posts.Count / 10;
             int startIndex = (pageNumber - 1) * 10;
             int count = 10;
             if (pageNumber > fullPagesCount)
             {
                 startIndex = fullPagesCount * 10;
-                count = recommendedPosts.Count - startIndex;
+                count = posts.Count - startIndex;
             }
-            recommendedPostsOut.AddRange(recommendedPosts.GetRange(startIndex, count));
-            return recommendedPostsOut;
+            postsOut.AddRange(posts.GetRange(startIndex, count));
+            return postsOut;
         }
 
         public void AddCommentToPost(int postId, string userId, string commentText)

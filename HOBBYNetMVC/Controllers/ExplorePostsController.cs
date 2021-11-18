@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Services;
 using Domain.Models;
+using Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,15 +28,17 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1)
         {
             var posts = _explorePostsService.GetExplorePosts();
-            return View(posts);
+            var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+            //return View(posts);
+            return View(new ExplorePostsViewModel(posts.Count) { Posts = postsByPage, CurrentPageNumber = pageNumber });
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult RecommendedPosts()
+        public IActionResult RecommendedPosts(int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
           
@@ -43,7 +46,10 @@ namespace HOBBYNetMVC.Controllers
             Dictionary<Hobby, int> postRatingByHobbies;
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
-            return View(recommendedPostsList);
+            var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
+
+            return View(new ExplorePostsViewModel(recommendedPostsList.Count) { Posts = recommendedPostsByPage, CurrentPageNumber = pageNumber });
+            //return View(recommendedPostsByPage);
         }
 
         [Authorize]
@@ -84,8 +90,5 @@ namespace HOBBYNetMVC.Controllers
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
             return View("PostComments", post);
         }
-
-
-
     }
 }

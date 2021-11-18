@@ -1,4 +1,5 @@
-﻿@model List<Domain.Models.ExplorePost>
+﻿@*@model List<Domain.Models.ExplorePost>*@
+@model Domain.ViewModels.ExplorePostsViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -10,10 +11,10 @@
         margin: 20px 0;
     }
 
-    .explore-post p {
-        margin: 0;
-        padding: 0;
-    }
+        .explore-post p {
+            margin: 0;
+            padding: 0;
+        }
 
     .explore-post-user {
         text-align: center;
@@ -35,8 +36,7 @@
         margin: 10px;
         vertical-align: top;
         display: inline-block;
-        float:right;
-
+        float: right;
     }
 </style>
 
@@ -47,62 +47,81 @@
 
 
 
-    @foreach (var post in Model)
-    {
-        <div class="explore-post">
-            <p>Post id: @post.Id</p>
-            <div class="explore-post-user">
-                <img src="@post.User.PhotoPath" height="100" width="100" />
-                <p>@post.User.FirstName @post.User.LastName</p>
-                <div>
-                    <form asp-action="SetLikeToPost" method="post">
-                        <button type="submit" name="postId" value="@post.Id">
-                            <img src="~/images/like.png" height="40" width="40" />
-                        </button>
+@foreach (var post in Model.Posts)
+{
+    <div class="explore-post">
+        <p>Post id: @post.Id</p>
+        <div class="explore-post-user">
+            <img src="@post.User.PhotoPath" height="100" width="100" />
+            <p>@post.User.FirstName @post.User.LastName</p>
+            <div>
+                <form asp-action="SetLikeToPost" method="post">
+                    <button type="submit" name="postId" value="@post.Id">
+                        <img src="~/images/like.png" height="40" width="40" />
+                    </button>
 
-                        @post.ExploreLikes.Count
-                        @foreach (var like in post.ExploreLikes)
-                        {
+                    @post.ExploreLikes.Count
+                    @foreach (var like in post.ExploreLikes)
+                    {
 
-                            <p>@like.User.FirstName;</p>
-                        }
+                        <p>@like.User.FirstName;</p>
+                    }
 
-                    </form>
+                </form>
 
-                </div>
-                <div>
-                    <form asp-action="SetCommentToPost" method="get">
-                        <button type="submit" name="postId" value="@post.Id">
-                            <img src="~/images/comment.png" height="40" width="40" />
-                        </button>
-                        @post.ExploreComments.Count
-                        @foreach (var comment in post.ExploreComments)
-                        {
-
-                            @*<p>@comment.User.FirstName - @comment.Text;</p>*@
-                        }
-                    </form>
-                </div>
             </div>
+            <div>
+                <form asp-action="SetCommentToPost" method="get">
+                    <button type="submit" name="postId" value="@post.Id">
+                        <img src="~/images/comment.png" height="40" width="40" />
+                    </button>
+                    @post.ExploreComments.Count
+                    @foreach (var comment in post.ExploreComments)
+                    {
 
-
-
-            @*<div class="explore-post-text">
-                    @post.Text
-                </div>*@
-            <div class="explore-post-text">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-            </div>
-
-            <div class="explore-post-hobby">
-                <img src="~/images/postPhoto.png" height="134" width="160" />
-                @foreach (var hobby in post.Hobbies)
-                {
-
-                    <p>@hobby.Name</p>
-                }
+                        @*<p>@comment.User.FirstName - @comment.Text;</p>*@
+                    }
+                </form>
             </div>
         </div>
-    }
+
+
+
+        @*<div class="explore-post-text">
+                @post.Text
+            </div>*@
+        <div class="explore-post-text">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+        </div>
+
+        <div class="explore-post-hobby">
+            <img src="~/images/postPhoto.png" height="134" width="160" />
+            @foreach (var hobby in post.Hobbies)
+            {
+
+                <p>@hobby.Name</p>
+            }
+        </div>
+    </div>
+}
+
+<div style="text-align: center;">
+    <span>
+        @for (int i = 1; i <= Model.PagesCount; i++)
+        {
+            if (i == Model.CurrentPageNumber)
+            {
+                <a style="font-size:36px; color:red" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+            }
+            else
+            {
+                <a style="font-size:36px; color:black" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+            }
+
+        }
+
+    </span>
+</div>
+
 
 
