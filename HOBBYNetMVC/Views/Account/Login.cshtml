@@ -1,4 +1,4 @@
-﻿@model Domain.ViewModels.LoginViewModel
+﻿@model Domain.ViewModels.AccountViewModel
 
 <div class="hero">
     <div class="form-box" id="form-box">
@@ -11,9 +11,9 @@
             <img src="~/images/gp.png" />
         </div>
         <form id="login" class="input-group" method="post" 
-              asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
-            <input type="text" class="input-field" placeholder="Email" required asp-for="Email">
-            <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="Password">
+              asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.loginViewModel.ReturnUrl">
+            <input type="text" class="input-field" placeholder="Email" required asp-for="loginViewModel.Email">
+            <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="loginViewModel.Password">
             <div class="show-password">
                 <input type="checkbox" class="check-box" onclick="ShowPassword()">
                 <span>Show password</span>
@@ -23,11 +23,11 @@
 
         <form id="register" class="input-group" method="post" 
               asp-controller="Account" asp-action="Register">
-            <input type="text" class="input-field" placeholder="First name" required>
-            <input type="text" class="input-field" placeholder="Last name" required>
-            <input type="email" class="input-field" placeholder="Email" required>
-            <input type="text" class="input-field" placeholder="Enter password" required>
-            <input type="text" class="input-field" placeholder="Password confirm" required>
+            <input type="text" class="input-field" placeholder="First name" required asp-for="registerViewModel.FirstName">
+            <input type="text" class="input-field" placeholder="Last name" required asp-for="registerViewModel.LastName">
+            <input type="email" class="input-field" placeholder="Email" required asp-for="registerViewModel.Email">
+            <input type="password" class="input-field" placeholder="Enter password" required asp-for="registerViewModel.Password">
+            <input type="password" class="input-field" placeholder="Password confirm" required asp-for="registerViewModel.PasswordConfirm">
             <button type="submit" class="submit-btn">Register</button>
         </form>
     </div>
@@ -67,7 +67,7 @@
 <style>
 
     body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/banner.jpg);
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
     }
     /* .hero {
         height: 100%;

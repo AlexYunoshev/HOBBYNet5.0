@@ -32,12 +32,17 @@ namespace HOBBYNetMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(AccountViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = new User {FirstName = model.FirstName, LastName = model.LastName, Email = model.Email, UserName = model.Email, Year = model.Year };
-                var result = await _userManager.CreateAsync(user, model.Password);
+                User user = new User {
+                    FirstName = model.registerViewModel.FirstName, 
+                    LastName = model.registerViewModel.LastName, 
+                    Email = model.registerViewModel.Email, 
+                    UserName = model.registerViewModel.Email 
+                };
+                var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "user");
@@ -51,21 +56,21 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            return View(new AccountViewModel { loginViewModel = new LoginViewModel() { ReturnUrl = returnUrl } });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(AccountViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(model.loginViewModel.Email, model.loginViewModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    if (!string.IsNullOrEmpty(model.loginViewModel.ReturnUrl) && Url.IsLocalUrl(model.loginViewModel.ReturnUrl))
                     {
-                        return Redirect(model.ReturnUrl);
+                        return Redirect(model.loginViewModel.ReturnUrl);
                     }
                     else
                     {
@@ -81,7 +86,7 @@ namespace HOBBYNetMVC.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //[HttpGet]
