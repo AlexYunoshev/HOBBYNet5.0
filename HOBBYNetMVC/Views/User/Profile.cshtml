@@ -7,153 +7,268 @@
     body {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/yoga1.jpg);
     }
+
     body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
-    }
-
-    .explore-post {
-        padding: 10px;
-        border: solid black 1px;
-        margin: 20px 0;
-    }
-
-        .explore-post p {
-            margin: 0;
-            padding: 0;
-        }
-
-    .explore-post-user {
-        text-align: center;
-        vertical-align: top;
-        display: inline-block;
-        margin: 10px;
-    }
-
-    .explore-post-text {
-        text-align: left;
-        vertical-align: top;
-        display: inline-block;
-        margin: 10px;
-        width: 700px;
-    }
-
-    .explore-post-hobby {
-        text-align: center;
-        margin: 10px;
-        vertical-align: top;
-        display: inline-block;
-        float: right;
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
     }
 
 
     .content {
         position: relative;
-        margin: 20px auto;
-        padding: 0 20px;
-        background: #fff;
+        margin: 10px auto;
+        /*  padding: 0 20px;*/
+        width: 485px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+        overflow: auto;
+        /* Hide scrollbar for IE, Edge and Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        /*scrollbar-width: none; /* Firefox */
+    }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .content::-webkit-scrollbar {
+            display: none;
+        }
+
+    .user-info a {
+        font-family: 'Lora', serif;
+        text-decoration: none;
+        outline: none;
+        color: black;
+    }
+
+    .explore-post p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .explore-post {
+        padding: 10px;
+        border: solid black 1px;
+        text-align: center;
         background-color: rgba(255, 255, 255, 1);
         border-radius: 15px;
-        overflow: hidden;
         transition: .5s;
+        margin-bottom: 10px;
     }
+
+    .explore-post-header {
+        text-align: left;
+        vertical-align: center;
+        display: flex;
+        margin: 10px;
+        width: 448px;
+    }
+
+    #user-pic {
+        border-radius: 50%;
+        max-width: 70px;
+        max-height: 70px;
+    }
+
+    .user-info {
+        margin: 0 20px;
+    }
+
+    #username {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        margin: 3px 0;
+    }
+
+    #address {
+        font-size: 18px;
+        letter-spacing: 0.05em;
+        margin: 3px 0;
+    }
+
+    #hobbies {
+        font-size: 16px;
+        letter-spacing: 0.05em;
+        margin: 3px 0;
+    }
+
+    .social-actions {
+        display: flex;
+    }
+
+    .social-img {
+        max-height: 45px;
+        max-width: 45px;
+    }
+
+    .social-actions span {
+        text-align: center;
+    }
+
+    .counter {
+        font-family: 'Lora', serif;
+    }
+
+    .explore-post-content {
+        text-align: left;
+        max-width: 440px;
+        margin: 10px;
+    }
+
+        .explore-post-content p {
+            padding: 10px 3px;
+            text-align: justify;
+            max-height: 45px;
+            overflow: hidden;
+        }
+
+            .explore-post-content p:hover {
+                max-height: 100vh;
+            }
+
+
+    #hobby-pic {
+        max-width: 440px;
+        max-height: 440px;
+        border-radius: 15px;
+    }
+
+
+
+    .input-field {
+        width: 400px;
+        padding: 10px 3px;
+        border-left: 0;
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 1px solid #999;
+        outline: none;
+        background: transparent;
+        font-family: 'Lora', serif;
+        font-size: 16px;
+    }
+
+    .input {
+        display: inline-block;
+    }
+
+    button[type="submit"] {
+        padding: 7px 0 0 5px;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+        position: absolute;
+    }
+
+    #submit-btn {
+        max-height: 30px;
+        max-width: 30px;
+    }
+
+    .footer {
+        text-align: left;
+        max-width: 440px;
+        margin: 10px 0px 5px 10px;
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .pages {
+      /*  position: absolute;
+        bottom: 10px;*/
+        margin: 10px auto;
+        /*padding: 0 20px;*/
+        text-align: center;
+        align-content: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+    /*    left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;*/
+        max-width: 440px;
+    }
+
+     .pages a {
+        text-decoration: none;
+        outline: none;
+        font-family: 'Lora', serif;
+        font-size: 20px;
+        transition: .5s linear;
+     }
+
+
 </style>
 
 <div class="content">
     @foreach (var post in Model.Posts)
     {
     <div class="explore-post">
-        <p>Post id: @post.Id</p>
-        <div class="explore-post-user">
-            <img src="@post.User.PhotoPath" height="100" width="100" />
-            <p>@post.User.FirstName @post.User.LastName</p>
-            <div>
-                <form asp-action="SetLikeToPost" method="post">
-                    <button type="submit" name="postId" value="@post.Id">
-                        <img src="~/images/like.png" height="40" width="40" />
-                    </button>
 
-                    @post.ExploreLikes.Count
-                    @foreach (var like in post.ExploreLikes)
-                    {
+        <div class="explore-post-header">
+            <img id="user-pic" src="/images/i.jpg" />
+            <div class="user-info">
+                <p><a id="username">Oleksandr Yunoshev</a></p>
+                <p><a id="address">Kharkiv, Krychevsky street</a></p>
+                <p><a id="hobbies">#Fishing, #Football, #Boxing</a></p>
+            </div>
+            <div class="social-actions">
+                <span>
+                    <img class="social-img" src="/images/like1.png" />
+                    <p class="counter">125</p>
+                </span>
 
-                    <p>@like.User.FirstName;</p>
-                    }
-
-                </form>
+                <span>
+                    <img class="social-img" src="/images/comment1.png" />
+                    <p class="counter">51</p>
+                </span>
 
             </div>
-            <div>
-                <form asp-action="SetCommentToPost" method="get">
-                    <button type="submit" name="postId" value="@post.Id">
-                        <img src="~/images/comment.png" height="40" width="40" />
-                    </button>
-                    @post.ExploreComments.Count
-                    @foreach (var comment in post.ExploreComments)
-                    {
 
-                    @*<p>@comment.User.FirstName - @comment.Text;</p>*@
-                    }
-                </form>
-            </div>
         </div>
 
 
+        <div class="explore-post-content">
+            <img id="hobby-pic" src="images/background/login.jpg" />
+            <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+            </p>
 
-        @*<div class="explore-post-text">
-            @post.Text
-        </div>*@
-        <div class="explore-post-text">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+            <form>
+                <input class="input-field" type="text" placeholder="Add comment">
+                <button type="submit">
+                    <img id="submit-btn" src="images/send.png" />
+                </button>
+            </form>
         </div>
 
-        <div class="explore-post-hobby">
-            <img src="~/images/postPhoto.png" height="134" width="160" />
-            @foreach (var hobby in post.Hobbies)
-            {
 
-            <p>@hobby.Name</p>
-            }
+        <div class="footer">
+            <p>10 hours ago</p>
         </div>
+
     </div>
     }
 
-    <div style="text-align: center;">
-        <span>
-            @for (int i = 1; i <= Model.PagesCount; i++)
-            {
+</div>
+
+<div class="pages">
+    <span>
+        @for (int i = 1; i <= Model.PagesCount; i++)
+        {
             if (i == Model.CurrentPageNumber)
             {
-            <a style="font-size:36px; color:red" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:red" href="/User/Profile?pageNumber=@i">@i</a>
             }
             else
             {
-            <a style="font-size:36px; color:black" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
             }
-
-            }
-
-        </span>
-    </div>
-
-
-
-
-
-
-    @*<div>
-
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-
-        @if (User.Identity.IsAuthenticated)
-        {
-        <h1 class="display-4">Welcome @User.Identity.Name</h1>
         }
-        else
-        {
-        <h1 class="display-4">You are not logged in</h1>
-        }
-    </div>*@
-
+      
+    </span>
 </div>
+
 
 
