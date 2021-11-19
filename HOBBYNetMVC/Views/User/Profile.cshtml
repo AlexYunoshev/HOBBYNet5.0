@@ -7,6 +7,9 @@
     body {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/yoga1.jpg);
     }
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
+    }
 
     .explore-post {
         padding: 10px;
@@ -42,13 +45,22 @@
         float: right;
     }
 
+
+    .content {
+        position: relative;
+        margin: 20px auto;
+        padding: 0 20px;
+        background: #fff;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: .5s;
+    }
 </style>
 
-
-
-
-@foreach (var post in Model.Posts)
-{
+<div class="content">
+    @foreach (var post in Model.Posts)
+    {
     <div class="explore-post">
         <p>Post id: @post.Id</p>
         <div class="explore-post-user">
@@ -64,7 +76,7 @@
                     @foreach (var like in post.ExploreLikes)
                     {
 
-                        <p>@like.User.FirstName;</p>
+                    <p>@like.User.FirstName;</p>
                     }
 
                 </form>
@@ -79,7 +91,7 @@
                     @foreach (var comment in post.ExploreComments)
                     {
 
-                        @*<p>@comment.User.FirstName - @comment.Text;</p>*@
+                    @*<p>@comment.User.FirstName - @comment.Text;</p>*@
                     }
                 </form>
             </div>
@@ -88,8 +100,8 @@
 
 
         @*<div class="explore-post-text">
-                @post.Text
-            </div>*@
+            @post.Text
+        </div>*@
         <div class="explore-post-text">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
         </div>
@@ -99,29 +111,49 @@
             @foreach (var hobby in post.Hobbies)
             {
 
-                <p>@hobby.Name</p>
+            <p>@hobby.Name</p>
             }
         </div>
     </div>
-}
+    }
 
-<div style="text-align: center;">
-    <span>
-        @for (int i = 1; i <= Model.PagesCount; i++)
-        {
+    <div style="text-align: center;">
+        <span>
+            @for (int i = 1; i <= Model.PagesCount; i++)
+            {
             if (i == Model.CurrentPageNumber)
             {
-                <a style="font-size:36px; color:red" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+            <a style="font-size:36px; color:red" href="/User/Profile?pageNumber=@i">@i</a>
             }
             else
             {
-                <a style="font-size:36px; color:black" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+            <a style="font-size:36px; color:black" href="/User/Profile?pageNumber=@i">@i</a>
             }
 
+            }
+
+        </span>
+    </div>
+
+
+
+
+
+
+    @*<div>
+
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+        <h1 class="display-4">Welcome @User.Identity.Name</h1>
         }
+        else
+        {
+        <h1 class="display-4">You are not logged in</h1>
+        }
+    </div>*@
 
-    </span>
 </div>
-
 
 

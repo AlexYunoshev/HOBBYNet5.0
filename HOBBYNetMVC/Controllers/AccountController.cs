@@ -47,7 +47,7 @@ namespace HOBBYNetMVC.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Profile", "User");
                 }
             }
             return View(model);
@@ -74,7 +74,7 @@ namespace HOBBYNetMVC.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Profile", "User");
                     }
                 }
             }

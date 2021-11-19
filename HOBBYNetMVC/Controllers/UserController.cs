@@ -2,6 +2,7 @@
 using DataAccess.Context;
 using Domain.Models;
 using Domain.Models.DTO;
+using Domain.ViewModels;
 using HOBBYNetMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,25 +23,38 @@ namespace HOBBYNetMVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly UserService _userService;
-
+        private readonly ExplorePostsService _explorePostsService;
         private readonly ILogger<UserController> _logger;
 
        
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService, ILogger<UserController> logger)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService, ExplorePostsService explorePostsService, ILogger<UserController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
+            _explorePostsService = explorePostsService;
             _logger = logger;
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Profile(int pageNumber = 1)
         {
-            return View();
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
+            var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+            return View(new ExplorePostsViewModel(posts.Count) { Posts = postsByPage, CurrentPageNumber = pageNumber });
         }
+
+        //[Authorize]
+        //[HttpGet]
+        //public IActionResult Profile(string userId)
+        //{
+        //    return View();
+        //}
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
