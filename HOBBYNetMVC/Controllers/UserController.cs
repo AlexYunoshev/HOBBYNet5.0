@@ -2,12 +2,15 @@
 using DataAccess.Context;
 using Domain.Models;
 using Domain.Models.DTO;
+using HOBBYNetMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -20,16 +23,34 @@ namespace HOBBYNetMVC.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserService _userService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService)
+        private readonly ILogger<UserController> _logger;
+
+       
+
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService, ILogger<UserController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
+            _logger = logger;
         }
 
         [Authorize]
         [HttpGet]
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UsersList()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View(_userService.GetUsersList(loginUserId));
