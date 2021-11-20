@@ -16,8 +16,7 @@
     .content {
         position: relative;
         margin: 10px auto;
-        /*  padding: 0 20px;*/
-        width: 485px;
+        width: 900px;
         border-radius: 15px;
         transition: .5s;
         overflow: hidden;
@@ -35,6 +34,7 @@
 
     .user-info a {
         font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
         text-decoration: none;
         outline: none;
         color: black;
@@ -60,7 +60,7 @@
         vertical-align: center;
         display: flex;
         margin: 10px;
-        width: 448px;
+        /*width: 800px;*/
     }
 
     #user-pic {
@@ -69,6 +69,8 @@
         max-height: 70px;
     }
 
+   
+
     .user-info {
         margin: 0 20px;
     }
@@ -76,7 +78,7 @@
     #username {
         font-size: 20px;
         font-weight: 600;
-        letter-spacing: 0.15em;
+       /* letter-spacing: 0.15em;*/
         margin: 3px 0;
     }
 
@@ -94,6 +96,9 @@
 
     .social-actions {
         display: flex;
+        margin-left: auto;
+        margin-right: 0;
+        text-align: center;
     }
 
     .social-img {
@@ -101,30 +106,44 @@
         max-width: 45px;
     }
 
-    .social-actions span {
-        text-align: center;
-    }
-
     .counter {
         font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align:center;
     }
 
     .explore-post-content {
+        display:inline-block;
+        float:left;
         text-align: left;
         max-width: 440px;
-        margin: 10px;
+    /*    margin: 10px;*/
     }
 
-        .explore-post-content p {
-            padding: 10px 3px;
-            text-align: justify;
-            max-height: 45px;
-            overflow: hidden;
-        }
+    .explore-post-comment {
+        display: inline-block;
+        align-content: start;
+        float: left;
+        margin: 0 10px;
+        max-width: 390px;
+    }
 
-            .explore-post-content p:hover {
-                max-height: 100vh;
-            }
+    .body{
+/*        display:inline;*/
+        padding:10px;
+        width:100%;
+    }
+
+    .explore-post-content p {
+        padding: 10px 3px;
+        text-align: justify;
+        max-height: 70px;
+        overflow: hidden;
+     }
+
+    /* .explore-post-content p:hover {
+        max-height: 100vh;
+     }*/
 
 
     #hobby-pic {
@@ -136,7 +155,7 @@
 
 
     .input-field {
-        width: 400px;
+        width: 370px;
         padding: 10px 3px;
         border-left: 0;
         border-top: 0;
@@ -145,6 +164,7 @@
         outline: none;
         background: transparent;
         font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 16px;
     }
 
@@ -152,7 +172,7 @@
         display: inline-block;
     }
 
-    .explore-post-content button[type="submit"] {
+    .explore-post-comment button[type="submit"] {
         padding: 7px 0 0 5px;
         border: none;
         background: inherit;
@@ -206,6 +226,39 @@
      }
 
 
+    .comment {
+        text-align: left;
+        display: flex;
+        align-items: normal;
+        margin-bottom: 10px;
+    }
+
+    .comment-user-pic {
+        margin-top:5px;
+        border-radius: 50%;
+        max-width: 35px;
+        max-height: 35px;
+        vertical-align: middle;
+        /*  float: left;*/
+    }
+
+    .comment-username{
+        font-weight:600;
+    }
+
+    .comment-content {
+        margin-left: 10px;
+        text-align: justify;
+    }
+
+    .comment-date {
+        color: #8e8e8e;
+        margin-left: auto;
+        margin-right: 0;
+    }
+    
+
+
 </style>
 
 <div class="content">
@@ -217,9 +270,15 @@
             @*<img id="user-pic" src="@post.User.PhotoPath" />*@
             <img id="user-pic" src="~/images/i.jpg" />
             <div class="user-info">
-                <p><a id="username">Oleksandr Yunoshev</a></p>
+                <p><a id="username">@post.User.UserName</a></p>
                 <p><a id="address">Kharkiv, Krychevsky street</a></p>
-                <p><a id="hobbies">#Fishing, #Football, #Boxing</a></p>
+                <p>
+                    @foreach (var hobby in post.Hobbies)
+                    {
+                        <a id="hobbies">#@hobby.Name</a>
+                    }
+
+                </p>
             </div>
             <div class="social-actions">
                 <form asp-action="SetLikeToPost" method="post">
@@ -228,6 +287,7 @@
                             <img class="social-img" src="/images/like1.png"/>
                         </button>
                         <p class="counter">@post.ExploreLikes.Count</p>
+                        @*<p class="counter" style="margin-right:10px">100000000000000000</p>*@
                         <input type="hidden" name="postId" value="@post.Id" />
                     </span>
                 </form>
@@ -236,33 +296,67 @@
                         <img class="social-img" src="/images/comment1.png" />
                     </button>
                     <p class="counter">@post.ExploreComments.Count</p>
+                    @*<p class="counter">100000000000000000</p>*@
                 </span>
 
             </div>
 
         </div>
 
+        <hr style="margin:0 10px"/>
 
-        <div class="explore-post-content">
-            @*<img id="hobby-pic" src="@post.PhotoPath" />*@
-            <img id="hobby-pic" src="~/images/background/login.jpg" />
-            <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-            </p>
+        <div class="body">
 
-            <form asp-action="AddCommentToPost" method="post">
-                <input class="input-field" type="text" placeholder="Add comment" name="commentText">
-                <button type="submit">
-                    <img id="submit-btn" src="~/images/send.png" />
+            <div class="explore-post-content">
+                @*<img id="hobby-pic" src="@post.PhotoPath" />*@
+                <img id="hobby-pic" src="~/images/background/login.jpg" />
+                <p id="p-@post.Id">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                </p>
+                <span @*id="more-btn"*@ style="cursor:pointer; color: #8e8e8e; padding-left:3px" onclick="more(this, @post.Id)">more</span>
 
-                </button>
-                <input type="hidden" name="postId" value="@post.Id" />
-            </form>
+
+            </div>
+
+            <div class="explore-post-comment">
+
+                @foreach (var comment in post.ExploreComments)
+                {
+                <div class="comment">
+
+                    <img class="comment-user-pic" src="~/images/i.jpg" />
+
+                    <div class="comment-content">
+                        <span><a class="comment-username">@comment.User.UserName</a></span>
+                        <span class="comment-date">10 hours ago</span>
+                        <p class="comment-text">@comment.Text</p>
+
+                    </div>
+                 
+
+
+
+
+
+
+                </div>
+                    
+                }
+
+                <form asp-action="AddCommentToPost" method="post">
+                    <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                    <button type="submit">
+                        <img id="submit-btn" src="~/images/send.png" />
+
+                    </button>
+                    <input type="hidden" name="postId" value="@post.Id" />
+                </form>
+            </div>
         </div>
 
 
         <div class="footer">
-            <p>10 hours ago; Post id = @post.Id</p>
+            <p style="color: #8e8e8e; padding-left:3px; text-transform:uppercase">10 hours ago; Post id = @post.Id</p>
         </div>
 
     </div>
@@ -287,5 +381,20 @@
     </span>
 </div>
 
+
+<script>
+
+    function more(element, postId) {
+        x = document.getElementById("p-" + postId);
+        if (x.style.maxHeight == "100vh") {
+            x.style.maxHeight = "70px";
+            element.innerHTML = "more";
+        }
+        else {
+            x.style.maxHeight = "100vh";
+            element.innerHTML = "hide";
+        }    
+    }
+</script>
 
 

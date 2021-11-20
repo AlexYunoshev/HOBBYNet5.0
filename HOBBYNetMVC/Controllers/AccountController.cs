@@ -40,7 +40,7 @@ namespace HOBBYNetMVC.Controllers
                     FirstName = model.registerViewModel.FirstName, 
                     LastName = model.registerViewModel.LastName, 
                     Email = model.registerViewModel.Email, 
-                    UserName = model.registerViewModel.Email 
+                    UserName = model.registerViewModel.UserName 
                 };
                 var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)

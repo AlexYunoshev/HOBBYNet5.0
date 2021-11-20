@@ -25,6 +25,7 @@
               asp-controller="Account" asp-action="Register">
             <input type="text" class="input-field" placeholder="First name" required asp-for="registerViewModel.FirstName">
             <input type="text" class="input-field" placeholder="Last name" required asp-for="registerViewModel.LastName">
+            <input type="text" class="input-field" placeholder="Username" required asp-for="registerViewModel.UserName">
             <input type="email" class="input-field" placeholder="Email" required asp-for="registerViewModel.Email">
             <input type="password" class="input-field" placeholder="Enter password" required asp-for="registerViewModel.Password">
             <input type="password" class="input-field" placeholder="Password confirm" required asp-for="registerViewModel.PasswordConfirm">
@@ -50,7 +51,7 @@
         x.style.left = "-400px";
         y.style.left = "50px";
         z.style.left = "110px";
-        p.style.height = "485px";
+        p.style.height = "530px";
     }
 
     function ShowPassword() {
@@ -83,7 +84,7 @@
         width: 380px;
         height: 360px;
         position: relative;
-        margin: 6% auto;
+        margin: 6% auto 0;
         padding: 5px;
         background: #fff;
         background-color: rgba(255, 255, 255, 0.75);

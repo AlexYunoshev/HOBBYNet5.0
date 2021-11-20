@@ -28,7 +28,7 @@ namespace HOBBYNetMVC.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
+            var output = _userManager.Users.Select(x => new UsersList(x.Email, x.Id)).ToList();
             return View(output);
         } 
 

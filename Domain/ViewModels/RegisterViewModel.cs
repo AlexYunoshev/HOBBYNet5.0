@@ -22,8 +22,10 @@ namespace Domain.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Год рождения")]
-        public int Year { get; set; }
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+
 
         [Required]
         [DataType(DataType.Password)]

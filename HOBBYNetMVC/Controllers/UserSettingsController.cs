@@ -24,7 +24,7 @@ namespace HOBBYNetMVC.Controllers
 
         public IActionResult Index()
         {
-            var output = _userManager.Users.Select(x => new UsersList(x.Year, x.Email, x.Id)).ToList();
+            var output = _userManager.Users.Select(x => new UsersList(x.Email, x.Id)).ToList();
             return View(output.FirstOrDefault(u => u.Email == User.Identity.Name));
             //return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
         }
