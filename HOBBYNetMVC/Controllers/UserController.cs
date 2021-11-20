@@ -39,6 +39,7 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
+  
         public IActionResult Profile(int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -47,12 +48,43 @@ namespace HOBBYNetMVC.Controllers
             return View(new ExplorePostsViewModel(posts.Count) { Posts = postsByPage, CurrentPageNumber = pageNumber });
         }
 
-        //[Authorize]
-        //[HttpGet]
-        //public IActionResult Profile(string userId)
-        //{
-        //    return View();
-        //}
+
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult SetLikeToPost(int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _explorePostsService.SetLikeToPost(postId, loginUserId);
+
+            return RedirectToAction("Profile");
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddCommentToPost(string commentText, int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
+            var post = _explorePostsService.GetExplorePost(postId);
+            return RedirectToAction("Profile");
+            return View("PostComments", post);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveCommentFromPost(int commentId, int postId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var post = _explorePostsService.GetExplorePost(postId);
+            _explorePostsService.RemoveCommentFromPost(postId, commentId);
+            return View("PostComments", post);
+        }
+
+
+
+
 
 
 

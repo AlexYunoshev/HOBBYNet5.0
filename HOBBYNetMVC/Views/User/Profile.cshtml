@@ -152,12 +152,19 @@
         display: inline-block;
     }
 
-    button[type="submit"] {
+    .explore-post-content button[type="submit"] {
         padding: 7px 0 0 5px;
         border: none;
         background: inherit;
         cursor: pointer;
         position: absolute;
+    }
+
+    .explore-post-header button[type="submit"] {
+        padding: 0;
+        border: none;
+        background: inherit;
+        cursor: pointer;
     }
 
     #submit-btn {
@@ -207,21 +214,28 @@
     <div class="explore-post">
 
         <div class="explore-post-header">
-            <img id="user-pic" src="/images/i.jpg" />
+            @*<img id="user-pic" src="@post.User.PhotoPath" />*@
+            <img id="user-pic" src="~/images/i.jpg" />
             <div class="user-info">
                 <p><a id="username">Oleksandr Yunoshev</a></p>
                 <p><a id="address">Kharkiv, Krychevsky street</a></p>
                 <p><a id="hobbies">#Fishing, #Football, #Boxing</a></p>
             </div>
             <div class="social-actions">
+                <form asp-action="SetLikeToPost" method="post">
+                    <span>
+                        <button type="submit">
+                            <img class="social-img" src="/images/like1.png"/>
+                        </button>
+                        <p class="counter">@post.ExploreLikes.Count</p>
+                        <input type="hidden" name="postId" value="@post.Id" />
+                    </span>
+                </form>
                 <span>
-                    <img class="social-img" src="/images/like1.png" />
-                    <p class="counter">125</p>
-                </span>
-
-                <span>
-                    <img class="social-img" src="/images/comment1.png" />
-                    <p class="counter">51</p>
+                    <button type="submit">
+                        <img class="social-img" src="/images/comment1.png" />
+                    </button>
+                    <p class="counter">@post.ExploreComments.Count</p>
                 </span>
 
             </div>
@@ -230,22 +244,25 @@
 
 
         <div class="explore-post-content">
-            <img id="hobby-pic" src="images/background/login.jpg" />
+            @*<img id="hobby-pic" src="@post.PhotoPath" />*@
+            <img id="hobby-pic" src="~/images/background/login.jpg" />
             <p>
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
             </p>
 
-            <form>
-                <input class="input-field" type="text" placeholder="Add comment">
+            <form asp-action="AddCommentToPost" method="post">
+                <input class="input-field" type="text" placeholder="Add comment" name="commentText">
                 <button type="submit">
-                    <img id="submit-btn" src="images/send.png" />
+                    <img id="submit-btn" src="~/images/send.png" />
+
                 </button>
+                <input type="hidden" name="postId" value="@post.Id" />
             </form>
         </div>
 
 
         <div class="footer">
-            <p>10 hours ago</p>
+            <p>10 hours ago; Post id = @post.Id</p>
         </div>
 
     </div>
@@ -266,7 +283,7 @@
                 <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
             }
         }
-      
+
     </span>
 </div>
 
