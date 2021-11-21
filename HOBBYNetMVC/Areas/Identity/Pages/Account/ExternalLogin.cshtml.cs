@@ -52,6 +52,9 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+            [Required]
+            public string UserName { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -122,11 +125,11 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var username = Input.Email;
-                int startIndex = username.IndexOf('@');
-                //int length = username.Length - startIndex;
-                username = username.Remove(startIndex);
-                var user = new User { UserName = username, Email = Input.Email };
+                //var username = Input.Email;
+                //int startIndex = username.IndexOf('@');
+                ////int length = username.Length - startIndex;
+                //username = username.Remove(startIndex);
+                var user = new User { UserName = Input.UserName, Email = Input.Email };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
