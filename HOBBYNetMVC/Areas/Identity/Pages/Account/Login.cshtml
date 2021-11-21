@@ -1,13 +1,11 @@
 ﻿@page
-@*@model LoginModel*@
-@model LoginRegisterModel
+@model LoginModel
 
 @{
     ViewData["Title"] = "Log in";
 }
 
 <h1>@ViewData["Title"]</h1>
-
 <div class="row">
     <div class="col-md-4">
         <section>
@@ -16,20 +14,20 @@
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.loginModel.Input.Email"></label>
-                    <input asp-for="@Model.loginModel.Input.Email" class="form-control" />
-                    <span asp-validation-for="@Model.loginModel.Input.Email" class="text-danger"></span>
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.loginModel.Input.Password"></label>
-                    <input asp-for="@Model.loginModel.Input.Password" class="form-control" />
-                    <span asp-validation-for="@Model.loginModel.Input.Password" class="text-danger"></span>
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
-                        <label asp-for="@Model.loginModel.Input.RememberMe">
-                            <input asp-for="@Model.loginModel.Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.loginModel.Input.RememberMe)
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
                         </label>
                     </div>
                 </div>
@@ -41,7 +39,7 @@
                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
                     <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.loginModel.ReturnUrl">Register as a new user</a>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
                     </p>
                     <p>
                         <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
@@ -55,7 +53,7 @@
             <h4>Use another service to log in.</h4>
             <hr />
             @{
-                if ((@Model.loginModel.ExternalLogins?.Count ?? 0) == 0)
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
                         <p>
@@ -66,10 +64,10 @@
                 }
                 else
                 {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.loginModel.ReturnUrl" method="post" class="form-horizontal">
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                         <div>
                             <p>
-                                @foreach (var provider in @Model.loginModel.ExternalLogins)
+                                @foreach (var provider in Model.ExternalLogins)
                                 {
                                     <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                 }
@@ -85,211 +83,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-
-
-
-
-
-
-<div class="hero">
-    <div class="form-box" id="form-box">
-        <div class="button-box">
-            <div id="btn"></div>
-            <button type="button" class="toggle-btn" onclick="login()">Log In</button>
-            <button type="button" class="toggle-btn" onclick="register()">Register</button>
-        </div>
-        @*<form asp-controller="Identity" asp-action="Login" method="get">*@
-        <form asp-area="Identity" asp-page="/Account/ExternalLogin" method="post">
-            <div class="social-icons">
-                @*<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
-                <button type="submit" name="provider" value="Google">
-                    <img src="~/images/gp.png" />
-                </button>
-
-            </div>
-        </form>
-        <form id="login" class="input-group" method="post">
-            <input type="text" class="input-field" placeholder="Email" required asp-for="@Model.loginModel.Input.Email">
-            <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="@Model.loginModel.Input.Password">
-            <div class="show-password">
-                <input type="checkbox" class="check-box" onclick="ShowPassword()">
-                <span>Show password</span>
-            </div>
-            <button type="submit" class="submit-btn">Login</button>
-        </form>
-
-        <form id="register" class="input-group" method="post"
-              asp-controller="Account" asp-action="Register">
-            <input type="text" class="input-field" placeholder="First name" required>
-            <input type="text" class="input-field" placeholder="Last name" required>
-            <input type="text" class="input-field" placeholder="Username" required>
-            <input type="email" class="input-field" placeholder="Email" required>
-            <input type="password" class="input-field" placeholder="Enter password" required>
-            <input type="password" class="input-field" placeholder="Password confirm" required>
-            <button type="submit" class="submit-btn">Register</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    var x = document.getElementById("login");
-    var y = document.getElementById("register");
-    var z = document.getElementById("btn");
-    var p = document.getElementById("form-box");
-
-    function login() {
-        x.style.left = "50px";
-        y.style.left = "450px";
-        z.style.left = "0";
-        p.style.height = "360px";
-    }
-
-    function register() {
-        x.style.left = "-400px";
-        y.style.left = "50px";
-        z.style.left = "110px";
-        p.style.height = "530px";
-    }
-
-    function ShowPassword() {
-        var x = document.getElementById("login-password");
-        if (x.type === "password") {
-            x.type = "text";
-        } else {
-            x.type = "password";
-        }
-    }
-
-</script>
-
-<style>
-
-    body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
-    }
-    /* .hero {
-        height: 100%;
-        width: 100%;
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/banner.jpg);
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        position: absolute;
-    }*/
-
-    .form-box {
-        width: 380px;
-        height: 360px;
-        position: relative;
-        margin: 6% auto 0;
-        padding: 5px;
-        background: #fff;
-        background-color: rgba(255, 255, 255, 0.75);
-        border-radius: 15px;
-        overflow: hidden;
-        transition: .5s;
-    }
-
-    .button-box {
-        width: 220px;
-        margin: 35px auto;
-        position: relative;
-        box-shadow: 0 0 20px 9px #ff61241f;
-        border-radius: 30px;
-    }
-
-    .toggle-btn {
-        padding: 10px 30px;
-        cursor: pointer;
-        background: transparent;
-        border: 0;
-        outline: none;
-        position: relative;
-    }
-
-    #btn {
-        top: 0;
-        left: 0;
-        position: absolute;
-        width: 110px;
-        height: 100%;
-        background: linear-gradient(to right, #ff105f, #ffaf06);
-        border-radius: 30px;
-        transition: .5s;
-    }
-
-    .social-icons button[type="submit"] {
-        padding: 0;
-        border: none;
-        background: inherit;
-        cursor: pointer;
-    }
-
-    .social-icons {
-        margin: 30px auto;
-        text-align: center;
-    }
-
-        .social-icons img {
-            width: 30px;
-            margin: 0 12px;
-            box-shadow: 0 0 20px 0 #7f7f7f3d;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-
-    .input-group {
-        top: 155px;
-        position: absolute;
-        width: 280px;
-        transition: .5s;
-    }
-
-    .input-field {
-        width: 100%;
-        padding: 10px 0;
-        margin: 5px 0;
-        border-left: 0;
-        border-top: 0;
-        border-right: 0;
-        border-bottom: 1px solid #999;
-        outline: none;
-        background: transparent;
-    }
-
-    .submit-btn {
-        width: 85%;
-        padding: 10px 30px;
-        cursor: pointer;
-        display: block;
-        margin: auto;
-        margin-top: 30px;
-        background: linear-gradient(to right, #ff105f, #ffaf06);
-        border: 0;
-        outline: none;
-        border-radius: 30px;
-    }
-
-    .check-box {
-        margin: 0 10px 0 0;
-    }
-
-    span {
-        color: #777;
-        font-size: 12px;
-    }
-
-    .show-password {
-        align-items: center;
-        display: flex;
-    }
-
-    #login {
-        left: 50px;
-    }
-
-    #register {
-        left: 450px;
-    }
-</style>
