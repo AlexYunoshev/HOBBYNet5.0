@@ -52,12 +52,12 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult SetLikeToPost(int postId)
+        public IActionResult SetLikeToPost(int postId, int pageNumber)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _explorePostsService.SetLikeToPost(postId, loginUserId);
-
-            return RedirectToAction("Profile");
+            string url = "Profile?pageNumber="+pageNumber+"#post-" + postId;
+            return Redirect(url);
         }
 
 
