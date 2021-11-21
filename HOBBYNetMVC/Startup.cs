@@ -80,7 +80,7 @@ namespace HOBBYNetMVC
 
             services.ConfigureApplicationCookie(options =>
             {
-                //options.LoginPath = $"/Identity/Account/Login";
+                options.LoginPath = $"/Account/Login";
                 //options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Account/AccessDenied";
                
