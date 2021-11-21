@@ -7,9 +7,16 @@
             <button type="button" class="toggle-btn" onclick="login()">Log In</button>
             <button type="button" class="toggle-btn" onclick="register()">Register</button>
         </div>
-        <div class="social-icons">
-            <img src="~/images/gp.png" />
-        </div>
+        @*<form asp-controller="Identity" asp-action="Login" method="get">*@
+        <form  asp-area="Identity"  asp-page="/Account/ExternalLogin"  method="post">
+            <div class="social-icons">
+                @*<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
+                <button type="submit" name="provider" value="Google">
+                    <img src="~/images/gp.png" />
+                </button>
+
+            </div>
+        </form>
         <form id="login" class="input-group" method="post" 
               asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.loginViewModel.ReturnUrl">
             <input type="text" class="input-field" placeholder="Email" required asp-for="loginViewModel.Email">
@@ -119,6 +126,13 @@
         background: linear-gradient(to right, #ff105f, #ffaf06);
         border-radius: 30px;
         transition: .5s;
+    }
+
+    .social-icons button[type="submit"] {
+        padding: 0;
+        border: none;
+        background: inherit;
+        cursor: pointer;
     }
 
     .social-icons {

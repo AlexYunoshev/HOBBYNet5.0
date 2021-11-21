@@ -27,7 +27,6 @@ namespace HOBBYNetMVC
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<HobbyNetContext>(options =>
@@ -36,15 +35,19 @@ namespace HOBBYNetMVC
             services.AddScoped<UserService>();
             services.AddScoped<HobbyService>();
             services.AddScoped<ExplorePostsService>();
-            services.AddIdentity<User, IdentityRole>(opt =>
-            {
-                opt.Password.RequiredLength = 5;
-                opt.Password.RequireNonAlphanumeric = false;
-                opt.Password.RequireLowercase = false;
-                opt.Password.RequireUppercase = false;
-                opt.Password.RequireDigit = false;               
-            })
-                .AddEntityFrameworkStores<HobbyNetContext>();
+            services.AddRazorPages();
+            services.AddDefaultIdentity<User>()
+            .AddEntityFrameworkStores<HobbyNetContext>();
+
+            //services.AddIdentity<User, IdentityRole>(opt =>
+            //{
+            //    opt.Password.RequiredLength = 5;
+            //    opt.Password.RequireNonAlphanumeric = false;
+            //    opt.Password.RequireLowercase = false;
+            //    opt.Password.RequireUppercase = false;
+            //    opt.Password.RequireDigit = false;               
+            //})
+            //.AddEntityFrameworkStores<HobbyNetContext>();
             // services.AddAuthorization(options =>
             //options.AddPolicy("admin",
             //    policy => policy.RequireClaim("Manager")));
@@ -61,14 +64,19 @@ namespace HOBBYNetMVC
 
             services.AddControllersWithViews();
 
+            services.AddAuthentication()
+             .AddGoogle(options =>
+             {
+                 options.ClientId = "309671515965-npac8tm527ok5amva1d95op6j1lim0bc.apps.googleusercontent.com";
+                 options.ClientSecret = "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";
+             });
 
-
-           // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
-           //.AddRazorPagesOptions(options =>
-           //{
-           //    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-           //    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-           //});
+            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
+            //.AddRazorPagesOptions(options =>
+            //{
+            //    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
+            //    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+            //});
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -104,6 +112,7 @@ namespace HOBBYNetMVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=User}/{action=Profile}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }
