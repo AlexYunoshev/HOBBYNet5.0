@@ -4,264 +4,7 @@
 }
 
 <style>
-    body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
-    }
-
-
-
-    .content {
-        position: relative;
-        margin: 10px auto;
-        width: 900px;
-        border-radius: 15px;
-        transition: .5s;
-        overflow: hidden;
-        height: 80vh;
-        overflow: auto;
-        /* Hide scrollbar for IE, Edge and Firefox */
-        -ms-overflow-style: none; /* IE and Edge */
-        /*scrollbar-width: none; /* Firefox */
-    }
-
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .content::-webkit-scrollbar {
-            display: none;
-        }
-
-    .user-info a {
-        font-family: 'Lora', serif;
-        font-family: Arial, Helvetica, sans-serif;
-        text-decoration: none;
-        outline: none;
-        color: black;
-    }
-
-    .explore-post p {
-        margin: 0;
-        padding: 0;
-    }
-
-    .explore-post {
-        padding: 10px;
-        border: solid black 1px;
-        text-align: center;
-        background-color: rgba(255, 255, 255, 1);
-        border-radius: 15px;
-        transition: .5s;
-        margin-bottom: 10px;
-    }
-
-    .explore-post-header {
-        text-align: left;
-        vertical-align: center;
-        display: flex;
-        margin: 10px;
-        /*width: 800px;*/
-    }
-
-    #user-pic {
-        border-radius: 50%;
-        max-width: 70px;
-        max-height: 70px;
-    }
-
-
-
-    .user-info {
-        margin: 0 20px;
-    }
-
-    #username {
-        font-size: 20px;
-        font-weight: 600;
-        /* letter-spacing: 0.15em;*/
-        margin: 3px 0;
-    }
-
-    #address {
-        font-size: 18px;
-        letter-spacing: 0.05em;
-        margin: 3px 0;
-    }
-
-    #hobbies {
-        font-size: 16px;
-        letter-spacing: 0.05em;
-        margin: 3px 0;
-    }
-
-    .social-actions {
-        display: flex;
-        margin-left: auto;
-        margin-right: 0;
-        text-align: center;
-    }
-
-    .social-img {
-        max-height: 45px;
-        max-width: 45px;
-    }
-
-    .chat-img {
-        max-height: 40px;
-        max-width: 40px;
-    }
-
-    .chat {
-        margin:5px 10px 5px 5px;
-    }
-
-    .counter {
-        font-family: 'Lora', serif;
-        font-family: Arial, Helvetica, sans-serif;
-        text-align: center;
-    }
-
-    .explore-post-content {
-        display: inline-block;
-        float: left;
-        text-align: left;
-        max-width: 440px;
-        margin-bottom: 10px;
-    }
-
-    .explore-post-comment {
-        display: inline-block;
-        align-content: start;
-        float: left;
-        margin: 0 10px;
-        max-width: 390px;
-    }
-
-    .body {
-        /*        display:inline;*/
-        padding: 10px;
-        width: 100%;
-    }
-
-    .explore-post-content p {
-        padding: 10px 3px;
-        text-align: justify;
-        max-height: 70px;
-        overflow: hidden;
-    }
-
-    /* .explore-post-content p:hover {
-        max-height: 100vh;
-     }*/
-
-
-    #hobby-pic {
-        max-width: 440px;
-        max-height: 440px;
-        border-radius: 15px;
-    }
-
-
-
-    .input-field {
-        width: 370px;
-        padding: 10px 3px;
-        border-left: 0;
-        border-top: 0;
-        border-right: 0;
-        border-bottom: 1px solid #999;
-        outline: none;
-        background: transparent;
-        font-family: 'Lora', serif;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 16px;
-    }
-
-    .input {
-        display: inline-block;
-    }
-
-    .explore-post-comment button[type="submit"] {
-        padding: 7px 0 0 5px;
-        border: none;
-        background: inherit;
-        cursor: pointer;
-        position: absolute;
-    }
-
-    .explore-post-header button[type="submit"] {
-        padding: 0;
-        border: none;
-        background: inherit;
-        cursor: pointer;
-    }
-
-    #submit-btn {
-        max-height: 30px;
-        max-width: 30px;
-    }
-
-    .footer {
-        text-align: left;
-        max-width: 440px;
-        margin: 10px 0px 5px 10px;
-        font-size: 12px;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .pages {
-        /*  position: absolute;
-        bottom: 10px;*/
-        margin: 10px auto;
-        /*padding: 0 20px;*/
-        text-align: center;
-        align-content: center;
-        background-color: rgba(255, 255, 255, 1);
-        border-radius: 15px;
-        transition: .5s;
-        /*    left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;*/
-        max-width: 440px;
-    }
-
-        .pages a {
-            text-decoration: none;
-            outline: none;
-            font-family: 'Lora', serif;
-            font-size: 20px;
-            transition: .5s linear;
-        }
-
-
-    .comment {
-        text-align: left;
-        display: flex;
-        align-items: normal;
-        margin-bottom: 10px;
-    }
-
-    .comment-user-pic {
-        margin-top: 5px;
-        border-radius: 50%;
-        max-width: 35px;
-        max-height: 35px;
-        vertical-align: middle;
-        /*  float: left;*/
-    }
-
-    .comment-username {
-        font-weight: 600;
-    }
-
-    .comment-content {
-        margin-left: 10px;
-        text-align: justify;
-    }
-
-    .comment-date {
-        color: #8e8e8e;
-        margin-left: auto;
-        margin-right: 0;
-    }
+    
 </style>
 
 
@@ -272,8 +15,8 @@
         <div class="explore-post" id="post-@post.Id">
 
             <div class="explore-post-header">
-                @*<img id="user-pic" src="@post.User.PhotoPath" />*@
-                <img id="user-pic" src="~/images/i.jpg" />
+                <img id="user-pic" src="@post.User.PhotoPath" />
+                @*<img id="user-pic" src="~/images/i.jpg" />*@
                 <div class="user-info">
                     <p><a id="username">@post.User.UserName</a></p>
                     <p><a id="address">Kharkiv, Krychevsky street</a></p>
@@ -343,51 +86,54 @@
 
             <div class="body">
 
-                <div class="explore-post-content">
+                <div class="explore-post-content" id="content-@post.Id">
                     @*<img id="hobby-pic" src="@post.PhotoPath" />*@
-                    <img id="hobby-pic" src="~/images/background/login.jpg" />
+                    @*<img id="hobby-pic" src="~/images/background/login.jpg" />*@
+                    <img class="hobby-pic" src="~/images/other/IMG_20200602_160204.jpg" />
                     <p id="p-@post.Id">
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
                     </p>
+                    @*<p id="p-@post.Id">
+                        asd
+                    </p>*@
                     <span @*id="more-btn"*@ style="cursor:pointer; color: #8e8e8e; padding-left:3px" onclick="more(this, @post.Id)">more</span>
 
 
                 </div>
 
-                <div class="explore-post-comment">
+                <div class="comments">
+                    <div class="explore-post-comment" id="postComments-@post.Id">
 
-                    @foreach (var comment in post.ExploreComments)
-                    {
-                        <div class="comment">
+                        @foreach (var comment in post.ExploreComments)
+                        {
+                            <div class="comment">
 
-                            <img class="comment-user-pic" src="~/images/i.jpg" />
+                                <img class="comment-user-pic" src="~/images/i.jpg" />
 
-                            <div class="comment-content">
-                                <span><a class="comment-username">@comment.User.UserName</a></span>
-                                <span class="comment-date">10 hours ago</span>
-                                <p class="comment-text">@comment.Text</p>
+                                <div class="comment-content">
+                                    <span><a class="comment-username">@comment.User.UserName</a></span>
+                                    <span class="comment-date">10 hours ago</span>
+                                    <p class="comment-text">@comment.Text</p>
 
+                                </div>
                             </div>
+                        }
+                    </div>
 
+                    <div class="comment-add-input" id="addComment-@post.Id">
+                        <form asp-action="AddCommentToPost" method="post">
+                            <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                            <button type="submit" onclick="func()">
+                                <img id="submit-btn" src="~/images/send.png" />
 
-
-
-
-
-
-                        </div>
-
-                    }
-
-                    <form asp-action="AddCommentToPost" method="post">
-                        <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
-                        <button type="submit">
-                            <img id="submit-btn" src="~/images/send.png" />
-
-                        </button>
-                        <input type="hidden" name="postId" value="@post.Id" />
-                    </form>
+                            </button>
+                            <input type="hidden" name="postId" value="@post.Id" />
+                        </form>
+                    </div>
                 </div>
+
+                
+               
             </div>
 
 
@@ -422,14 +168,30 @@
 
     function more(element, postId) {
         x = document.getElementById("p-" + postId);
+        y = document.getElementById("content-" + postId)
         if (x.style.maxHeight == "100vh") {
             x.style.maxHeight = "70px";
+            /*y.style.maxHeight = "540px"*/
             element.innerHTML = "more";
         }
         else {
             x.style.maxHeight = "100vh";
+           /* y.style.maxHeight = "100vh"*/
             element.innerHTML = "hide";
         }
+    }
+
+    function setHeight(postId) {
+        alert("asas");
+        x = document.getElementById("p-" + postId);
+        y = document.getElementById("postComments-" + post.Id);
+        y.style.maxHeight = x.maxHeight - "190px";
+        alert("asas");
+    }
+
+    function func() {
+        alert("aaa");
+        //setHeight(post.Id)
     }
 </script>
 
