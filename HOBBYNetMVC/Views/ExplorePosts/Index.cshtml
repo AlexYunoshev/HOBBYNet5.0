@@ -8,120 +8,394 @@
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/yoga1.jpg);
     }
 
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 900px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+        overflow: auto;
+        /* Hide scrollbar for IE, Edge and Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        /*scrollbar-width: none; /* Firefox */
+    }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .content::-webkit-scrollbar {
+            display: none;
+        }
+
+    .user-info a {
+        font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration: none;
+        outline: none;
+        color: black;
+    }
+
+    .explore-post p {
+        margin: 0;
+        padding: 0;
+    }
+
     .explore-post {
         padding: 10px;
         border: solid black 1px;
-        margin: 20px 0;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
     }
 
-        .explore-post p {
-            margin: 0;
-            padding: 0;
+    .explore-post-header {
+        text-align: left;
+        vertical-align: center;
+        display: flex;
+        margin: 10px;
+        /*width: 800px;*/
+    }
+
+    #user-pic {
+        border-radius: 50%;
+        max-width: 70px;
+        max-height: 70px;
+    }
+
+
+
+    .user-info {
+        margin: 0 20px;
+    }
+
+    #username {
+        font-size: 20px;
+        font-weight: 600;
+        /* letter-spacing: 0.15em;*/
+        margin: 3px 0;
+    }
+
+    #address {
+        font-size: 18px;
+        letter-spacing: 0.05em;
+        margin: 3px 0;
+    }
+
+    #hobbies {
+        font-size: 16px;
+        letter-spacing: 0.05em;
+        margin: 3px 0;
+    }
+
+    .social-actions {
+        display: flex;
+        margin-left: auto;
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .social-img {
+        max-height: 45px;
+        max-width: 45px;
+    }
+
+    .counter {
+        font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    .explore-post-content {
+        display: inline-block;
+        float: left;
+        text-align: left;
+        max-width: 440px;
+        margin-bottom: 10px;
+    }
+
+    .explore-post-comment {
+        display: inline-block;
+        align-content: start;
+        float: left;
+        margin: 0 10px;
+        max-width: 390px;
+    }
+
+    .body {
+        /*        display:inline;*/
+        padding: 10px;
+        width: 100%;
+    }
+
+    .explore-post-content p {
+        padding: 10px 3px;
+        text-align: justify;
+        max-height: 70px;
+        overflow: hidden;
+    }
+
+    /* .explore-post-content p:hover {
+        max-height: 100vh;
+     }*/
+
+
+    #hobby-pic {
+        max-width: 440px;
+        max-height: 440px;
+        border-radius: 15px;
+    }
+
+
+
+    .input-field {
+        width: 370px;
+        padding: 10px 3px;
+        border-left: 0;
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 1px solid #999;
+        outline: none;
+        background: transparent;
+        font-family: 'Lora', serif;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px;
+    }
+
+    .input {
+        display: inline-block;
+    }
+
+    .explore-post-comment button[type="submit"] {
+        padding: 7px 0 0 5px;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+        position: absolute;
+    }
+
+    .explore-post-header button[type="submit"] {
+        padding: 0;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
+
+    #submit-btn {
+        max-height: 30px;
+        max-width: 30px;
+    }
+
+    .footer {
+        text-align: left;
+        max-width: 440px;
+        margin: 10px 0px 5px 10px;
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .pages {
+        /*  position: absolute;
+        bottom: 10px;*/
+        margin: 10px auto;
+        /*padding: 0 20px;*/
+        text-align: center;
+        align-content: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        /*    left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;*/
+        max-width: 440px;
+    }
+
+        .pages a {
+            text-decoration: none;
+            outline: none;
+            font-family: 'Lora', serif;
+            font-size: 20px;
+            transition: .5s linear;
         }
 
-    .explore-post-user {
-        text-align: center;
-        vertical-align: top;
-        display: inline-block;
-        margin: 10px;
-    }
 
-    .explore-post-text {
+    .comment {
         text-align: left;
-        vertical-align: top;
-        display: inline-block;
-        margin: 10px;
-        width: 700px;
+        display: flex;
+        align-items: normal;
+        margin-bottom: 10px;
     }
 
-    .explore-post-hobby {
-        text-align: center;
-        margin: 10px;
-        vertical-align: top;
-        display: inline-block;
-        float: right;
+    .comment-user-pic {
+        margin-top: 5px;
+        border-radius: 50%;
+        max-width: 35px;
+        max-height: 35px;
+        vertical-align: middle;
+        /*  float: left;*/
     }
 
+    .comment-username {
+        font-weight: 600;
+    }
+
+    .comment-content {
+        margin-left: 10px;
+        text-align: justify;
+    }
+
+    .comment-date {
+        color: #8e8e8e;
+        margin-left: auto;
+        margin-right: 0;
+    }
+    
 </style>
 
 
+<div class="content">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="explore-post" id="post-@post.Id">
 
+            <div class="explore-post-header">
+                @*<img id="user-pic" src="@post.User.PhotoPath" />*@
+                <img id="user-pic" src="~/images/i.jpg" />
+                <div class="user-info">
+                    <p><a id="username">@post.User.UserName</a></p>
+                    <p><a id="address">Kharkiv, Krychevsky street</a></p>
+                    <p>
+                        @foreach (var hobby in post.Hobbies)
+                        {
+                            <a id="hobbies">#@hobby.Name</a>
+                        }
 
-@foreach (var post in Model.Posts)
-{
-    <div class="explore-post">
-        <p>Post id: @post.Id</p>
-        <div class="explore-post-user">
-            <img src="@post.User.PhotoPath" height="100" width="100" />
-            <p>@post.User.FirstName @post.User.LastName</p>
-            <div>
-                <form asp-action="SetLikeToPost" method="post">
-                    <button type="submit" name="postId" value="@post.Id">
-                        <img src="~/images/like.png" height="40" width="40" />
-                    </button>
+                    </p>
+                </div>
+                <div class="social-actions">
+                    <form asp-action="SetLikeToPost" method="post">
+                        <span>
+                            <button type="submit">
+                                <img class="social-img" src="/images/like1.png" />
+                            </button>
+                            <p class="counter">@post.ExploreLikes.Count</p>
+                            @*<p class="counter" style="margin-right:10px">100000000000000000</p>*@
+                            <input type="hidden" name="postId" value="@post.Id" />
+                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                        </span>
+                    </form>
+                    <span>
+                        <button type="submit">
+                            <img class="social-img" src="/images/comment1.png" />
+                        </button>
+                        <p class="counter">@post.ExploreComments.Count</p>
+                        @*<p class="counter">100000000000000000</p>*@
+                    </span>
 
-                    @post.ExploreLikes.Count
-                    @foreach (var like in post.ExploreLikes)
-                    {
-
-                        <p>@like.User.FirstName;</p>
-                    }
-
-                </form>
+                </div>
 
             </div>
-            <div>
-                <form asp-action="SetCommentToPost" method="get">
-                    <button type="submit" name="postId" value="@post.Id">
-                        <img src="~/images/comment.png" height="40" width="40" />
-                    </button>
-                    @post.ExploreComments.Count
+
+            <hr style="margin:0 10px" />
+
+            <div class="body">
+
+                <div class="explore-post-content">
+                    @*<img id="hobby-pic" src="@post.PhotoPath" />*@
+                    <img id="hobby-pic" src="~/images/background/login.jpg" />
+                    <p id="p-@post.Id">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                    </p>
+                    <span @*id="more-btn"*@ style="cursor:pointer; color: #8e8e8e; padding-left:3px" onclick="more(this, @post.Id)">more</span>
+
+
+                </div>
+
+                <div class="explore-post-comment">
+
                     @foreach (var comment in post.ExploreComments)
                     {
+                        <div class="comment">
 
-                        @*<p>@comment.User.FirstName - @comment.Text;</p>*@
+                            <img class="comment-user-pic" src="~/images/i.jpg" />
+
+                            <div class="comment-content">
+                                <span><a class="comment-username">@comment.User.UserName</a></span>
+                                <span class="comment-date">10 hours ago</span>
+                                <p class="comment-text">@comment.Text</p>
+
+                            </div>
+
+
+
+
+
+
+
+                        </div>
+
                     }
-                </form>
+
+                    <form asp-action="AddCommentToPost" method="post">
+                        <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                        <button type="submit">
+                            <img id="submit-btn" src="~/images/send.png" />
+
+                        </button>
+                        <input type="hidden" name="postId" value="@post.Id" />
+                    </form>
+                </div>
             </div>
+
+
+            <div class="footer">
+                <p style="color: #8e8e8e; padding-left:3px; text-transform:uppercase">10 hours ago; Post id = @post.Id</p>
+            </div>
+
         </div>
+    }
 
+</div>
 
-
-        @*<div class="explore-post-text">
-                @post.Text
-            </div>*@
-        <div class="explore-post-text">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-        </div>
-
-        <div class="explore-post-hobby">
-            <img src="~/images/postPhoto.png" height="134" width="160" />
-            @foreach (var hobby in post.Hobbies)
-            {
-
-                <p>@hobby.Name</p>
-            }
-        </div>
-    </div>
-}
-
-<div style="text-align: center;">
+<div class="pages">
     <span>
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
             if (i == Model.CurrentPageNumber)
             {
-                <a style="font-size:36px; color:red" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+                <a style="color:red" href="/User/Profile?pageNumber=@i">@i</a>
             }
             else
             {
-                <a style="font-size:36px; color:black" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+                <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
             }
-
         }
 
     </span>
 </div>
+
+
+<script>
+
+    function more(element, postId) {
+        x = document.getElementById("p-" + postId);
+        if (x.style.maxHeight == "100vh") {
+            x.style.maxHeight = "70px";
+            element.innerHTML = "more";
+        }
+        else {
+            x.style.maxHeight = "100vh";
+            element.innerHTML = "hide";
+        }
+    }
+</script>
 
 
 
