@@ -1,0 +1,19 @@
+﻿@model HOBBYNetMVC.Models.UserSettings.MessengerViewModel
+@{
+    ViewBag.Title = "Изменение адреса WhatsApp";
+}
+<h2>Изменение адреса в WhatsApp для пользователя @Model.Id</h2>
+<form asp-action="WhatsApp" asp-controller="UserSettings">
+    <div asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label>WhatsApp phone number in the format "380504058135"</label>
+        <input type="text" asp-for="@Model.MessengerUsername" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" />
+    </div>
+</form>

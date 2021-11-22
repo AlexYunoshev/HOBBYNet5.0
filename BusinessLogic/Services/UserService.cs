@@ -19,6 +19,29 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
+        public void SetTelegramUsername(string currentUserId, string telegramName)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).FirstOrDefault();
+            user.TelegramUsername = telegramName;
+            _context.SaveChanges();
+        }
+
+        public void SetViberUsername(string currentUserId, string viberName)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).FirstOrDefault();
+            user.ViberUsername = viberName;
+            _context.SaveChanges();
+        }
+
+
+        public void SetWhatsAppUsername(string currentUserId, string whatsAppName)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).FirstOrDefault();
+            user.WhatsAppUsername = whatsAppName;
+            _context.SaveChanges();
+        }
+
+
         public List<User> GetUsersList(string currentUserId)
         {
             var users = _context.Users.ToList();

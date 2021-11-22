@@ -23,6 +23,10 @@ namespace Domain.Models
         public IList<ExploreLike> ExploreLikes { get; set; }
         public IList<ExploreComment> ExploreComments { get; set; }
 
+        public string TelegramUsername { get; set; }
+        public string ViberUsername { get; set; }
+        public string WhatsAppUsername { get; set; }
+
 
         //public List<Post> PostsList { get; set; }
         //public List<Hobby> HobbyList { get; set; }

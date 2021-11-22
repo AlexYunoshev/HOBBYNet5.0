@@ -1,0 +1,19 @@
+﻿@model HOBBYNetMVC.Models.UserSettings.MessengerViewModel
+@{
+    ViewBag.Title = "Изменение адреса телеграма";
+}
+<h2>Изменение адреса в телеграме для пользователя @Model.Id</h2>
+<form asp-action="Telegram" asp-controller="UserSettings">
+    <div asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="Id" />
+    
+    <div class="form-group">
+        <label>Telegram username:</label>
+        <input type="text" asp-for="@Model.MessengerUsername"/>
+    </div>
+  
+    <div class="form-group">
+        <input type="submit" value="Save" />
+    </div>
+</form>

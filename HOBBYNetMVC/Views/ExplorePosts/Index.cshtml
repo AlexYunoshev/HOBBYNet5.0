@@ -7,7 +7,7 @@
     body {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
     }
-   
+
 
 
     .content {
@@ -101,6 +101,15 @@
     .social-img {
         max-height: 45px;
         max-width: 45px;
+    }
+
+    .chat-img {
+        max-height: 40px;
+        max-width: 40px;
+    }
+
+    .chat {
+        margin:5px 10px 5px 5px;
     }
 
     .counter {
@@ -253,8 +262,8 @@
         margin-left: auto;
         margin-right: 0;
     }
-    
 </style>
+
 
 
 <div class="content">
@@ -277,6 +286,36 @@
                     </p>
                 </div>
                 <div class="social-actions">
+                    @if (post.User.TelegramUsername != null)
+                    {
+                        string link = "https://t.me/" + @post.User.TelegramUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/Telegram.png" />
+                            </a>
+                        </span>
+                    }
+
+                    @if (post.User.ViberUsername != null)
+                    {
+                        string link = "viber://chat?number=" + @post.User.ViberUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/Viber.png" />
+                            </a>
+                        </span>
+                    }
+
+                    @if (post.User.WhatsAppUsername != null)
+                    {
+                        string link = "whatsapp://send?phone=" + @post.User.WhatsAppUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/WhatsApp.png" />
+                            </a>
+                        </span>
+                    }
+
                     <form asp-action="SetLikeToPost" method="post">
                         <span>
                             <button type="submit">
