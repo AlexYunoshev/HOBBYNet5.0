@@ -5,12 +5,9 @@
 
 <style>
     body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/yoga1.jpg);
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
     }
-
-    body {
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
-    }
+   
 
 
     .content {
@@ -370,11 +367,11 @@
         {
             if (i == Model.CurrentPageNumber)
             {
-                <a style="color:red" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:red" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
             }
             else
             {
-                <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:black" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
             }
         }
 
