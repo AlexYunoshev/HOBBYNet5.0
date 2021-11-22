@@ -39,7 +39,6 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-  
         public IActionResult Profile(int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
