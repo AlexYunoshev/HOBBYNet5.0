@@ -54,12 +54,12 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult SetLikeToPost(int postId)
+        public IActionResult SetLikeToPost(int postId, int pageNumber)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _explorePostsService.SetLikeToPost(postId, loginUserId);
-           
-            return RedirectToAction("Index");
+            string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
         }
 
         [Authorize]
@@ -73,22 +73,28 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddCommentToPost(string commentText, int postId)
+        public IActionResult AddCommentToPost(string commentText, int postId, int pageNumber)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
             var post = _explorePostsService.GetExplorePost(postId);
-            return View("PostComments", post);
+            string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
+            //return View("PostComments", post);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult RemoveCommentFromPost(int commentId, int postId)
+        public IActionResult RemoveCommentFromPost(int commentId, int postId, int pageNumber)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = _explorePostsService.GetExplorePost(postId);
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
-            return View("PostComments", post);
+            string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
+            //return RedirectToAction("Index");
+            //return View("PostComments", post);
+
         }
     }
 }

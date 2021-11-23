@@ -3,18 +3,18 @@
     ViewData["Title"] = "Index";
 }
 
-
 <div class="content">
     @foreach (var post in Model.Posts)
     {
         <div class="explore-post" id="post-@post.Id">
 
             <div class="explore-post-header">
-                @*<img id="user-pic" src="@post.User.PhotoPath" />*@
-                <img id="user-pic" src="~/images/i.jpg" />
+                @*<img class="user-pic" src="~/images/i.jpg" />*@
+                <img class="user-pic" src="@post.User.PhotoPath" />
                 <div class="user-info">
                     <p class="username"><a>@post.User.UserName</a></p>
                     <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+
                 </div>
                 <div class="social-actions">
                     @if (post.User.TelegramUsername != null)
@@ -27,6 +27,7 @@
                         </span>
                     }
 
+
                     @if (post.User.ViberUsername != null)
                     {
                         string link = "viber://chat?number=" + @post.User.ViberUsername;
@@ -36,7 +37,6 @@
                             </a>
                         </span>
                     }
-
                     @if (post.User.WhatsAppUsername != null)
                     {
                         string link = "whatsapp://send?phone=" + @post.User.WhatsAppUsername;
@@ -50,20 +50,21 @@
                     <form asp-action="SetLikeToPost" method="post">
                         <span>
                             <button type="submit">
-                                <img class="social-img" src="/images/like1.png" />
+                                <img class="social-img" src="~/images/like1.png" />
                             </button>
-                            @*<p class="counter">@post.ExploreLikes.Count</p>*@
-                            <p class="counter">53</p>
+                            <p class="counter">@post.ExploreLikes.Count</p>
                             <input type="hidden" name="postId" value="@post.Id" />
                             <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
                         </span>
                     </form>
                     <span>
-                        <button type="submit">
-                            <img class="social-img" src="/images/comment1.png" />
-                        </button>
-                        @*<p class="counter">@post.ExploreComments.Count</p>*@
-                        <p class="counter">4</p>
+                        @*<button type="submit">
+                            <img class="social-img" src="~/images/comment1.png" />
+                        </button>*@
+                        <a href="Index?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
+                            <img class="social-img" src="~/images/comment1.png" />
+                        </a>
+                        <p class="counter">@post.ExploreComments.Count</p>
                     </span>
 
                 </div>
@@ -74,52 +75,58 @@
 
             <div class="body">
 
-                <div class="explore-post-content" id="content-@post.Id">
-                    <p id="p-@post.Id">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                    </p>
+                <div class="explore-post-content">
                     @*<p id="p-@post.Id">
-                asd
-            </p>*@
-                    @*<img id="hobby-pic" src="@post.PhotoPath" />*@
-                    <img class="hobby-pic" src="~/images/other/IMG_20200602_160204.jpg" />
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                        </p>*@
+                    <p id="p-@post.Id">
+                        @post.Text
+                    </p>
+                    <img id="image" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" />
                     <p>
+                        @*<a class="hobbies">#Football</a>
+                            <a class="hobbies">#Boxing</a>
+                            <a class="hobbies">#Cycling</a>*@
                         @foreach (var hobby in post.Hobbies)
                         {
                             <a class="hobbies">#@hobby.Name</a>
                         }
-
                     </p>
-
                 </div>
 
                 <hr style="margin:10px" />
 
-                <div class="comments">
-                    <div class="comments-area">
-                        <div class="explore-post-comment" id="postComments-@post.Id">
 
-                            @foreach (var comment in post.ExploreComments)
-                            {
-                                <img class="comment-user-pic" src="~/images/i.jpg" />
+
+                <div class="comments">
+
+                    <div class="comments-area" id="commentsPost-@post.Id">
+                        @foreach (var comment in post.ExploreComments)
+                        {
+                            <div class="explore-post-comment">
+                                @*<img class="comment-user-pic" src="~/images/i.jpg" />*@
+                                <img class="comment-user-pic" src="@comment.User.PhotoPath" />
                                 <div class="comment-content">
-                                    @*<span><a class="comment-username">@comment.User.UserName</a></span>*@
-                                    <span><a class="comment-username">Oleksandr Yunoshev</a></span>
+                                    <span><a class="comment-username">@comment.User.UserName</a></span>
                                     <span class="comment-date">10 hours ago</span>
-                                    <form class="form-delete-comment">
+                                    <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
                                         <span>
-                                            <button type="submit">
-                                                <img class="remove-img" src="delete.png" />
+                                            <button type="submit" name="postId" value="@post.Id">
+                                                <img class="remove-img" src="~/images/delete.png" />
                                             </button>
+                                            <input type="hidden" name="commentId" value="@comment.Id" />
+                                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
                                         </span>
                                     </form>
-                                    @*<p class="comment-text">@comment.Text</p>*@
-                                    <p class="comment-text">I really like the Contrib extension of Dapper. It allows us to write generic CRUD methods in the case of this video to the SqlDataAccess class and then we don't have to write CRUD stored procedures for every table unless there are some specific side effects that are needed in the sprocs. I think it saves a lot of coding time but of course there might be some reasons such as access control and maybe as you mentioned, performance which would require stored procedures. In my experience though, the Contrib methods are just fine.</p>
+                                    <p class="comment-text">@comment.Text</p>
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
+
                     </div>
-                    <div class="comment-add-input" id="addComment-@post.Id">
+
+
+                    <div class="comment-add-input">
                         <form asp-action="AddCommentToPost" method="post">
                             <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
                             <button type="submit">
@@ -127,19 +134,26 @@
 
                             </button>
                             <input type="hidden" name="postId" value="@post.Id" />
+                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
                         </form>
                     </div>
                 </div>
+
+
+
             </div>
 
+
             <div class="footer">
-                <p style="color: #8e8e8e; text-transform:uppercase">10 hours ago; Post id = @post.Id</p>
+                <p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>
             </div>
 
         </div>
+
     }
 
 </div>
+
 
 <script>
     var image = document.getElementById('image');
@@ -156,7 +170,7 @@
     }
 </script>
 
-@*<div class="pages">
+<div class="pages">
     <span>
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
@@ -174,36 +188,36 @@
 </div>
 
 
-<script>
+@*   <script>
 
-    function more(element, postId) {
-        x = document.getElementById("p-" + postId);
-        y = document.getElementById("content-" + postId)
-        if (x.style.maxHeight == "100vh") {
-            x.style.maxHeight = "70px";
-            /*y.style.maxHeight = "540px"*/
-            element.innerHTML = "more";
+        function more(element, postId) {
+            x = document.getElementById("p-" + postId);
+            y = document.getElementById("content-" + postId)
+            if (x.style.maxHeight == "100vh") {
+                x.style.maxHeight = "70px";
+                /*y.style.maxHeight = "540px"*/
+                element.innerHTML = "more";
+            }
+            else {
+                x.style.maxHeight = "100vh";
+               /* y.style.maxHeight = "100vh"*/
+                element.innerHTML = "hide";
+            }
         }
-        else {
-            x.style.maxHeight = "100vh";
-           /* y.style.maxHeight = "100vh"*/
-            element.innerHTML = "hide";
+
+        function setHeight(postId) {
+            alert("asas");
+            x = document.getElementById("p-" + postId);
+            y = document.getElementById("postComments-" + post.Id);
+            y.style.maxHeight = x.maxHeight - "190px";
+            alert("asas");
         }
-    }
 
-    function setHeight(postId) {
-        alert("asas");
-        x = document.getElementById("p-" + postId);
-        y = document.getElementById("postComments-" + post.Id);
-        y.style.maxHeight = x.maxHeight - "190px";
-        alert("asas");
-    }
-
-    function func() {
-        alert("aaa");
-        //setHeight(post.Id)
-    }
-</script>*@
+        function func() {
+            alert("aaa");
+            //setHeight(post.Id)
+        }
+    </script>*@
 
 
 
