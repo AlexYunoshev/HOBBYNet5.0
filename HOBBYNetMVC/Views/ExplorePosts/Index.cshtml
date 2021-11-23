@@ -3,6 +3,12 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
+    }
+</style>
+
 <div class="content">
     @foreach (var post in Model.Posts)
     {
@@ -58,9 +64,6 @@
                         </span>
                     </form>
                     <span>
-                        @*<button type="submit">
-                            <img class="social-img" src="~/images/comment1.png" />
-                        </button>*@
                         <a href="Index?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
                             <img class="social-img" src="~/images/comment1.png" />
                         </a>
@@ -76,17 +79,11 @@
             <div class="body">
 
                 <div class="explore-post-content">
-                    @*<p id="p-@post.Id">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                        </p>*@
                     <p id="p-@post.Id">
                         @post.Text
                     </p>
-                    <img id="image" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" />
+                    <img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)"/>
                     <p>
-                        @*<a class="hobbies">#Football</a>
-                            <a class="hobbies">#Boxing</a>
-                            <a class="hobbies">#Cycling</a>*@
                         @foreach (var hobby in post.Hobbies)
                         {
                             <a class="hobbies">#@hobby.Name</a>
@@ -149,26 +146,9 @@
             </div>
 
         </div>
-
     }
 
 </div>
-
-
-<script>
-    var image = document.getElementById('image');
-    image.onclick = function () {
-        if (this.style.maxWidth == '300px') {
-            this.style.maxHeight = '660px';
-            this.style.maxWidth = '660px';
-        }
-        else {
-            this.style.maxHeight = '300px';
-            this.style.maxWidth = '300px';
-        }
-
-    }
-</script>
 
 <div class="pages">
     <span>
@@ -187,37 +167,16 @@
     </span>
 </div>
 
-
-@*   <script>
-
-        function more(element, postId) {
-            x = document.getElementById("p-" + postId);
-            y = document.getElementById("content-" + postId)
-            if (x.style.maxHeight == "100vh") {
-                x.style.maxHeight = "70px";
-                /*y.style.maxHeight = "540px"*/
-                element.innerHTML = "more";
-            }
-            else {
-                x.style.maxHeight = "100vh";
-               /* y.style.maxHeight = "100vh"*/
-                element.innerHTML = "hide";
-            }
+<script>
+    function imageZoom(postId) {
+        var image = document.getElementById("image-" + postId);
+        if (image.style.maxWidth == '300px') {
+            image.style.maxHeight = '660px';
+            image.style.maxWidth = '660px';
         }
-
-        function setHeight(postId) {
-            alert("asas");
-            x = document.getElementById("p-" + postId);
-            y = document.getElementById("postComments-" + post.Id);
-            y.style.maxHeight = x.maxHeight - "190px";
-            alert("asas");
+        else {
+            image.style.maxHeight = '300px';
+            image.style.maxWidth = '300px';
         }
-
-        function func() {
-            alert("aaa");
-            //setHeight(post.Id)
-        }
-    </script>*@
-
-
-
+    }
+</script>
