@@ -1,30 +1,157 @@
-﻿@model List<Domain.Models.Hobby>
+﻿@model Domain.ViewModels.HobbyViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
 
-<h1>Hi, @User.Identity.Name</h1>
 
 
-<h3>Hobbies list:</h3>
-<form asp-action="RemoveHobbyFromList" method="post">
-    <table border="1" cellpadding="2" cellspacing="2">
-        <tr>
-            <th>Hobby</th>
-            <th></th>
-        </tr>
-        @foreach (var hobby in Model)
-        {
-            <tr>
-                <td>@hobby.Name</td>
-             
-                <td>
-                    <button type="submit" class="btn btn-sm btn-danger" name="subHobbyId" value="@hobby.Id">Удалить</button>
-                </td>
 
-            </tr>
+
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/Cycling6.jpg);
+    }
+
+    table {
+        margin: 0;
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 400px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 85vh;
+        overflow: auto;
+        /* Hide scrollbar for IE, Edge and Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /*Firefox */
+    }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .content::-webkit-scrollbar {
+            display: none;
         }
-    </table>
-</form>
+
+
+    .hobbies-list::-webkit-scrollbar {
+        display: none;
+    }
+
+
+
+
+    .hobbies-list {
+        border-radius: 15px;
+        max-height: 280px;
+        overflow: auto;
+        margin: 5px 0;
+    }
+
+    .canvas {
+        padding: 10px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
+    }
+
+
+
+
+    .canvas button[type="submit"] {
+        padding: 0;
+        padding-top: 3px;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
+
+    .canvas input[type="submit"] {
+        padding: 10px;
+        border-radius: 30px;
+        width: 85%;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
+    }
+
+    .remove-img {
+        margin-top: 3px;
+    }
+</style>
+
+
+<div class="content">
+    <div class="canvas">
+        @if (Model.userHobbiesList.Count > 0)
+        {
+            <h3>Your current hobbies:</h3>
+            <div class="hobbies-list">
+                <form asp-action="RemoveHobbyFromList" method="post">
+                    <table border="0" cellpadding="5" cellspacing="2">
+                        @foreach (var hobby in Model.userHobbiesList)
+                        {
+                        <tr>
+                            <td>@hobby.Name</td>
+                            <td>
+                                <button type="submit" name="hobbyId" value="@hobby.Id">
+                                    <img class="remove-img" src="~/images/delete.png" />
+                                </button>
+                            </td>
+
+
+
+                        </tr>
+                        }
+                    </table>
+                </form>
+            </div>
+        }
+        else
+        {
+            <h3>You don't have any hobby</h3>
+        }
+
+    </div>
+
+
+    <div class="canvas">
+        <h3>Hobbies to add:</h3>
+        <form asp-action="AddHobbies" method="post">
+            <div class="hobbies-list">
+
+                <table border="0" cellpadding="5" cellspacing="2">
+
+                    @for (int i = 0; i < Model.addHobbiesList.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.CheckBoxFor(m => m.addHobbiesList[i].IsSelected)
+                                @Model.addHobbiesList[i].Name
+                                @Html.HiddenFor(m => m.addHobbiesList[i].Id)
+                                @Html.HiddenFor(m => m.addHobbiesList[i].Name)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </div>
+            <input type="submit" value="Submit" />
+        </form>
+            
+    </div>
+
+
+</div>
 

@@ -21,7 +21,13 @@ namespace BusinessLogic.Services
         public List<Hobby> GetUserHobbiesList(string currentUserId)
         {
             var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
-            var hobbies = user.Hobbies;
+            var hobbies = user.Hobbies.OrderBy(h=>h.Name).ToList();
+            return hobbies;
+        }
+
+        public List<Hobby> GetAllHobbies()
+        {
+            var hobbies = _context.Hobbies.OrderBy(h => h.Name).ToList();
             return hobbies;
         }
 
@@ -33,5 +39,14 @@ namespace BusinessLogic.Services
             _context.SaveChanges();
             return true;
         }
+
+        public void AddHobbiesToUser(string currentUserId, List<Hobby> hobbies)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
+            user.Hobbies.AddRange(hobbies);
+            _context.SaveChanges();
+        }
+
+
     }
 }
