@@ -4,7 +4,10 @@
 
 <input style="margin: 10px;" type="submit" id="locationButton" onclick="initMap()"/>
 <div style="margin: 10px; height: 60%; width:60%; position:absolute" id="map"></div>
-
+<form id="form1" asp-action="Location" method="post">
+    <input id="latitude" type="hidden" name="latitude" value="" />
+    <input id="longitude" type="hidden" name="longitude" value="" />
+</form>
 
 <script >
 
@@ -42,6 +45,9 @@
 
                         map.setCenter(pos);
                         map.setZoom(15);
+                        document.getElementById("latitude").value = pos.lat;
+                        document.getElementById("longitude").value = pos.lng;
+                        document.getElementById("form1").submit();
                     },
                     () => {
                         handleLocationError(true, infoWindow, map.getCenter());

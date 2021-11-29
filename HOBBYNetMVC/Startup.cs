@@ -35,6 +35,7 @@ namespace HOBBYNetMVC
             services.AddScoped<UserService>();
             services.AddScoped<HobbyService>();
             services.AddScoped<ExplorePostsService>();
+            services.AddScoped<LocationService>();
             services.AddRazorPages();
             services.AddDefaultIdentity<User>()
             .AddEntityFrameworkStores<HobbyNetContext>();

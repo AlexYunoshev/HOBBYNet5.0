@@ -17,12 +17,14 @@ namespace HOBBYNetMVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly UserService _userService;
+        private readonly LocationService _locationService;
 
-        public UserSettingsController(UserManager<User> userManager, UserService userService, SignInManager<User> signInManager)
+        public UserSettingsController(UserManager<User> userManager, UserService userService, SignInManager<User> signInManager, LocationService locationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
+            _locationService = locationService;
         }
 
         public IActionResult Index()
@@ -134,6 +136,13 @@ namespace HOBBYNetMVC.Controllers
                 return NotFound();
             }
             
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Location(string latitude, string longitude)
+        {
+            List<Location> locations = _locationService.GetLocations(latitude + " " + longitude);
             return View();
         }
 
