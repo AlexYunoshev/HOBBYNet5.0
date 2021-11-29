@@ -140,10 +140,10 @@ namespace HOBBYNetMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Location(string latitude, string longitude)
+        public async Task<IActionResult> LocationResult(string latitude, string longitude)
         {
             List<Location> locations = _locationService.GetLocations(latitude + " " + longitude);
-            return View();
+            return View(locations);
         }
 
 
