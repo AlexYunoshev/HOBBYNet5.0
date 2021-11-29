@@ -12,7 +12,7 @@
     .content-body {
         padding: 10px;
         border: solid black 1px;
-        text-align: center;
+        text-align: left;
         background-color: rgba(255, 255, 255, 1);
         border-radius: 15px;
         transition: .5s;
@@ -32,35 +32,78 @@
         height: 80vh;
     }
 </style>
-
 <script>
 
     let map;
+    let markers = [];
+    let locationsArray = [];
+
     function initMap() {
-        var userLocation = new google.maps.LatLng(@Model[0].Latitude,@Model[0].Longitude);
+        var centerLocation = new google.maps.LatLng(@Model[0].Latitude,@Model[0].Longitude);
 
         map = new google.maps.Map(document.getElementById("map"), {
-            center: userLocation,
+            center: centerLocation,
             zoom: 15,
         });
 
-        marker = new google.maps.Marker({
-            position: userLocation,
-            map,
-            title: "Your location",
-            animation: google.maps.Animation.BOUNCE,
-        });
-
-        @*var index = 0;
-        @foreach(var location in @Model)
+        @foreach (var location in @Model)
         {
-           @:var position = new google.maps.LatLng(@location.Latitude, @location.Longitude);
-           @:var marker = new google.maps.Marker({
-            @:position: position,
-            @:map,
-        })
-        }*@
+            @:locationsArray.push({ "lat": "@location.Latitude", "lon": "@location.Longitude", "placeid":"@location.PlaceId"});
+        }
 
+        var id = "place-" + locationsArray[0]["placeid"];
+        var checked = document.getElementById(id);
+        checked.checked = true;
+        GetCheckedValue();
+    }
+
+
+    function removeMarkers() {
+        for (let i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+    }
+
+    function addMarker(position, animation) {
+        if (animation == true) {
+            const marker = new google.maps.Marker({
+                position,
+                map,
+                animation: google.maps.Animation.BOUNCE
+            });
+            markers.push(marker);
+        }
+        else {
+            const marker = new google.maps.Marker({
+                position,
+                map,
+            });
+            markers.push(marker);
+        }
+    }
+
+
+    function GetCheckedValue() {
+        console.log(markers);
+        var value = document.querySelector('input[name="places"]:checked').value;
+        console.log(value);
+        removeMarkers();
+        console.log(markers);
+
+
+
+        for (i = 0; i < locationsArray.length; i++) {
+            var markerPosition = new google.maps.LatLng(locationsArray[i]["lat"], locationsArray[i]["lon"]);
+            if (locationsArray[i]["placeid"] == value) {
+                addMarker(markerPosition, true);
+                  
+                map.setCenter(markerPosition);
+            }
+            else {
+                addMarker(markerPosition, false);
+            }
+        }
     }
 
 </script>
@@ -72,10 +115,9 @@
             @foreach (var location in @Model)
             {
                 <div>
-                    <input type="radio" id="place-@location.PlaceId" name="places" value="@location.PlaceId">
+                    <input type="radio" id="place-@location.PlaceId" name="places" value="@location.PlaceId" onchange="GetCheckedValue()">
                     <label for="place-@location.PlaceId">@location.Name</label>
                 </div>
-                @*<p style="text-align: left;">@location.Name</p>*@
             }
 
 
