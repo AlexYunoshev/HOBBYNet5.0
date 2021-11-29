@@ -1,0 +1,102 @@
+﻿@model List<Domain.Models.Location>
+@{
+    ViewBag.Title = "Изменение локации";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
+    }
+
+
+    .content-body {
+        padding: 10px;
+        border: solid black 1px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
+        max-height: 150px;
+        overflow: auto;
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 1200px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+    }
+</style>
+
+<script>
+
+    let map;
+    function initMap() {
+        var userLocation = new google.maps.LatLng(@Model[0].Latitude,@Model[0].Longitude);
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: userLocation,
+            zoom: 15,
+        });
+
+        marker = new google.maps.Marker({
+            position: userLocation,
+            map,
+            title: "Your location",
+            animation: google.maps.Animation.BOUNCE,
+        });
+
+        @*var index = 0;
+        @foreach(var location in @Model)
+        {
+           @:var position = new google.maps.LatLng(@location.Latitude, @location.Longitude);
+           @:var marker = new google.maps.Marker({
+            @:position: position,
+            @:map,
+        })
+        }*@
+
+    }
+
+</script>
+
+
+<div class="content">
+    <div class="content-body">
+        <form>
+            @foreach (var location in @Model)
+            {
+                <div>
+                    <input type="radio" id="place-@location.PlaceId" name="places" value="@location.PlaceId">
+                    <label for="place-@location.PlaceId">@location.Name</label>
+                </div>
+                @*<p style="text-align: left;">@location.Name</p>*@
+            }
+
+
+
+        </form>
+
+
+
+    </div>
+
+    <div style="width: 1200px; height: 70%; position: absolute; top:170px; border:solid white 1px; border-radius:15px;" id="map"></div>
+    <form id="form1" asp-action="Location" method="post">
+        <input id="latitude" type="hidden" name="latitude" value="" />
+        <input id="longitude" type="hidden" name="longitude" value="" />
+    </form>
+</div>
+
+
+
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async></script>
+

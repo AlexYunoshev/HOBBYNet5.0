@@ -2,14 +2,88 @@
     ViewBag.Title = "Изменение локации";
 }
 
-<input style="margin: 10px;" type="submit" id="locationButton" onclick="initMap()"/>
-<div style="margin: 10px; height: 60%; width:60%; position:absolute" id="map"></div>
-<form id="form1" asp-action="LocationResult" method="post">
-    <input id="latitude" type="hidden" name="latitude" value="" />
-    <input id="longitude" type="hidden" name="longitude" value="" />
-</form>
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
+    }
 
-<script >
+
+
+    .content-body {
+        padding: 10px;
+        border: solid black 1px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
+        max-height: 105px;
+        justify-content: center;
+        display: flex;
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 1200px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+        overflow: auto;
+    }
+
+    .geolocation {
+        display: inline-block;
+        float: left;
+        max-width: 900px;
+        margin-left: 5px;
+        padding-right: 15px;
+        border-right: solid black 1px;
+    }
+
+    .manually-location {
+        display: inline-block;
+        margin: 0 15px;
+    }
+</style>
+
+<div class="content">
+    <div class="content-body">
+        <div class="geolocation">
+
+            <h4>You can try to get your current location.</h4>
+            <form id="form1" asp-action="LocationResultByGeolocation" method="post">
+                <input id="latitude" type="hidden" name="latitude" value="" />
+                <input id="longitude" type="hidden" name="longitude" value="" />
+            </form>
+            <input style="margin: 10px;" type="submit" id="locationButton" value="Get my current location" />
+        </div>
+
+
+
+        <div class="manually-location">
+            <h4>Or you can input location manually...</h4>
+            <form asp-action="LocationResultByAddress" method="post">
+                <input style="margin-top: 10px; width:350px;" type="text" name="address" placeholder="Address" />
+                <input type="submit" value="Search..." />
+            </form>
+        </div>
+
+    </div>
+
+    <div style="width: 1200px; height: 80%; position: absolute; top:120px; border:solid white 1px; border-radius:15px;" id="map"></div>
+   
+</div>
+
+
+
+
+
+
+
+<script>
 
     let map, infoWindow;
 
@@ -33,18 +107,6 @@
                             lng: position.coords.longitude,
                         };
 
-                        infoWindow.setPosition(pos);
-                        infoWindow.setContent("Location found");
-                        infoWindow.open(map);
-
-                        var positionMarker = new google.maps.Marker({
-                            position: pos,
-                            map,
-                            title: "Your current location",
-                        });
-
-                        map.setCenter(pos);
-                        map.setZoom(15);
                         document.getElementById("latitude").value = pos.lat;
                         document.getElementById("longitude").value = pos.lng;
                         document.getElementById("form1").submit();
