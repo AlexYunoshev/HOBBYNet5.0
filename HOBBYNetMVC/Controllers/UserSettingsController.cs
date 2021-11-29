@@ -124,6 +124,18 @@ namespace HOBBYNetMVC.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> Location(string id)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User user = await _userManager.FindByIdAsync(id);
+            if (user == null || loginUserId != id)
+            {
+                return NotFound();
+            }
+            
+            return View();
+        }
 
 
         [HttpGet]

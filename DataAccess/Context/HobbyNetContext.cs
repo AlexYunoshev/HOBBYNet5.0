@@ -19,6 +19,8 @@ namespace DataAccess.Context
         public DbSet<ExplorePost> ExplorePosts { get; set; }
         public DbSet<ExploreLike> ExploreLikes { get; set; }
         public DbSet<ExploreComment> ExploreComments { get; set; }
+        public DbSet<Location> Locations { get; set; }
+
 
         //public DbSet<SubHobbyUser> SubHobbyUser { get; set; }
 
