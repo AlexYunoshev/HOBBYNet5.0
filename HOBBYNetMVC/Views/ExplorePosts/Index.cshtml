@@ -24,6 +24,7 @@
                     @if (@post.User.Location != null)
                     {
                         <p class="address"><a>@post.User.Location.Name</a></p>
+                        <p class="address">Dist: @Model.distanceToUser[post.User] km</p>
                     }
 
                 </div>

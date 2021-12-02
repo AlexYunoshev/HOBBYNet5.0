@@ -18,22 +18,28 @@ namespace HOBBYNetMVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ExplorePostsService _explorePostsService;
+        private readonly UserService _userService;
 
-        public ExplorePostsController(UserManager<User> userManager, SignInManager<User> signInManager, ExplorePostsService explorePostsService)
+        public ExplorePostsController(UserManager<User> userManager, SignInManager<User> signInManager, ExplorePostsService explorePostsService, UserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _explorePostsService = explorePostsService;
+            _userService = userService;
         }
 
         [Authorize]
         [HttpGet]
         public IActionResult Index(int pageNumber = 1)
         {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            User currentUser = _userService.GetUserById(loginUserId);
             var posts = _explorePostsService.GetExplorePosts();
             var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             //return View(posts);
-            return View(new ExplorePostsViewModel(posts.Count) { Posts = postsByPage, CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, postsByPage) { CurrentPageNumber = pageNumber });
         }
 
         [Authorize]
@@ -41,14 +47,15 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult RecommendedPosts(int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-          
+
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             List<ExplorePost> explorePostsWithoutRating;
             Dictionary<Hobby, int> postRatingByHobbies;
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
             var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
 
-            return View(new ExplorePostsViewModel(recommendedPostsList.Count) { Posts = recommendedPostsByPage, CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsByPage) { CurrentPageNumber = pageNumber });
             //return View(recommendedPostsByPage);
         }
 
