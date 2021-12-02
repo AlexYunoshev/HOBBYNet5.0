@@ -125,6 +125,18 @@
         </form>
 
 
+        <form asp-action="SaveLocation" method="post" style="display: inline-block;">
+            <h4>This is your current location?</h4>
+            <input type="submit" value="Yes, save it" style="margin-top:11px;" />
+            <input type="hidden" value="@Model[0].Latitude" name="latitude" />
+            <input type="hidden" value="@Model[0].Longitude" name="longitude" />
+            <input type="hidden" value="@Model[0].Name" name="name" />
+            <input type="hidden" value="@Model[0].PlaceId" name="placeId" />
+            <input type="hidden" value="@Model[0].Address" name="address" />
+        </form>
+
+        @*нужно брать значение из жаваскрипт*@
+
 
     </div>
 

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Domain.Models.Location
+
+@{
     ViewBag.Title = "Изменение локации";
 }
 
@@ -47,34 +49,70 @@
         display: inline-block;
         margin: 0 15px;
     }
+
+    .location-info p {
+  /*      max-width: 700px;*/
+        text-align: left;
+    }
 </style>
 
 <div class="content">
-    <div class="content-body">
-        <div class="geolocation">
+    @if (Model == null)
+    {
+        <div class="content-body">
+            <div class="geolocation">
 
-            <h4>You can try to get your current location.</h4>
-            <form id="form1" asp-action="LocationResultByGeolocation" method="post">
-                <input id="latitude" type="hidden" name="latitude" value="" />
-                <input id="longitude" type="hidden" name="longitude" value="" />
-            </form>
-            <input style="margin: 10px;" type="submit" id="locationButton" value="Get my current location" />
+                <h4>You can try to get your current location.</h4>
+                <form id="form1" asp-action="LocationResultByGeolocation" method="post">
+                    <input id="latitude" type="hidden" name="latitude" value="" />
+                    <input id="longitude" type="hidden" name="longitude" value="" />
+                </form>
+                <input style="margin: 10px;" type="submit" id="locationButton" value="Get my current location" />
+            </div>
+
+
+
+            <div class="manually-location">
+                <h4>Or you can input location manually...</h4>
+                <form asp-action="LocationResultByAddress" method="post">
+                    <input style="margin-top: 10px; width:350px;" type="text" name="address" placeholder="Address" />
+                    <input type="submit" value="Search..." />
+                </form>
+            </div>
+
         </div>
 
+        <div style="width: 1200px; height: 80%; position: absolute; top:120px; border:solid white 1px; border-radius:15px;" id="map"></div>
+
+    }
+
+    else
+    {
+        <div class="content-body">
+
+            <div class="location-info">
+                <p>Your current location is:</p>
+                @if (Model.Address != null)
+                {
+                    <p>@Model.Address</p>
+                }
+
+                <p>@Model.Latitude @Model.Longitude</p>
 
 
-        <div class="manually-location">
-            <h4>Or you can input location manually...</h4>
-            <form asp-action="LocationResultByAddress" method="post">
-                <input style="margin-top: 10px; width:350px;" type="text" name="address" placeholder="Address" />
-                <input type="submit" value="Search..." />
-            </form>
+                <p>@Model.Name</p>
+
+                <form asp-action="Location" method="get">
+                    <input type="hidden" name="change" value="1" />
+                    <input type="submit" value="Click, if you want to change your location" />
+                </form>
+
+                
+            </div>
+            
+
         </div>
-
-    </div>
-
-    <div style="width: 1200px; height: 80%; position: absolute; top:120px; border:solid white 1px; border-radius:15px;" id="map"></div>
-   
+    }
 </div>
 
 

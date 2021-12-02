@@ -1,5 +1,6 @@
 ﻿using DataAccess.Context;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,20 @@ namespace BusinessLogic.Services
         public LocationService(HobbyNetContext context)
         {
             _context = context;
+        }
+
+        public Location GetUserLocation(string userId)
+        {
+            return _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Location)
+                .FirstOrDefault().Location;
+        }
+
+        public void SaveLocation(Location location, string userId)
+        {
+            _context.Users.Where(u => u.Id == userId).FirstOrDefault().Location = location;
+            _context.SaveChanges();
         }
 
         public List<Location> GetLocations(string address)

@@ -127,7 +127,7 @@ namespace HOBBYNetMVC.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Location(string id)
+        public async Task<IActionResult> Location(string id, int change = 0)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User user = await _userManager.FindByIdAsync(id);
@@ -135,24 +135,45 @@ namespace HOBBYNetMVC.Controllers
             {
                 return NotFound();
             }
-            
+            Location location = _locationService.GetUserLocation(loginUserId);
+            if (change == 0)
+            {
+                return View(location);
+            }
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> LocationResultByGeolocation(string latitude, string longitude)
+        public IActionResult LocationResultByGeolocation(string latitude, string longitude)
         {
             List<Location> locations = _locationService.GetLocations(latitude + " " + longitude);
             return View(locations);
         }
 
         [HttpPost]
-        public async Task<IActionResult> LocationResultByAddress(string address)
+        public IActionResult LocationResultByAddress(string address)
         {
             List<Location> locations = _locationService.GetLocations(address);
             return View(locations);
         }
 
+
+        [HttpPost]
+        public IActionResult SaveLocation(string latitude, string longitude, string name, long placeId, string address) { 
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Location location = new Location()
+            {
+                Latitude = latitude,
+                Longitude = longitude,
+                Name = name, 
+                PlaceId = placeId, 
+                Address = address
+            };
+            _locationService.SaveLocation(location, loginUserId);
+            return View(location);
+            //return View();
+
+        }
 
         [HttpGet]
         public async Task<IActionResult> ChangePassword(string id)
