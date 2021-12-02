@@ -19,7 +19,12 @@
                 <img class="user-pic" src="@post.User.PhotoPath" />
                 <div class="user-info">
                     <p class="username"><a>@post.User.UserName</a></p>
-                    <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+                    @*<p class="address"><a>Kharkiv, Krychevsky street</a></p>*@
+                    @*<p class="address"><a>@post.User.Location.Latitude</a></p>*@
+                    @if (@post.User.Location != null)
+                    {
+                        <p class="address"><a>@post.User.Location.Name</a></p>
+                    }
 
                 </div>
                 <div class="social-actions">

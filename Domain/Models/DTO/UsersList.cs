@@ -8,13 +8,13 @@ namespace Domain.Models.DTO
 {
     public class UsersList
     {
-        public UsersList(string Email, string Id)
+        public UsersList(string Username, string Id)
         {
-            this.Email = Email;
+            this.Username = Username;
             this.Id = Id;
         }
 
-        public string Email { get; set; }
+        public string Username { get; set; }
         public string Id { get; set; }
     }
 }

@@ -13,6 +13,8 @@ namespace Domain.ViewModels
         public int AllPostsCount { get; set; }
         public int PagesCount { get; set; }
         public int CurrentPageNumber { get; set; }
+
+
         
         public ExplorePostsViewModel(int allPostsCount)
         {

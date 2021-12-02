@@ -42,7 +42,7 @@ namespace BusinessLogic.Services
         {
             var posts = _context.ExplorePosts
                 .Include(h => h.Hobbies)
-                .Include(h => h.User)
+                .Include(h => h.User).ThenInclude(u => u.Location)
                 .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
                 .Include(h => h.ExploreComments).ThenInclude(c => c.User)
                 .Where(p => p.UserId == userId)
@@ -55,7 +55,7 @@ namespace BusinessLogic.Services
         {
             var posts = _context.ExplorePosts
                 .Include(h => h.Hobbies)
-                .Include(h => h.User)
+                .Include(h => h.User).ThenInclude(u=>u.Location)
                 .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
                 .Include(h => h.ExploreComments).ThenInclude(c => c.User)
                 .ToList();

@@ -44,6 +44,7 @@ namespace HOBBYNetMVC.Controllers
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
             var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+
             return View(new ExplorePostsViewModel(posts.Count) { Posts = postsByPage, CurrentPageNumber = pageNumber });
         }
 
