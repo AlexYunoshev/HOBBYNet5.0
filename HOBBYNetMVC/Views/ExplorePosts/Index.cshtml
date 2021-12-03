@@ -9,6 +9,62 @@
     }
 </style>
 
+
+<script async>
+    function ChangeRadius() {
+        //console.log(markers);
+        //var value = document.querySelector('input[name="places"]:checked').value;
+        //console.log(value);
+        //removeMarkers();
+        //console.log(markers);
+
+        //for (i = 0; i < locationsArray.length; i++) {
+        //    var markerPosition = new google.maps.LatLng(locationsArray[i]["lat"], locationsArray[i]["lon"]);
+        //    if (locationsArray[i]["placeid"] == value) {
+        //        addMarker(markerPosition, true);
+
+        //        map.setCenter(markerPosition);
+        //    }
+        //    else {
+        //        addMarker(markerPosition, false);
+        //    }
+        //}
+    }
+
+</script>
+
+
+
+<div class="settings">
+    <form asp-action="Index" method="get">
+        <label for="sort">Sort:</label>
+        <select asp-for="Sort" name="sort" id="sort">
+            <option value="newest">Newest</option>
+            <option value="older">Older</option>
+            <option value="friends">Friends first</option>
+        </select>
+
+        <span>Filter by distance:</span>
+
+        <input type="radio" id="radius-all" name="locationRadius" asp-for="LocationRadius" value="0" onchange="ChangeRadius()">
+        <label for="radius-all">All</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="1" onchange="ChangeRadius()">
+        <label for="radius-1km">1 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="3" onchange="ChangeRadius()">
+        <label for="radius-3km">3 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="5" onchange="ChangeRadius()">
+        <label for="radius-5km">5 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="10" onchange="ChangeRadius()">
+        <label for="radius-10km">10 km</label>
+
+        <input type="submit" value="OK">
+    </form>
+</div>
+
 <div class="content">
     @foreach (var post in Model.Posts)
     {
@@ -23,7 +79,7 @@
                     @*<p class="address"><a>@post.User.Location.Latitude</a></p>*@
                     @if (@post.User.Location != null)
                     {
-                        <p class="address"><a>@post.User.Location.Name</a></p>
+                        @*<p class="address"><a>@post.User.Location.Name</a></p>*@
                         <p class="address">Dist: @Model.distanceToUser[post.User] km</p>
                     }
 
@@ -86,9 +142,10 @@
 
                 <div class="explore-post-content">
                     <p id="p-@post.Id">
-                        @post.Text
+                        @*@post.Text*@
+                        Text
                     </p>
-                    <img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)"/>
+                    @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)" />*@
                     <p>
                         @foreach (var hobby in post.Hobbies)
                         {

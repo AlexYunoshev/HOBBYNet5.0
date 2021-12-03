@@ -30,16 +30,16 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult Index(int pageNumber = 1)
+        public IActionResult Index(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             //User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             User currentUser = _userService.GetUserById(loginUserId);
             var posts = _explorePostsService.GetExplorePosts();
-            var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             //return View(posts);
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, postsByPage) { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius) { CurrentPageNumber = pageNumber, LocationRadius = locationRadius });
         }
 
         [Authorize]
@@ -53,9 +53,9 @@ namespace HOBBYNetMVC.Controllers
             Dictionary<Hobby, int> postRatingByHobbies;
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
-            var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
+            //var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
 
-            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsByPage) { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, 0) { CurrentPageNumber = pageNumber });
             //return View(recommendedPostsByPage);
         }
 

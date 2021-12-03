@@ -43,10 +43,10 @@ namespace HOBBYNetMVC.Controllers
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
-            var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
 
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, postsByPage) { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
         }
 
 

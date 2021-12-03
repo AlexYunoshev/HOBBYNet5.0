@@ -62,6 +62,39 @@ namespace BusinessLogic.Services
             return posts;
         }
 
+        public List<ExplorePost> GetExplorePosts(int radius)
+        {
+            var posts = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User).ThenInclude(u => u.Location)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .ToList();
+            return posts;
+        }
+
+        public List<ExplorePost> GetExplorePosts(string sortType)
+        {
+            var posts = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User).ThenInclude(u => u.Location)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .ToList();
+            return posts;
+        }
+
+        public List<ExplorePost> GetExplorePosts(int radius, string sortType)
+        {
+            var posts = _context.ExplorePosts
+                .Include(h => h.Hobbies)
+                .Include(h => h.User).ThenInclude(u => u.Location)
+                .Include(h => h.ExploreLikes).ThenInclude(l => l.User)
+                .Include(h => h.ExploreComments).ThenInclude(c => c.User)
+                .ToList();
+            return posts;
+        }
+
         public ExplorePost GetExplorePost(int postId)
         {
             var post = _context.ExplorePosts
