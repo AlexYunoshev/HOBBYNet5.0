@@ -5,6 +5,8 @@ using Domain.Models.DTO;
 using Domain.ViewModels;
 using HOBBYNetMVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -25,16 +28,20 @@ namespace HOBBYNetMVC.Controllers
         private readonly UserService _userService;
         private readonly ExplorePostsService _explorePostsService;
         private readonly ILogger<UserController> _logger;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-       
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, UserService userService, ExplorePostsService explorePostsService, ILogger<UserController> logger)
+        public UserController(
+            UserManager<User> userManager, SignInManager<User> signInManager, 
+            UserService userService, ExplorePostsService explorePostsService, 
+            ILogger<UserController> logger, IWebHostEnvironment appEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
             _explorePostsService = explorePostsService;
             _logger = logger;
+            _appEnvironment = appEnvironment;
         }
 
         [Authorize]
@@ -49,6 +56,64 @@ namespace HOBBYNetMVC.Controllers
             return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
         }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult AddPost()
+        {
+            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+          
+            //User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPost(string postText, IFormFile file)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            var path = _appEnvironment.WebRootPath;
+            var filePath = Path.Combine(path, "images");
+            filePath = Path.Combine(filePath, currentUser.UserName);
+            if (file != null)
+            {
+                if (file.FileName.ToUpper().EndsWith(".JPG") || file.FileName.ToUpper().EndsWith(".PNG"))
+                {
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+
+                    //filePath = Path.Combine(filePath, file.FileName);
+
+                    filePath = Path.Combine(filePath, "post-12313");
+                    if (file.FileName.ToUpper().EndsWith(".JPG"))
+                    {
+                        filePath += ".jpg";
+                    }
+                    else if (file.FileName.ToUpper().EndsWith(".PNG"))
+                    {
+                        filePath += ".png";
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    _explorePostsService.AddPost(loginUserId, postText, filePath);
+                }
+            }
+
+            
+
+            else
+            {
+                _explorePostsService.AddPost(loginUserId, postText);
+            }
+
+           
+            return RedirectToAction("Profile");
+        }
 
 
         [Authorize]

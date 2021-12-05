@@ -11,7 +11,7 @@ namespace Domain.Models
         public string Text { get; set; }
         public string PhotoPath { get; set; }
         public string UserId { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public List<Hobby> Hobbies { get; set; } = new List<Hobby>();
 
         public IList<ExploreLike> ExploreLikes { get; set; }
@@ -19,5 +19,6 @@ namespace Domain.Models
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
     }
 }

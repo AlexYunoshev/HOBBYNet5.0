@@ -18,6 +18,14 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
+        public void AddPost(string currentUserId, string postText, string photoPath = null)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).FirstOrDefault();
+            var post = new ExplorePost() { User = user, Text = postText, PhotoPath = photoPath };
+            _context.ExplorePosts.Add(post);
+            _context.SaveChanges();
+        }
+
         public List<ExploreLike> GetExploreLikes(string currentUserId)
         {
             var likes = _context.ExploreLikes

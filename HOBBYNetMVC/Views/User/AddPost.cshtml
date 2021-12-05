@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/Cycling1.jpg);
+    }
+
+    .input {
+        padding: 10px;
+        margin: 10px auto;
+        display: block;
+        width: 95%;
+    }
+
+    
+    textarea {
+        resize: none;
+    }
+
+    input[type="submit"]{
+        border-radius: 30px;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        display: block;
+    }
+    
+</style>
+
+<div class="content">
+    <div class="explore-post" >
+        <form asp-action="AddPost" method="post" enctype="multipart/form-data">
+            <textarea class="input" rows="10" name="postText" placeholder="Post text"></textarea>
+            <label for="file">You can upload one photo. Correct file types are .jpg or .png</label>
+            <input type="file" name="file" />
+            <input class="input" type="submit" value="Submit" />
+        </form>
+    </div>
+</div>
+
