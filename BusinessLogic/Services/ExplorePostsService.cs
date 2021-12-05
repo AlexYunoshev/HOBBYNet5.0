@@ -1,8 +1,10 @@
 ﻿using DataAccess.Context;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +20,56 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-        public void AddPost(string currentUserId, string postText, string photoPath = null)
+        public async Task AddPost(User user, string postText, IFormFile file, string filePath, List<Hobby> hobbies)
         {
-            var user = _context.Users.Where(u => u.Id == currentUserId).FirstOrDefault();
-            var post = new ExplorePost() { User = user, Text = postText, PhotoPath = photoPath };
+            
+            var lastPost = _context.ExplorePosts.OrderByDescending(p => p.Id).FirstOrDefault();
+            var post = new ExplorePost() { User = user, Text = postText };
+
+            if (file != null)
+            {
+                if (file.FileName.ToUpper().EndsWith(".JPG") || file.FileName.ToUpper().EndsWith(".PNG"))
+                {
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+
+                    int id = lastPost.Id + 1;
+                    string fileName = "post-" + id.ToString();
+
+
+                    filePath = Path.Combine(filePath, fileName);
+                    if (file.FileName.ToUpper().EndsWith(".JPG"))
+                    {
+                        filePath += ".jpg";
+                    }
+                    else if (file.FileName.ToUpper().EndsWith(".PNG"))
+                    {
+                        filePath += ".png";
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    int index = filePath.IndexOf("images");
+                    filePath = filePath.Remove(0, index-1);
+                    post.PhotoPath = filePath;
+                }
+            }
+
+           
             _context.ExplorePosts.Add(post);
+            _context.SaveChanges();
+
+            var addedPost = _context.ExplorePosts.Where(p => p.Id == post.Id).FirstOrDefault();
+            foreach (var hobby in hobbies)
+            {
+                addedPost.Hobbies.Add(hobby);
+            }
+
+            //post.Hobbies = hobbies;
             _context.SaveChanges();
         }
 

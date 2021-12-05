@@ -29,17 +29,20 @@ namespace HOBBYNetMVC.Controllers
         private readonly ExplorePostsService _explorePostsService;
         private readonly ILogger<UserController> _logger;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly HobbyService _hobbyService;
 
 
         public UserController(
             UserManager<User> userManager, SignInManager<User> signInManager, 
-            UserService userService, ExplorePostsService explorePostsService, 
+            UserService userService, ExplorePostsService explorePostsService,
+            HobbyService hobbyService,
             ILogger<UserController> logger, IWebHostEnvironment appEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userService = userService;
             _explorePostsService = explorePostsService;
+            _hobbyService = hobbyService;
             _logger = logger;
             _appEnvironment = appEnvironment;
         }
@@ -60,58 +63,48 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult AddPost()
         {
-            //var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-          
-            //User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+           
 
-            return View();
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+
+
+            var allHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
+            var viewModel = new HobbyViewModel();
+            var hobbiesToAdd = new List<AddHobbiesModel>();
+
+            foreach (var hobby in allHobbies)
+            {
+                hobbiesToAdd.Add(new AddHobbiesModel() { 
+                    Id = hobby.Id, 
+                    Name = hobby.Name, 
+                    IsSelected = false });
+
+            }
+            viewModel.addHobbiesList = hobbiesToAdd;
+          
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPost(string postText, IFormFile file)
+        public async Task<IActionResult> AddPost(string postText, IFormFile file, HobbyViewModel hobbiesModel)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
-            var path = _appEnvironment.WebRootPath;
-            var filePath = Path.Combine(path, "images");
-            filePath = Path.Combine(filePath, currentUser.UserName);
-            if (file != null)
+            var rootPath = _appEnvironment.WebRootPath;
+            var startFilePath = Path.Combine(rootPath, "images");
+            startFilePath = Path.Combine(startFilePath, currentUser.UserName);
+
+            var hobbies = new List<Hobby>();
+            foreach (var hobby in hobbiesModel.addHobbiesList)
             {
-                if (file.FileName.ToUpper().EndsWith(".JPG") || file.FileName.ToUpper().EndsWith(".PNG"))
+                if (hobby.IsSelected)
                 {
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
-
-                    //filePath = Path.Combine(filePath, file.FileName);
-
-                    filePath = Path.Combine(filePath, "post-12313");
-                    if (file.FileName.ToUpper().EndsWith(".JPG"))
-                    {
-                        filePath += ".jpg";
-                    }
-                    else if (file.FileName.ToUpper().EndsWith(".PNG"))
-                    {
-                        filePath += ".png";
-                    }
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                    _explorePostsService.AddPost(loginUserId, postText, filePath);
+                    hobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
                 }
             }
 
-            
-
-            else
-            {
-                _explorePostsService.AddPost(loginUserId, postText);
-            }
-
-           
+            await _explorePostsService.AddPost(currentUser, postText, file, startFilePath, hobbies);
             return RedirectToAction("Profile");
         }
 
