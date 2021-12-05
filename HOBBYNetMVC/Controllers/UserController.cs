@@ -59,6 +59,15 @@ namespace HOBBYNetMVC.Controllers
             return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
         }
 
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemovePost(int postId)
+        {
+            _explorePostsService.RemovePost(postId);
+            return RedirectToAction("Profile");
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult AddPost()

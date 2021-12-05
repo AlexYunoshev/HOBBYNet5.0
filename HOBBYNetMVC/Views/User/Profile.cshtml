@@ -8,6 +8,14 @@
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/fishing1.jpg);
     }
 
+    .removePost-img {
+        max-height: 15px;
+        max-width: 15px;
+        position: absolute;
+        margin-top: -30px;
+        margin-left: -3px;
+    }
+
 </style>
 
 <div class="content">
@@ -25,36 +33,7 @@
 
                 </div>
                 <div class="social-actions">
-                    @if (post.User.TelegramUsername != null)
-                    {
-                        string link = "https://t.me/" + @post.User.TelegramUsername;
-                        <span class="chat">
-                            <a href="@link" target="_blank">
-                                <img class="chat-img" src="/images/Telegram.png" />
-                            </a>
-                        </span>
-                    }
-
-
-                    @if (post.User.ViberUsername != null)
-                    {
-                        string link = "viber://chat?number=" + @post.User.ViberUsername;
-                        <span class="chat">
-                            <a href="@link" target="_blank">
-                                <img class="chat-img" src="/images/Viber.png" />
-                            </a>
-                        </span>
-                    }
-                    @if (post.User.WhatsAppUsername != null)
-                    {
-                        string link = "whatsapp://send?phone=" + @post.User.WhatsAppUsername;
-                        <span class="chat">
-                            <a href="@link" target="_blank">
-                                <img class="chat-img" src="/images/WhatsApp.png" />
-                            </a>
-                        </span>
-                    }
-
+                    
                     <form asp-action="SetLikeToPost" method="post">
                         <span>
                             <button type="submit">
@@ -71,6 +50,15 @@
                         </a>
                         <p class="counter">@post.ExploreComments.Count</p>
                     </span>
+
+                    <form asp-action="RemovePost" method="post">
+                        <span>
+                            <button type="submit" name="postId" value="@post.Id">
+                                <img class="removePost-img" src="~/images/delete.png" />
+                            </button>
+                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                        </span>
+                    </form>
 
                 </div>
 

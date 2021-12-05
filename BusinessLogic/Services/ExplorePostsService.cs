@@ -20,6 +20,14 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
+        public void RemovePost(int postId)
+        {
+         
+            var post = _context.ExplorePosts.Where(p => p.Id == postId).FirstOrDefault();
+            _context.ExplorePosts.Remove(post);
+            _context.SaveChanges();
+        }
+
         public async Task AddPost(User user, string postText, IFormFile file, string filePath, List<Hobby> hobbies)
         {
             
@@ -48,6 +56,7 @@ namespace BusinessLogic.Services
                     {
                         filePath += ".png";
                     }
+                   
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
