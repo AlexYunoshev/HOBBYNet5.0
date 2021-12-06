@@ -64,7 +64,10 @@ namespace HOBBYNetMVC.Controllers
         [HttpPost]
         public IActionResult RemovePost(int postId, int pageNumber)
         {
-            _explorePostsService.RemovePost(postId);
+            
+            var rootPath = _appEnvironment.WebRootPath;
+           
+            _explorePostsService.RemovePost(postId, rootPath);
             string url = "Profile?pageNumber=" + pageNumber;
             return Redirect(url);
         }

@@ -20,10 +20,12 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-        public void RemovePost(int postId)
+        public void RemovePost(int postId, string filePath)
         {
-         
             var post = _context.ExplorePosts.Where(p => p.Id == postId).FirstOrDefault();
+            //var deletePath = Path.Combine(filePath, post.PhotoPath);
+            var deletePath = filePath + post.PhotoPath;
+            File.Delete(deletePath);
             _context.ExploreLikes.RemoveRange(_context.ExploreLikes.Where(p => p.PostId == postId));
             _context.ExploreComments.RemoveRange(_context.ExploreComments.Where(p => p.PostId == postId));
             _context.ExplorePosts.Remove(post);
