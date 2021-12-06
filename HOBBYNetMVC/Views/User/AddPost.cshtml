@@ -35,12 +35,9 @@
         display: none;
     }
 
-
-
-
     .hobbies-list {
         border-radius: 15px;
-        max-height: 280px;
+        max-height: 130px;
         overflow: auto;
     }
 
@@ -76,7 +73,7 @@
 
             <input class="input" type="file" name="file" />
 
-            
+
             <p class="input">You need to choose at least 1 hobby from the list below:</p>
 
             <div class="canvas">
@@ -102,7 +99,12 @@
                 </div>
 
             </div>
-
+            <p class="input">
+                Didn`t find your hobby? Add it to the hobbies list now.
+                <a asp-action="Index" asp-controller="Hobby" target="_blank">Just click here</a>
+            </p>
+      
+            
 
             <input class="input" type="submit" value="Submit" />
         </form>

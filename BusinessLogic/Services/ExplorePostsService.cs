@@ -24,6 +24,8 @@ namespace BusinessLogic.Services
         {
          
             var post = _context.ExplorePosts.Where(p => p.Id == postId).FirstOrDefault();
+            _context.ExploreLikes.RemoveRange(_context.ExploreLikes.Where(p => p.PostId == postId));
+            _context.ExploreComments.RemoveRange(_context.ExploreComments.Where(p => p.PostId == postId));
             _context.ExplorePosts.Remove(post);
             _context.SaveChanges();
         }
@@ -82,6 +84,71 @@ namespace BusinessLogic.Services
             _context.SaveChanges();
         }
 
+
+        public async Task EditPost(int postId, string postText, IFormFile file, string filePath, 
+            List<Hobby> hobbies, List<Hobby> userHobbies)
+        {
+            var post = _context.ExplorePosts
+               .Where(p => p.Id == postId)
+               .Include(p => p.User).ThenInclude(u => u.Hobbies)
+               .Include(p => p.Hobbies)
+               .FirstOrDefault();
+
+            //var userHobbies = post.User.Hobbies.ToList();
+
+            if (file != null)
+            {
+                if (file.FileName.ToUpper().EndsWith(".JPG") || file.FileName.ToUpper().EndsWith(".PNG"))
+                {
+                    if (!Directory.Exists(filePath))
+                    {
+                        Directory.CreateDirectory(filePath);
+                    }
+
+                    string fileName = "post-" + postId.ToString();
+
+                    filePath = Path.Combine(filePath, fileName);
+                    if (file.FileName.ToUpper().EndsWith(".JPG"))
+                    {
+                        filePath += ".jpg";
+                    }
+                    else if (file.FileName.ToUpper().EndsWith(".PNG"))
+                    {
+                        filePath += ".png";
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                    int index = filePath.IndexOf("images");
+                    filePath = filePath.Remove(0, index - 1);
+                    post.PhotoPath = filePath;
+                }
+            }
+
+            post.Text = postText;
+
+            foreach (var hobby in userHobbies)
+            {  
+                if (hobbies.Any(h => h.Name == hobby.Name)) {
+                    continue;
+                }
+                post.Hobbies.RemoveAll(h => h.Name == hobby.Name);
+            }
+            _context.SaveChanges();
+
+            foreach (var hobby in hobbies)
+            {
+                if (post.Hobbies.Any(h => h.Name == hobby.Name)) {
+                    continue;
+                }
+                var h = userHobbies.Where(h => h.Name == hobby.Name).FirstOrDefault();
+                post.Hobbies.Add(h);
+            }
+            _context.SaveChanges();
+        }
+
         public List<ExploreLike> GetExploreLikes(string currentUserId)
         {
             var likes = _context.ExploreLikes
@@ -114,6 +181,13 @@ namespace BusinessLogic.Services
             return posts;
         }
 
+
+        public void RemoveHobbiesFromPost(int postId)
+        {
+            var post = GetExplorePost(postId);
+            post.Hobbies.Clear();
+            _context.SaveChanges();
+        }
 
         public List<ExplorePost> GetExplorePosts()
         {

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +30,11 @@ namespace HOBBYNetMVC
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<HobbyNetContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            services.AddDbContext<HobbyNetContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("DBConnection"));
+                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                //options.EnableSensitiveDataLogging(true);
+               });
 
             services.AddScoped<UserService>();
             services.AddScoped<HobbyService>();
@@ -86,6 +90,13 @@ namespace HOBBYNetMVC
                 options.AccessDeniedPath = $"/Account/AccessDenied";
                
             });
+
+            services.AddLogging(loggingBuilder => {
+                loggingBuilder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+                loggingBuilder.AddDebug();
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -62,10 +62,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult RemovePost(int postId)
+        public IActionResult RemovePost(int postId, int pageNumber)
         {
             _explorePostsService.RemovePost(postId);
-            return RedirectToAction("Profile");
+            string url = "Profile?pageNumber=" + pageNumber;
+            return Redirect(url);
         }
 
         [Authorize]
@@ -116,6 +117,78 @@ namespace HOBBYNetMVC.Controllers
             await _explorePostsService.AddPost(currentUser, postText, file, startFilePath, hobbies);
             return RedirectToAction("Profile");
         }
+
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult EditPost(int postId, int pageNumber)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+
+            var post = _explorePostsService.GetExplorePost(postId);
+            var allHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
+            var viewModel = new HobbyViewModel();
+            var hobbiesToAdd = new List<AddHobbiesModel>();
+
+            foreach (var hobby in allHobbies)
+            {
+                hobbiesToAdd.Add(new AddHobbiesModel()
+                {
+                    Id = hobby.Id,
+                    Name = hobby.Name,
+                    IsSelected = false
+                });
+
+            }
+
+            foreach (var hobby in post.Hobbies)
+            {
+                hobbiesToAdd.Where(h => h.Name == hobby.Name).FirstOrDefault().IsSelected = true;
+            }
+
+            viewModel.addHobbiesList = hobbiesToAdd;
+
+
+
+            var editPostViewModel = new EditPostViewModel();
+
+
+
+            editPostViewModel.Post = post;
+            editPostViewModel.HobbyViewModel = viewModel;
+
+            return View(editPostViewModel);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditPost(int postId, string postText, IFormFile file, EditPostViewModel editPostViewModel)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            var rootPath = _appEnvironment.WebRootPath;
+            var startFilePath = Path.Combine(rootPath, "images");
+            startFilePath = Path.Combine(startFilePath, currentUser.UserName);
+
+            var hobbies = new List<Hobby>();
+            //var allUserHobbies = new List<Hobby>();
+            var allUserHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
+            foreach (var hobby in editPostViewModel.HobbyViewModel.addHobbiesList)
+            {
+                if (hobby.IsSelected)
+                {
+                    hobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
+                }
+                //allUserHobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
+            }
+
+            await _explorePostsService.EditPost(postId, postText, file, startFilePath, hobbies, allUserHobbies);
+            return RedirectToAction("Profile");
+        }
+
+
 
 
         [Authorize]
