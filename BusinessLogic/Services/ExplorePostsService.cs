@@ -24,8 +24,19 @@ namespace BusinessLogic.Services
         {
             var post = _context.ExplorePosts.Where(p => p.Id == postId).FirstOrDefault();
             //var deletePath = Path.Combine(filePath, post.PhotoPath);
-            var deletePath = filePath + post.PhotoPath;
-            File.Delete(deletePath);
+            if (post.PhotoPath != null)
+            {
+                var deletePath = filePath + post.PhotoPath;
+                try
+                {
+                    File.Delete(deletePath);
+                }
+                catch 
+                {
+                
+                }     
+            }
+           
             _context.ExploreLikes.RemoveRange(_context.ExploreLikes.Where(p => p.PostId == postId));
             _context.ExploreComments.RemoveRange(_context.ExploreComments.Where(p => p.PostId == postId));
             _context.ExplorePosts.Remove(post);
@@ -138,7 +149,7 @@ namespace BusinessLogic.Services
                 }
                 post.Hobbies.RemoveAll(h => h.Name == hobby.Name);
             }
-            _context.SaveChanges();
+            //_context.SaveChanges();
 
             foreach (var hobby in hobbies)
             {
