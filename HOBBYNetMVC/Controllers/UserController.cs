@@ -255,12 +255,17 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Friends()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_userService.GetFriendsList(loginUserId));
+            var friendsList = _userService.GetFriendsList(loginUserId);
+            FriendsDTO friendsDTO = new FriendsDTO();
+            friendsDTO.Friends = friendsList;
+            friendsDTO.RequestsToUser = _userService.GetFriendRequestsToUser(loginUserId);
+            friendsDTO.RequestsFromUser = _userService.GetFriendRequestsFromUser(loginUserId);
+            return View(friendsDTO);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Friends(string userId)
+        public IActionResult RemoveFriend(string userId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!_userService.RemoveUserFromFriends(loginUserId, userId))
@@ -290,13 +295,24 @@ namespace HOBBYNetMVC.Controllers
             if(acceptUserId != null)
             {
                 if(_userService.AcceptFriendRequest(loginUserId, acceptUserId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
-                return RedirectToAction("Friends", "User");
+                return RedirectToAction("Friends");
             }
             else
             {
                 if (_userService.RemoveUserFromFriends(loginUserId, declineUserId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
-                return RedirectToAction("FriendRequests", "User");
+                return RedirectToAction("Friends");
             }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CancelRequestFromUser(string userId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = await _userManager.FindByIdAsync(loginUserId);
+            User friendUser = await _userManager.FindByIdAsync(userId);
+            _userService.CancelFriendRequest(currentUser, friendUser);
+            return RedirectToAction("Friends");
         }
 
         [Authorize]
@@ -307,7 +323,7 @@ namespace HOBBYNetMVC.Controllers
             User mainUser = await _userManager.FindByIdAsync(loginUserId);
             User friendUser = await _userManager.FindByIdAsync(id);
             if (_userService.SendFriendRequest(mainUser, friendUser) == false) return View("~/Views/Shared/ErrorPage.cshtml");
-            return RedirectToAction("FriendRequests");
+            return RedirectToAction("Friends");
         }
     }
 }

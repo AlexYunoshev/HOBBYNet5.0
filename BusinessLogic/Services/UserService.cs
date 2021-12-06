@@ -56,12 +56,57 @@ namespace BusinessLogic.Services
             return users;
         }
 
+        //public List<FriendsList> GetFriendsList(string currentUserId)
+        //{
+        //    var mainUsers = _context.FriendsList
+        //        .Include(x => x.MainUser)
+        //        .Where(x => x.FriendUserId == currentUserId && x.RelationShips == RelationShips.Friend)
+        //        .ToList();
+
+        //    var friendUsers = _context.FriendsList
+        //        .Include(x => x.FriendUser)
+        //        .Where(x => x.MainUserId == currentUserId && x.RelationShips == RelationShips.Friend)
+        //        .ToList();
+
+        //    var friendsList = mainUsers
+        //        .Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId))
+        //        .ToList();
+
+        //    friendsList
+        //        .AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId))
+        //        .ToList());
+        //    return friendsList;
+        //}
+
         public List<FriendsList> GetFriendsList(string currentUserId)
         {
-            var mainUsers = _context.FriendsList.Include(x => x.MainUser).Where(x => x.FriendUserId == currentUserId && x.RelationShips == RelationShips.Friend).ToList();
-            var friendUsers = _context.FriendsList.Include(x => x.FriendUser).Where(x => x.MainUserId == currentUserId && x.RelationShips == RelationShips.Friend).ToList();
-            var friendsList = mainUsers.Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId)).ToList();
-            friendsList.AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId)).ToList());
+            var mainUsers = _context.FriendsList
+                .Include(x => x.MainUser)
+                .Where(x => x.FriendUserId == currentUserId && x.RelationShips == RelationShips.Friend)
+                .ToList();
+
+            var friendUsers = _context.FriendsList
+                .Include(x => x.FriendUser)
+                .Where(x => x.MainUserId == currentUserId && x.RelationShips == RelationShips.Friend)
+                .ToList();
+
+            var friendsList = mainUsers
+                .Select(x => new FriendsList(
+                    x.MainUserId, 
+                    x.MainUser.FirstName, 
+                    x.MainUser.LastName,
+                    x.MainUser.UserName,
+                    x.MainUser.PhotoPath
+                    )).ToList();
+
+            friendsList
+                .AddRange(friendUsers.Select(x => new FriendsList(
+                    x.FriendUserId,
+                    x.FriendUser.FirstName,
+                    x.FriendUser.LastName, 
+                    x.FriendUser.UserName,
+                    x.FriendUser.PhotoPath
+                    )).ToList());
             return friendsList;
         }
 
@@ -72,8 +117,13 @@ namespace BusinessLogic.Services
                 .Where(x => x.FriendUserId == currentUserId && x.RelationShips == RelationShips.Waiting)
                 .ToList();
             var requestsToUser = mainUsers
-                .Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId))
-                .ToList();
+                .Select(x => new FriendsList(
+                    x.MainUserId,
+                    x.MainUser.FirstName,
+                    x.MainUser.LastName,
+                    x.MainUser.UserName,
+                    x.MainUser.PhotoPath
+                    )).ToList();
             return requestsToUser;
         }
 
@@ -83,9 +133,13 @@ namespace BusinessLogic.Services
                 .Include(x => x.FriendUser)
                 .Where(x => x.MainUserId == currentUserId && x.RelationShips == RelationShips.Waiting)
                 .ToList();
-            var requestsFromUser = friendUsers
-                .Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId))
-                .ToList();
+            var requestsFromUser = friendUsers.Select(x => new FriendsList(
+                    x.FriendUserId,
+                    x.FriendUser.FirstName,
+                    x.FriendUser.LastName,
+                    x.FriendUser.UserName,
+                    x.FriendUser.PhotoPath
+                    )).ToList();
             return requestsFromUser;
         }
 
@@ -108,6 +162,18 @@ namespace BusinessLogic.Services
             _context.FriendsList.Add(friends);
             _context.SaveChanges();
             return true;
+        }
+
+
+        public void CancelFriendRequest(User currentUser, User friendUser)
+        {
+            var request = _context.FriendsList
+                .Where(m => m.MainUser == currentUser)
+                .Where(f => f.FriendUser == friendUser)
+                .Where(r => r.RelationShips == RelationShips.Waiting).FirstOrDefault();
+
+            _context.FriendsList.Remove(request);
+            _context.SaveChanges();
         }
 
         public bool RemoveUserFromFriends(string currentUserId, string friendUserId)
