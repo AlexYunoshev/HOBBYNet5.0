@@ -205,3 +205,16 @@ ul, li {
 .search-area{
     display:flex;
 }
+
+.logout-img {
+    max-height: 30px;
+    max-width: 30px;
+}
+
+.menu button[type="submit"] {
+    padding: 0;
+    border: none;
+    background: inherit;
+    cursor: pointer;
+    display: flex;
+}
