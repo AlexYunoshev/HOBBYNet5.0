@@ -147,6 +147,7 @@ ul, li {
 
 .menu {
     display: flex;
+    align-items:center;
 }
 
 .menu li a {
@@ -177,7 +178,30 @@ ul, li {
     transition: 0.5s ease-in-out;
 }
 
+.search-area input[type="text"] {
+    width: 250px;
+ /*   border-radius: 30px;
+    padding: 10px 30px;
+    border: none;
+    background: linear-gradient(to right, #ff105f, #ffaf06);
+    cursor: pointer;
+    display: block;*/
+}
+
+.search-area button[type="submit"] {
+    padding: 0;
+    border: none;
+    background: inherit;
+    cursor: pointer;
+}
 
 
 
+.search-img{
+    max-width: 25px;
+    max-height: 25px;
+}
 
+.search-area{
+    display:flex;
+}

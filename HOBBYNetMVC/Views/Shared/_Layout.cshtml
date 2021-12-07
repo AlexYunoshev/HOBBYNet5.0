@@ -24,11 +24,23 @@
                 </div>
 
 
-                <form method="post" asp-controller="Account" asp-action="Logout">
+               
                     <ul class="menu">
 
                         @if (User.Identity.IsAuthenticated)
                         {
+
+                            <li>
+                                <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
+                                    <input type="text" name="searchText" placeholder="Find user" />
+                                    <button type="submit">
+                                        <img class="search-img" src="~/images/search.png" />
+                                    </button>
+                                </form>
+                                
+                            </li>
+
+
                             <li>
                                 <a asp-controller="User" asp-action="Profile">My Profile</a>
                                 <ul class="submenu">
@@ -82,7 +94,10 @@
                             </li>
 
                             <li>
-                                <input type="submit" value="Logout" />
+                                <form method="post" asp-controller="Account" asp-action="Logout">
+                                    <input type="submit" value="Logout" />
+                                </form>
+                                   
                             </li>
 
                         }
@@ -98,7 +113,7 @@
                     @*<ul class="menu">
                             <li> <a><input type="submit" value="Logout" /></a></li>
                         </ul>*@
-                </form>
+               
             </nav>
         </div>
 

@@ -1,6 +1,7 @@
 ﻿using DataAccess.Context;
 using Domain.Models;
 using Domain.Models.DTO;
+using Domain.Models.Extentions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,27 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
+
+      
+
+        public List<UsersList> GetUsersBySearch(string searchString)
+        {
+            var users = _context.Users
+                .Where(u => u.UserName.Contains(searchString))
+                .Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath) {Firstname = x.FirstName, Lastname = x.LastName })
+                .ToList();
+            users.AddRange(_context.Users
+                .Where(u => u.FirstName.Contains(searchString))
+                .Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath) { Firstname = x.FirstName, Lastname = x.LastName })
+                .ToList());
+            users.AddRange(_context.Users
+                .Where(u => u.LastName.Contains(searchString))
+                .Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath) { Firstname = x.FirstName, Lastname = x.LastName })
+                .ToList());    
+            return users.DistinctBy(u => u.Id).ToList();     
+        }
+
+  
 
         public User GetUserById(string userId)
         {

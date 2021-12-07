@@ -242,13 +242,6 @@ namespace HOBBYNetMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult UsersList()
-        {
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_userService.GetUsersList(loginUserId));
-        }
 
         [Authorize]
         [HttpGet]
@@ -317,13 +310,33 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> AddFriendRequest(string id)
+        public async Task<IActionResult> AddFriendRequest(string userId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User mainUser = await _userManager.FindByIdAsync(loginUserId);
-            User friendUser = await _userManager.FindByIdAsync(id);
+            User friendUser = await _userManager.FindByIdAsync(userId);
             if (_userService.SendFriendRequest(mainUser, friendUser) == false) return View("~/Views/Shared/ErrorPage.cshtml");
             return RedirectToAction("Friends");
+        }
+
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UsersList()
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return View(_userService.GetUsersList(loginUserId));
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult SearchUser(string searchText)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var users = _userService.GetUsersBySearch(searchText);
+            return View(users);
         }
     }
 }
