@@ -10,6 +10,7 @@ namespace Domain.Models
 
         public List<User> Users { get; set; } = new List<User>();
         public List<ExplorePost> ExplorePosts { get; set; } = new List<ExplorePost>();
+        public List<Advert> Adverts { get; set; } = new List<Advert>();
 
         //public int UserId { get; set; }
         //public User User { get; set; }

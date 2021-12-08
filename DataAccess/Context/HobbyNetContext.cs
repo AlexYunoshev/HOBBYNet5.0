@@ -20,6 +20,7 @@ namespace DataAccess.Context
         public DbSet<ExploreLike> ExploreLikes { get; set; }
         public DbSet<ExploreComment> ExploreComments { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Advert> Adverts { get; set; }
 
 
         //public DbSet<SubHobbyUser> SubHobbyUser { get; set; }
