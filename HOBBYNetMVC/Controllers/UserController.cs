@@ -51,10 +51,11 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult Profile(int pageNumber = 1)
         {
+
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
             //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
-            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            User currentUser = _userService.GetUserById(loginUserId);
 
             return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
         }
@@ -64,6 +65,8 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult ToUserProfile(string id, int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
             //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;

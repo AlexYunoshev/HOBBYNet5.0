@@ -9,7 +9,7 @@
 .content {
     position: relative;
     margin: 10px auto;
-    margin: 10px 0 0 20px;
+   /* margin: 10px 0 0 20px;*/
     width: 700px;
     border-radius: 15px;
     transition: .5s;
