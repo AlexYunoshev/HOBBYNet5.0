@@ -20,6 +20,11 @@ namespace Domain.Models
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+        //public Advert(List<Hobby> hobbies)
+        //{
+        //    Hobbies = hobbies;
+        //}
     }
 
 }

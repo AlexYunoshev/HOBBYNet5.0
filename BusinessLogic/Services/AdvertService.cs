@@ -1,5 +1,6 @@
 ﻿using DataAccess.Context;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,8 +52,27 @@ namespace BusinessLogic.Services
             {
                 _context.Adverts.Remove(advert);
                 _context.SaveChanges();
-            }
-               
+            }  
         }
+
+        public void AddAdvert(User user, string messageText, List<Hobby> hobbies)
+        {
+            var advert = new Advert() { User = user, Message = messageText};
+
+            _context.Adverts.Add(advert);
+            _context.SaveChanges();
+
+            var addedAdvert = _context.Adverts
+                .Where(a => a.UserId == user.Id)
+                .OrderByDescending(p => p.Id)
+                .FirstOrDefault();
+            foreach (var hobby in hobbies)
+            {
+                addedAdvert.Hobbies.Add(hobby);
+            }
+
+            _context.SaveChanges();
+        }
+
     }
 }
