@@ -168,25 +168,33 @@
 
                     @foreach (var advert in Model)
                     {
-                        <tr onclick="rowclick('@advert.User.Id')" style="cursor: pointer;">
-                            <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
-                            <td align="center">@advert.User.UserName</td>
-                            <td align="center">@advert.User.Location.Name</td>
-                            <td width="140" align="center">
-                                @foreach(var hobby in advert.Hobbies)
-                                {
-                                    <span>@hobby.Name</span>
-                                }
-                            </td>
+                <tr onclick="rowclick('@advert.User.Id')" style="cursor: pointer;">
+                    <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
+                    <td align="center">@advert.User.UserName</td>
+                    <td align="center">
+                        <span>
+                            @advert.User.Location.Name
+                        </span>
+                        <span>
+                            @advert.User.Location.Latitude @advert.User.Location.Longitude
+                        </span>
+                    </td>
 
-                            <td width="240" align="center">
-                                @advert.Message
-                            </td>
+                    <td width="140" align="center">
+                        @foreach (var hobby in advert.Hobbies)
+                        {
+                            <span>@hobby.Name</span>
+                        }
+                    </td>
 
-                            <td width="100">
-                                @advert.CreatedDate.ToShortDateString()
-                            </td>
-                        </tr>
+                    <td width="240" align="center">
+                        @advert.Message
+                    </td>
+
+                    <td width="100">
+                        @advert.CreatedDate.ToShortDateString()
+                    </td>
+                </tr>
                     }
                 </table>
             </div>

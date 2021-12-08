@@ -162,7 +162,14 @@
                     <tr>
                         <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
                         <td align="center">@advert.User.UserName</td>
-                        <td align="center">@advert.User.Location.Name</td>
+                        <td align="center">
+                            <span>
+                                @advert.User.Location.Name
+                            </span>
+                            <span>
+                                @advert.User.Location.Latitude @advert.User.Location.Longitude
+                            </span>
+                        </td>
                         <td width="140" align="center">
                             @foreach (var hobby in advert.Hobbies)
                             {
