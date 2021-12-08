@@ -25,5 +25,34 @@ namespace BusinessLogic.Services
                 .Include(a => a.User).ThenInclude(u => u.Location)
                 .ToList();
         }
+
+        public List<Advert> GetUserAdverts(string userId)
+        {
+            return _context.Adverts
+                .Include(a => a.Hobbies)
+                .Include(a => a.User).ThenInclude(u => u.Location)
+                .Where(a => a.UserId == userId)
+                .ToList();
+        }
+
+        public Advert GetAdvert(int advertId)
+        {
+            return _context.Adverts
+                .Include(a => a.Hobbies)
+                .Include(a => a.User)
+                .Where(a => a.Id == advertId)
+                .FirstOrDefault();
+        }
+
+        public void RemoveAdvert(string userId, int advertId)
+        {
+            var advert = GetAdvert(advertId);
+            if (advert.UserId == userId)
+            {
+                _context.Adverts.Remove(advert);
+                _context.SaveChanges();
+            }
+               
+        }
     }
 }

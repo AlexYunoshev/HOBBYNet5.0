@@ -1,11 +1,13 @@
 ﻿using BusinessLogic.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HOBBYNetMVC.Controllers
@@ -36,11 +38,30 @@ namespace HOBBYNetMVC.Controllers
             _advertService = advertService;
         }
 
-
+        [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
             var adverts = _advertService.GetAllAdverts();
             return View(adverts);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UserAdverts()
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var adverts = _advertService.GetUserAdverts(loginUserId);
+            return View(adverts);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveAdvert(int advertId)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _advertService.RemoveAdvert(loginUserId, advertId);
+            return RedirectToAction("UserAdverts");
         }
     }
 }
