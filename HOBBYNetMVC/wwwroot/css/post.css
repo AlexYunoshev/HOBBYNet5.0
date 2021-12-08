@@ -9,11 +9,12 @@
 .content {
     position: relative;
     margin: 10px auto;
+    margin: 10px 0 0 20px;
     width: 700px;
     border-radius: 15px;
     transition: .5s;
     overflow: hidden;
-    height: 85vh; 
+    height: 80vh;
     overflow: auto;
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */

@@ -23,18 +23,15 @@
 
 
     .aside-info {
-        width: 480px;
+        width: 450px;
         border: 1px solid black;
-        height: 500px;
         float: right;
         position: relative;
-        margin: 10px auto;
+        margin: 10px 20px 0 0;
         padding: 10px;
         border: solid black 1px;
         background-color: rgba(255, 255, 255, 1);
         border-radius: 15px;
-        transition: .5s;
-      
     }
 
     .content {
@@ -42,8 +39,64 @@
     }
 
     .user-pic {
-        max-height: 120px;
-        max-width: 120px;
+        max-height: 100px;
+        max-width: 100px;
+    }
+
+    .map-pic {
+        max-height: 45px;
+        max-width: 45px;
+    }
+
+    .chat-img {
+        max-height: 40px;
+        max-width: 40px;
+    }
+
+    .user-info-header {
+        text-align: left;
+        display: flex;
+        margin: 10px;
+    }
+
+    .user-info-body {
+        text-align: left;
+        margin: 10px;
+    }
+
+    .address {
+        text-align: justify;
+    }
+
+    .location-google, .chat {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        font-size: 18px;
+        margin: 0 20px 0 0;
+    }
+
+   
+
+    .location-google span {
+        margin: 0 5px;
+    }
+
+    .social-actions {
+        margin: 0;
+    }
+
+    .statistic-data {
+        display: flex;
+        align-items: center;
+        color: black;
+        font-size: 26px;
+    }
+
+    .statistic-data span {
+        text-decoration: underline;
+        margin-left: 10px;
     }
 
 </style>
@@ -54,15 +107,15 @@
         {
             <div class="explore-post" id="post-@post.Id">
 
-                <div class="explore-post-header">
+                <!--<div class="explore-post-header">-->
                     @*<img class="user-pic" src="~/images/i.jpg" />*@
-                    <img class="user-pic" src="@post.User.PhotoPath" />
+                    <!--<img class="user-pic" src="@post.User.PhotoPath" />
                     <div class="user-info">
                         <p class="username"><a>@post.User.UserName</a></p>
-                        <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+                        <p class="address"><a>Kharkiv, Krychevsky street</a></p>-->
                         @*<p class="address"><a>@post.User.Location.Name</a></p>*@
 
-                    </div>
+                    <!--</div>
                     <div class="social-actions">
 
                         <form asp-action="SetLikeToPost" method="post">
@@ -92,7 +145,7 @@
 
                 </div>
 
-                <hr style="margin:0 10px" />
+                <hr style="margin:0 10px" />-->
 
                 <div class="body">
 
@@ -187,6 +240,23 @@
                             </span>
 
                         </form>
+
+                        <form asp-action="SetLikeToPost" method="post">
+                            <span>
+                                <button type="submit">
+                                    <img class="social-img" src="~/images/like1.png" />
+                                </button>
+                                <p class="counter">@post.ExploreLikes.Count</p>
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            </span>
+                        </form>
+                        <span>
+                            <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
+                                <img class="social-img" src="~/images/comment1.png" style="margin-right:10px;" />
+                            </a>
+                            <p class="counter">@post.ExploreComments.Count</p>
+                        </span>
                     </div>
 
                     @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
@@ -199,27 +269,83 @@
     </div>
 
     <div class="aside-info">
-        <div class="explore-post-header">
-            @*<img class="user-pic" src="~/images/i.jpg" />*@
+        <div class="user-info-header">
             <img class="user-pic" src="@Model.CurrentUser.PhotoPath" />
             <div class="user-info">
-                <p class="username"><a>@Model.CurrentUser.UserName</a></p>
-                <p class="address"><a>Kharkiv, Krychevsky street</a></p>
-                @*<p class="address"><a>@post.User.Location.Name</a></p>*@
-
+                @*<p class="username">@Model.CurrentUser.UserName</p>
+                <p class="username">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</p>
+                <p class="username">@Model.CurrentUser.Email</p>*@
+                <p class="username">yunoshev4380</p>
+                <p class="username">Oleksandr Yunoshev</p>
+                <p class="username">yunoshev.alex@gmail.com</p>
             </div>
-            <div class="social-actions">
-
-               
-
-
-
-
-            </div>
-
-
-
         </div>
+
+        <div class="user-info-body">
+            @*<p class="address"><a>Kharkiv, Krychevsky street</a></p>*@
+            <p class="address">@Model.CurrentUser.Location.Name</p>
+            @{
+                string hrefLocationGoogle = "https://www.google.com.ua/maps/@";
+                hrefLocationGoogle += @Model.CurrentUser.Location.Latitude + ",";
+                hrefLocationGoogle += @Model.CurrentUser.Location.Longitude + ",";
+                hrefLocationGoogle += "18z";
+            }
+
+            <div class="social-actions">
+                @if (@Model.CurrentUser.TelegramUsername != null)
+                {
+                    string link = "https://t.me/" + @Model.CurrentUser.TelegramUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/Telegram.png" />
+                    </a>
+                }
+
+
+                @if (@Model.CurrentUser.ViberUsername != null)
+                {
+                    string link = "viber://chat?number=" + @Model.CurrentUser.ViberUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/Viber.png" />
+                    </a>
+                }
+                @if (@Model.CurrentUser.WhatsAppUsername != null)
+                {
+                    string link = "whatsapp://send?phone=" + @Model.CurrentUser.WhatsAppUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/WhatsApp.png" />
+                    </a>
+                }
+
+                <a class="location-google" href="@hrefLocationGoogle" target="_blank">
+                    <img class="map-pic" src="~/images/google_map.png" />
+                    <span>@Model.CurrentUser.Location.Latitude @Model.CurrentUser.Location.Longitude</span>
+                </a>
+
+
+            </div> 
+
+            <div class="statistic" style="margin-top: 10px;">
+                @{ 
+                    long allLikes = 0, allComments = 0;
+                    foreach(var post in Model.Posts)
+                    {
+                        allLikes += post.ExploreLikes.Count;
+                        allComments += post.ExploreComments.Count;
+                    }
+                }
+
+                <div class="statistic-data">
+                    <img class="social-img" src="~/images/like1.png"/>
+                    <span>@allLikes</span>  
+                </div>
+                <div class="statistic-data">
+                    <img class="social-img" src="~/images/comment1.png"/>
+                    <span>@allComments</span>
+                </div>
+            </div>   
+        </div>
+
+       
     </div>
 </div>
 
