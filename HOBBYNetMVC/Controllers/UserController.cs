@@ -59,6 +59,19 @@ namespace HOBBYNetMVC.Controllers
             return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
         }
 
+        [Authorize]
+        [HttpGet]
+        public IActionResult ToUserProfile(string id, int pageNumber = 1)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
+            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
+        }
+
+
 
         [Authorize]
         [HttpPost]
