@@ -15,7 +15,7 @@ namespace Domain.Models
         public string UserId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public List<Hobby> Hobbies { get; set; } = new List<Hobby>();
-
+        public string Message { get; set; }
        
 
         [ForeignKey("UserId")]

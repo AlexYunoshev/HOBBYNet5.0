@@ -18,12 +18,13 @@ namespace HOBBYNetMVC.Controllers
         private readonly ExplorePostsService _explorePostsService;
         private readonly ILogger<UserController> _logger;
         private readonly HobbyService _hobbyService;
+        private readonly AdvertService _advertService;
 
 
         public AdvertController(
             UserManager<User> userManager, SignInManager<User> signInManager,
             UserService userService, ExplorePostsService explorePostsService,
-            HobbyService hobbyService,
+            HobbyService hobbyService, AdvertService advertService,
             ILogger<UserController> logger)
         {
             _userManager = userManager;
@@ -32,12 +33,14 @@ namespace HOBBYNetMVC.Controllers
             _explorePostsService = explorePostsService;
             _hobbyService = hobbyService;
             _logger = logger;
+            _advertService = advertService;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            var adverts = _advertService.GetAllAdverts();
+            return View(adverts);
         }
     }
 }

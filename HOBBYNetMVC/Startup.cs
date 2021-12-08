@@ -40,6 +40,7 @@ namespace HOBBYNetMVC
             services.AddScoped<HobbyService>();
             services.AddScoped<ExplorePostsService>();
             services.AddScoped<LocationService>();
+            services.AddScoped<AdvertService>();
             services.AddRazorPages();
             services.AddDefaultIdentity<User>()
             .AddEntityFrameworkStores<HobbyNetContext>();
