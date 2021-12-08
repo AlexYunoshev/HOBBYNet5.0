@@ -9,8 +9,8 @@
     }
 
     .post-action-img {
-        max-height: 25px;
-        max-width: 25px;
+        max-height: 35px;
+        max-width: 35px;
         margin: 10px 10px 10px 0;
     }
 
@@ -99,6 +99,17 @@
         margin-left: 10px;
     }
 
+    .footer {
+        margin: 5px 0 10px 5px;
+        display: flex;
+
+    }
+
+    .footer-right {
+        float: right;
+        width: 540px;
+    }
+
 </style>
 
 <div class="content-body" style="display:inline-block; width: 1200px;">
@@ -106,47 +117,6 @@
         @foreach (var post in Model.Posts)
         {
             <div class="explore-post" id="post-@post.Id">
-
-                <!--<div class="explore-post-header">-->
-                    @*<img class="user-pic" src="~/images/i.jpg" />*@
-                    <!--<img class="user-pic" src="@post.User.PhotoPath" />
-                    <div class="user-info">
-                        <p class="username"><a>@post.User.UserName</a></p>
-                        <p class="address"><a>Kharkiv, Krychevsky street</a></p>-->
-                        @*<p class="address"><a>@post.User.Location.Name</a></p>*@
-
-                    <!--</div>
-                    <div class="social-actions">
-
-                        <form asp-action="SetLikeToPost" method="post">
-                            <span>
-                                <button type="submit">
-                                    <img class="social-img" src="~/images/like1.png" />
-                                </button>
-                                <p class="counter">@post.ExploreLikes.Count</p>
-                                <input type="hidden" name="postId" value="@post.Id" />
-                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                            </span>
-                        </form>
-                        <span>
-                            <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
-                                <img class="social-img" src="~/images/comment1.png" style="margin-right:10px;" />
-                            </a>
-                            <p class="counter">@post.ExploreComments.Count</p>
-                        </span>
-
-
-
-
-
-                    </div>
-
-
-
-                </div>
-
-                <hr style="margin:0 10px" />-->
-
                 <div class="body">
 
                     <div class="explore-post-content">
@@ -219,48 +189,56 @@
 
                 <div class="footer">
 
+                    <div class="footer-left">
+                        <div class="social-actions">
+                            <form asp-action="SetLikeToPost" method="post">
+                                <div>
+                                    <button type="submit">
+                                        <img class="social-img" src="~/images/like1.png" />
+                                    </button>
+                                    <p class="counter">@post.ExploreLikes.Count</p>
+                                    <input type="hidden" name="postId" value="@post.Id" />
+                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                </div>
+                            </form>
+                            <div>
+                                <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
+                                    <img class="social-img" src="~/images/comment1.png"/>
+                                </a>
+                                <p class="counter">@post.ExploreComments.Count</p>
+                            </div>
 
-                    <div class="social-actions" @*style="float: right; margin-top: -30px;"*@>
-                        <form asp-action="EditPost" method="get">
-                            <span>
-                                <button type="submit" name="postId" value="@post.Id">
-                                    <img class="post-action-img" src="~/images/edit.png" />
-                                </button>
-                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                            </span>
 
-                        </form>
 
-                        <form asp-action="RemovePost" method="post">
-                            <span>
-                                <button type="submit" name="postId" value="@post.Id">
-                                    <img class="post-action-img" width="24" src="~/images/delete2.png" />
-                                </button>
-                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                            </span>
+                        </div>
 
-                        </form>
-
-                        <form asp-action="SetLikeToPost" method="post">
-                            <span>
-                                <button type="submit">
-                                    <img class="social-img" src="~/images/like1.png" />
-                                </button>
-                                <p class="counter">@post.ExploreLikes.Count</p>
-                                <input type="hidden" name="postId" value="@post.Id" />
-                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                            </span>
-                        </form>
-                        <span>
-                            <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
-                                <img class="social-img" src="~/images/comment1.png" style="margin-right:10px;" />
-                            </a>
-                            <p class="counter">@post.ExploreComments.Count</p>
-                        </span>
+                        @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
+                        <p style="color: #8e8e8e; text-transform:uppercase; margin: 15px 0 0 5px;">@post.CreatedDate</p>
                     </div>
 
-                    @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
-                    <p style="color: #8e8e8e; text-transform:uppercase">@post.CreatedDate</p>
+                    <div class="footer-right">
+                        <div class="social-actions" style="float: right;">
+                            <form asp-action="EditPost" method="get">
+                                <span>
+                                    <button type="submit" name="postId" value="@post.Id">
+                                        <img class="post-action-img" src="~/images/edit.png" />
+                                    </button>
+                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                </span>
+
+                            </form>
+
+                            <form asp-action="RemovePost" method="post">
+                                <span>
+                                    <button type="submit" name="postId" value="@post.Id">
+                                        <img class="post-action-img" width="34" src="~/images/delete2.png" />
+                                    </button>
+                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                </span>
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
             </div>
