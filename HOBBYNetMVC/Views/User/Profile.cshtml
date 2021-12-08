@@ -21,171 +21,209 @@
         cursor: pointer;
     }
 
-  /*  .removePost-img {
-        max-height: 15px;
-        max-width: 15px;
-        position: absolute;
-        margin-top: -30px;
-        margin-left: -3px;
+
+    .aside-info {
+        width: 480px;
+        border: 1px solid black;
+        height: 500px;
+        float: right;
+        position: relative;
+        margin: 10px auto;
+        padding: 10px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+      
     }
 
-    .editPost-img {
-        max-height: 15px;
-        max-width: 15px;
-        position: absolute;
-        margin-top: -30px;
-        margin-left: -10px;
-    }*/
+    .content {
+        float:left;
+    }
+
+    .user-pic {
+        max-height: 120px;
+        max-width: 120px;
+    }
 
 </style>
 
-<div class="content">
-    @foreach (var post in Model.Posts)
-    {
-        <div class="explore-post" id="post-@post.Id">
+<div class="content-body" style="display:inline-block; width: 1200px;">
+    <div class="content">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="explore-post" id="post-@post.Id">
 
-            <div class="explore-post-header">
-                @*<img class="user-pic" src="~/images/i.jpg" />*@
-                <img class="user-pic" src="@post.User.PhotoPath" />
-                <div class="user-info">
-                    <p class="username"><a>@post.User.UserName</a></p>
-                    <p class="address"><a>Kharkiv, Krychevsky street</a></p>
-                    @*<p class="address"><a>@post.User.Location.Name</a></p>*@
+                <div class="explore-post-header">
+                    @*<img class="user-pic" src="~/images/i.jpg" />*@
+                    <img class="user-pic" src="@post.User.PhotoPath" />
+                    <div class="user-info">
+                        <p class="username"><a>@post.User.UserName</a></p>
+                        <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+                        @*<p class="address"><a>@post.User.Location.Name</a></p>*@
 
-                </div>
-                <div class="social-actions">
+                    </div>
+                    <div class="social-actions">
 
-                    <form asp-action="SetLikeToPost" method="post">
+                        <form asp-action="SetLikeToPost" method="post">
+                            <span>
+                                <button type="submit">
+                                    <img class="social-img" src="~/images/like1.png" />
+                                </button>
+                                <p class="counter">@post.ExploreLikes.Count</p>
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            </span>
+                        </form>
                         <span>
-                            <button type="submit">
-                                <img class="social-img" src="~/images/like1.png" />
-                            </button>
-                            <p class="counter">@post.ExploreLikes.Count</p>
-                            <input type="hidden" name="postId" value="@post.Id" />
-                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
+                                <img class="social-img" src="~/images/comment1.png" style="margin-right:10px;" />
+                            </a>
+                            <p class="counter">@post.ExploreComments.Count</p>
                         </span>
-                    </form>
-                    <span>
-                        <a href="Profile?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
-                            <img class="social-img" src="~/images/comment1.png" style="margin-right:10px;"/>
-                        </a>
-                        <p class="counter">@post.ExploreComments.Count</p>
-                    </span>
-
-
-                   
-
-
-                </div>
-
-                
-
-            </div>
-
-            <hr style="margin:0 10px" />
-
-            <div class="body">
-
-                <div class="explore-post-content">
-                    <p id="p-@post.Id">
-                        @post.Text
-                    </p>
-                    @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)"/>*@
-                    @if(@post.PhotoPath != null) {
-                        <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
-                    }
-                    
-                    <p>
-                        @foreach (var hobby in post.Hobbies)
-                        {
-                            <a class="hobbies">#@hobby.Name</a>
-                        }
-                    </p>
-                </div>
-
-                <hr style="margin:10px" />
 
 
 
-                <div class="comments">
 
-                    <div class="comments-area" id="commentsPost-@post.Id">
-                        @foreach (var comment in post.ExploreComments)
-                        {
-                            <div class="explore-post-comment">
-                                @*<img class="comment-user-pic" src="~/images/i.jpg" />*@
-                                <img class="comment-user-pic" src="@comment.User.PhotoPath" />
-                                <div class="comment-content">
-                                    <span><a class="comment-username">@comment.User.UserName</a></span>
-                                    <span class="comment-date">10 hours ago</span>
-                                    <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
-                                        <span>
-                                            <button type="submit" name="postId" value="@post.Id">
-                                                <img class="remove-img" src="~/images/delete.png" />
-                                            </button>
-                                            <input type="hidden" name="commentId" value="@comment.Id" />
-                                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                                        </span>
-                                    </form>
-                                    <p class="comment-text">@comment.Text</p>
-                                </div>
-                            </div>
-                        }
 
                     </div>
 
 
-                    <div class="comment-add-input">
-                        <form asp-action="AddCommentToPost" method="post">
-                            <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
-                            <button type="submit">
-                                <img id="submit-btn" src="~/images/send.png" />
 
-                            </button>
-                            <input type="hidden" name="postId" value="@post.Id" />
-                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                </div>
+
+                <hr style="margin:0 10px" />
+
+                <div class="body">
+
+                    <div class="explore-post-content">
+                        <p id="p-@post.Id">
+                            @post.Text
+                        </p>
+                        @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)"/>*@
+                        @if (@post.PhotoPath != null)
+                        {
+                            <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
+                        }
+
+                        <p>
+                            @foreach (var hobby in post.Hobbies)
+                            {
+                                <a class="hobbies">#@hobby.Name</a>
+                            }
+                        </p>
+                    </div>
+
+                    <hr style="margin:10px" />
+
+
+
+                    <div class="comments">
+
+                        <div class="comments-area" id="commentsPost-@post.Id">
+                            @foreach (var comment in post.ExploreComments)
+                            {
+                                <div class="explore-post-comment">
+                                    @*<img class="comment-user-pic" src="~/images/i.jpg" />*@
+                                    <img class="comment-user-pic" src="@comment.User.PhotoPath" />
+                                    <div class="comment-content">
+                                        <span><a class="comment-username">@comment.User.UserName</a></span>
+                                        <span class="comment-date">10 hours ago</span>
+                                        <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
+                                            <span>
+                                                <button type="submit" name="postId" value="@post.Id">
+                                                    <img class="remove-img" src="~/images/delete.png" />
+                                                </button>
+                                                <input type="hidden" name="commentId" value="@comment.Id" />
+                                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                            </span>
+                                        </form>
+                                        <p class="comment-text">@comment.Text</p>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <div class="comment-add-input">
+                            <form asp-action="AddCommentToPost" method="post">
+                                <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                                <button type="submit">
+                                    <img id="submit-btn" src="~/images/send.png" />
+
+                                </button>
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <div class="footer">
+
+
+                    <div class="social-actions" @*style="float: right; margin-top: -30px;"*@>
+                        <form asp-action="EditPost" method="get">
+                            <span>
+                                <button type="submit" name="postId" value="@post.Id">
+                                    <img class="post-action-img" src="~/images/edit.png" />
+                                </button>
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            </span>
+
+                        </form>
+
+                        <form asp-action="RemovePost" method="post">
+                            <span>
+                                <button type="submit" name="postId" value="@post.Id">
+                                    <img class="post-action-img" width="24" src="~/images/delete2.png" />
+                                </button>
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                            </span>
+
                         </form>
                     </div>
+
+                    @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
+                    <p style="color: #8e8e8e; text-transform:uppercase">@post.CreatedDate</p>
                 </div>
+
+            </div>
+        }
+
+    </div>
+
+    <div class="aside-info">
+        <div class="explore-post-header">
+            @*<img class="user-pic" src="~/images/i.jpg" />*@
+            <img class="user-pic" src="@Model.CurrentUser.PhotoPath" />
+            <div class="user-info">
+                <p class="username"><a>@Model.CurrentUser.UserName</a></p>
+                <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+                @*<p class="address"><a>@post.User.Location.Name</a></p>*@
+
+            </div>
+            <div class="social-actions">
+
+               
+
 
 
 
             </div>
 
 
-            <div class="footer">
-
-
-                <div class="social-actions" @*style="float: right; margin-top: -30px;"*@>
-                    <form asp-action="EditPost" method="get">
-                        <span>
-                            <button type="submit" name="postId" value="@post.Id">
-                                <img class="post-action-img" src="~/images/edit.png" />
-                            </button>
-                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                        </span>
-
-                    </form>
-
-                    <form asp-action="RemovePost" method="post">
-                        <span>
-                            <button type="submit" name="postId" value="@post.Id">
-                                <img class="post-action-img" width="24" src="~/images/delete2.png" />
-                            </button>
-                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                        </span>
-
-                    </form>
-                </div>
-
-                @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
-                <p style="color: #8e8e8e; text-transform:uppercase">@post.CreatedDate</p>
-            </div>
 
         </div>
-    }
-
+    </div>
 </div>
+
+
 
 <div class="pages">
     <span>
