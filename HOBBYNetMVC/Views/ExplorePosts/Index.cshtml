@@ -35,7 +35,7 @@
         <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="5">
         <label for="radius-5km">5 km</label>
 
-        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="10>
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="10">
         <label for="radius-10km">10 km</label>
 
         <input type="submit" value="OK">
@@ -194,15 +194,21 @@
 
 <div class="pages">
     <span>
+        @*<span>@Model.Sort</span>
+        <span>@Model.LocationRadius </span>*@
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
+            string href = "Index?sort=" + Model.Sort 
+                + "&locationRadius=" + Model.LocationRadius 
+                + "&pageNumber=" + i;
+
             if (i == Model.CurrentPageNumber)
             {
-                <a style="color:red" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+                <a style="color:red" href="@href">@i</a>
             }
             else
             {
-                <a style="color:black" href="/ExplorePosts/Index?pageNumber=@i">@i</a>
+                <a style="color:black" href="@href">@i</a>
             }
         }
 

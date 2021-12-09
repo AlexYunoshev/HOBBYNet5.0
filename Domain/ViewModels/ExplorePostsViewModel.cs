@@ -51,7 +51,11 @@ namespace Domain.ViewModels
 
         public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius, string sort)
         {
+            LocationRadius = locationRadius;
+            Sort = sort;
             CurrentUser = user;
+
+            //posts.RemoveAll(p => p.User == user);
 
             foreach (var post in posts)
             {
@@ -93,7 +97,7 @@ namespace Domain.ViewModels
                 var sortedPosts = new List<ExplorePost>();
                 foreach (var userKey in distanceToUser.Keys)
                 {
-                    sortedPosts.AddRange(posts.Where(p => p.UserId == userKey.Id));
+                    sortedPosts.AddRange(posts.Where(p => p.User == userKey));
                 }
                 posts.Clear();
                 posts.AddRange(sortedPosts);
@@ -105,7 +109,7 @@ namespace Domain.ViewModels
                 var sortedPosts = new List<ExplorePost>();
                 foreach (var userKey in distanceToUser.Keys)
                 {
-                    sortedPosts.AddRange(posts.Where(p => p.UserId == userKey.Id));
+                    sortedPosts.AddRange(posts.Where(p => p.User== userKey));
                 }
                 posts.Clear();
                 posts.AddRange(sortedPosts);
@@ -115,7 +119,8 @@ namespace Domain.ViewModels
             PostsByPage = GetPostsByPage(posts, pageNumber);
             Posts = PostsByPage;
            
-            AllPostsCount = allPostsCount;
+            //AllPostsCount = allPostsCount;
+            AllPostsCount = posts.Count;
             if (AllPostsCount % 10 == 0)
             {
                 PagesCount = AllPostsCount / 10;
