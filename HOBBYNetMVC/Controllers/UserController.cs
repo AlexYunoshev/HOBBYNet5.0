@@ -56,8 +56,11 @@ namespace HOBBYNetMVC.Controllers
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
             //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             User currentUser = _userService.GetUserById(loginUserId);
-
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
+            var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
+            var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
+                posts, pageNumber, 0)
+            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount };
+            return View(viewModele);
         }
 
         [Authorize]
@@ -65,13 +68,16 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult ToUserProfile(string id, int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (id == loginUserId) { return RedirectToAction("Profile"); }
 
+            var posts = _explorePostsService.GetExplorePostsByUser(id);
+            User currentUser = _userManager.FindByIdAsync(id).Result;
 
-            var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
-            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
-            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
-
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, 0) { CurrentPageNumber = pageNumber });
+            var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
+            var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
+                posts, pageNumber, 0)
+            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount, AuthorizedUserId = loginUserId };
+            return View(viewModele);
         }
 
 
@@ -212,23 +218,35 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult SetLikeToPost(int postId, int pageNumber)
+        public IActionResult SetLikeToPost(int postId, int pageNumber, string profileUserId = null)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _explorePostsService.SetLikeToPost(postId, loginUserId);
-            string url = "Profile?pageNumber="+pageNumber+"#post-" + postId;
+            string url;
+            if (loginUserId == profileUserId || profileUserId == null)
+            {
+                url = "Profile?pageNumber=" + pageNumber + "#post-" + postId;
+                return Redirect(url);
+            }
+            url = "ToUserProfile?id=" + profileUserId + "&pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
         }
 
 
         [Authorize]
         [HttpPost]
-        public IActionResult AddCommentToPost(string commentText, int postId, int pageNumber)
+        public IActionResult AddCommentToPost(string commentText, int postId, int pageNumber, string profileUserId = null)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
             var post = _explorePostsService.GetExplorePost(postId);
-            string url = "Profile?pageNumber=" + pageNumber + "#post-" + postId;
+            string url;
+            if (loginUserId == profileUserId || profileUserId == null)
+            {
+                url = "Profile?pageNumber=" + pageNumber + "#post-" + postId;
+                return Redirect(url);
+            }
+            url = "ToUserProfile?id=" + profileUserId + "&pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
             //return RedirectToAction("Profile");
             //return View("PostComments", post);
@@ -236,13 +254,19 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult RemoveCommentFromPost(int commentId, int postId, int pageNumber)
+        public IActionResult RemoveCommentFromPost(int commentId, int postId, int pageNumber, string profileUserId = null)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = _explorePostsService.GetExplorePost(postId);
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
-            string url = "Profile?pageNumber=" + pageNumber + "#post-" + postId;
-            return Redirect(url);
+            string url;
+            if (loginUserId == profileUserId || profileUserId == null)
+            {
+                url = "Profile?pageNumber=" + pageNumber + "#post-" + postId;
+                return Redirect(url);
+            }
+            url = "ToUserProfile?id=" + profileUserId + "&pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url); ;
             //return View("PostComments", post);
         }
 

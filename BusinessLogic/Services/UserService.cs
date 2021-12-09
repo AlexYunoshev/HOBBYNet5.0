@@ -44,7 +44,11 @@ namespace BusinessLogic.Services
 
         public User GetUserById(string userId)
         {
-            return _context.Users.Where(u => u.Id == userId).Include(u => u.Location).FirstOrDefault();
+            var user = _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.Location)
+                .FirstOrDefault();
+            return user;
         }
 
         public void SetTelegramUsername(string currentUserId, string telegramName)

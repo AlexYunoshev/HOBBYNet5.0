@@ -19,6 +19,10 @@ namespace Domain.ViewModels
         public User CurrentUser { get; set; }
         public Dictionary<User, double> distanceToUser = new Dictionary<User, double>();
 
+        public string AuthorizedUserId { get; set; }
+
+        public int UserFriendsCount { get; set; }
+
         public bool IsCurrentUserPage = false;
 
         [BindProperty]
