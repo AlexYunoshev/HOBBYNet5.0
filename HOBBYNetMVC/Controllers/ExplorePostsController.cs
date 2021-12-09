@@ -39,7 +39,7 @@ namespace HOBBYNetMVC.Controllers
             var posts = _explorePostsService.GetExplorePosts();
             //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             //return View(posts);
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius) { CurrentPageNumber = pageNumber, LocationRadius = locationRadius });
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber });
         }
 
         [Authorize]
@@ -55,7 +55,7 @@ namespace HOBBYNetMVC.Controllers
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
             //var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
 
-            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, 0) { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, 0, "newest") { CurrentPageNumber = pageNumber });
             //return View(recommendedPostsByPage);
         }
 

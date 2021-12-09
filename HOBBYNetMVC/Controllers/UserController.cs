@@ -58,7 +58,7 @@ namespace HOBBYNetMVC.Controllers
             User currentUser = _userService.GetUserById(loginUserId);
             var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
             var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
-                posts, pageNumber, 0)
+                posts, pageNumber, 0, "newest")
             { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount };
             return View(viewModele);
         }
@@ -75,7 +75,7 @@ namespace HOBBYNetMVC.Controllers
 
             var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
             var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
-                posts, pageNumber, 0)
+                posts, pageNumber, 0, "newest")
             { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount, AuthorizedUserId = loginUserId };
             return View(viewModele);
         }

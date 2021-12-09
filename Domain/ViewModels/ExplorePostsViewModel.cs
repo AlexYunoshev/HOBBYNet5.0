@@ -49,9 +49,10 @@ namespace Domain.ViewModels
         }
 
 
-        public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius)
+        public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius, string sort)
         {
             CurrentUser = user;
+
             foreach (var post in posts)
             {
                 if (post.User.Location != null)
@@ -84,6 +85,31 @@ namespace Domain.ViewModels
                 }
             }
             
+            if(sort == "newest") { posts = posts.OrderByDescending(p => p.CreatedDate).ToList(); }
+            else if(sort == "older") { posts = posts.OrderBy(p => p.CreatedDate).ToList(); }
+
+            else if(sort == "distanceAsc") {
+                distanceToUser = distanceToUser.OrderBy(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
+                var sortedPosts = new List<ExplorePost>();
+                foreach (var userKey in distanceToUser.Keys)
+                {
+                    sortedPosts.AddRange(posts.Where(p => p.UserId == userKey.Id));
+                }
+                posts.Clear();
+                posts.AddRange(sortedPosts);
+            }
+
+            else
+            {
+                distanceToUser = distanceToUser.OrderByDescending(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
+                var sortedPosts = new List<ExplorePost>();
+                foreach (var userKey in distanceToUser.Keys)
+                {
+                    sortedPosts.AddRange(posts.Where(p => p.UserId == userKey.Id));
+                }
+                posts.Clear();
+                posts.AddRange(sortedPosts);
+            }
 
 
             PostsByPage = GetPostsByPage(posts, pageNumber);
