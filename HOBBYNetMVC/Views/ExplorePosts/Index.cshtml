@@ -7,6 +7,10 @@
     body {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
     }
+
+    .content {
+        height: 75vh;
+    }
 </style>
 
 
@@ -56,7 +60,7 @@
                     @*<p class="address"><a>@post.User.Location.Latitude</a></p>*@
                     @if (@post.User.Location != null)
                     {
-                        @*<p class="address"><a>@post.User.Location.Name</a></p>*@
+                        <p class="address"><a>@post.User.Location.Name</a></p>
                         <p class="address">Dist: @Model.distanceToUser[post.User] km</p>
                     }
 
@@ -131,10 +135,10 @@
 
                 <div class="explore-post-content">
                     <p id="p-@post.Id">
-                        @*@post.Text*@
-                        Text
+                        @post.Text
                     </p>
                     @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)" />*@
+                    <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
                     <p>
                         @foreach (var hobby in post.Hobbies)
                         {

@@ -87,17 +87,32 @@
         margin: 0;
     }
 
-    .statistic-data {
+    .statistic {
         display: flex;
-        align-items: center;
+        margin: 10px 30px;
+        justify-content: space-between;
+    }
+
+    .statistic-data {
+        /*display: flex;
+        align-items: center;*/
         color: black;
         font-size: 26px;
     }
 
-        .statistic-data span {
-            text-decoration: underline;
-            margin-left: 10px;
-        }
+    .statistic-data-field {
+        text-decoration: underline;
+        text-align: center;
+        /* margin-left: 10px;*/
+    }
+
+    .statistic-data-img {
+        height: 45px;
+        width: 45px;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+    }
 
     .footer {
         margin: 5px 0 10px 5px;
@@ -256,12 +271,12 @@
         <div class="user-info-header">
             <img class="user-pic" src="@Model.CurrentUser.PhotoPath" />
             <div class="user-info">
-                <p class="username">@Model.CurrentUser.UserName</p>
-                <p class="username">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</p>
-                <p class="username">@Model.CurrentUser.Email</p>
+                <p class="username" style="letter-spacing: 0.15em; font-size: 22px;">@Model.CurrentUser.UserName</p>
+                <p class="username" style="font-weight: 400; color:#4e4e4e;">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</p>
+                <p class="username" style="font-weight: 400; color: #4e4e4e; font-size: 18px; margin-top:5px;">@Model.CurrentUser.Email</p>
                 @*<p class="username">yunoshev4380</p>
-                <p class="username">Oleksandr Yunoshev</p>
-                <p class="username">yunoshev.alex@gmail.com</p>*@
+        <p class="username">Oleksandr Yunoshev</p>
+        <p class="username">yunoshev.alex@gmail.com</p>*@
             </div>
         </div>
 
@@ -308,7 +323,7 @@
 
             </div>
 
-            <div class="statistic" style="margin-top: 10px;">
+            <div class="statistic">
                 @{
                     long allLikes = 0, allComments = 0;
                     foreach (var post in Model.Posts)
@@ -319,17 +334,18 @@
                 }
 
                 <div class="statistic-data">
-                    <img class="social-img" src="~/images/like1.png" />
-                    <span>@allLikes</span>
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/like1.png" /></div>
+                    <p class="statistic-data-field">@allLikes</p>
                 </div>
                 <div class="statistic-data">
-                    <img class="social-img" src="~/images/comment1.png" />
-                    <span>@allComments</span>
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/comment1.png" /></div>
+                    <p class="statistic-data-field">@allComments</p>
                 </div>
 
+
                 <div class="statistic-data">
-                    <img class="social-img" src="~/images/friends.png" />
-                    <span>@Model.UserFriendsCount</span>
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/friends.png" /></div>
+                    <p class="statistic-data-field">@Model.UserFriendsCount</p>
                 </div>
             </div>
         </div>
