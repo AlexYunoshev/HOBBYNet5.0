@@ -94,9 +94,21 @@
 
                     <form asp-action="SetLikeToPost" method="post">
                         <span>
-                            <button type="submit">
-                                <img class="social-img" src="~/images/like1.png" />
-                            </button>
+                            @{
+                                bool contains = post.ExploreLikes.Any(l => l.UserId == Model.AuthorizedUserId);
+                            }
+                            @if (contains)
+                            {
+                                <button type="submit">
+                                    <img class="social-img" src="~/images/like1red.png" />
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit">
+                                    <img class="social-img" src="~/images/like1.png" />
+                                </button>
+                            }
                             <p class="counter">@post.ExploreLikes.Count</p>
                             <input type="hidden" name="postId" value="@post.Id" />
                             <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />

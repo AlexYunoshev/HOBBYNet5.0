@@ -59,7 +59,7 @@ namespace HOBBYNetMVC.Controllers
             var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
             var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
                 posts, pageNumber, 0, "newest")
-            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount };
+            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount, AuthorizedUserId = loginUserId };
             return View(viewModele);
         }
 
