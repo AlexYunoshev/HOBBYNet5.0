@@ -368,6 +368,10 @@ namespace BusinessLogic.Services
 
             hobbyRatioOut = new Dictionary<Hobby, int>();
             recommendedPosts.Sort((a, b) => a.Count - b.Count);
+
+        
+            recommendedPosts.RemoveAll(l => l.Count == 0);
+
             foreach (List<ExplorePost> explorePosts in recommendedPosts)
             {
                 hobbyRatioOut[explorePosts[0].Hobbies.FirstOrDefault()] = hobbyRatio[explorePosts[0].Hobbies.FirstOrDefault()];
