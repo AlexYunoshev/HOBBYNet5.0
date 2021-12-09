@@ -33,14 +33,15 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Index(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             User currentUser = _userService.GetUserById(loginUserId);
             var posts = _explorePostsService.GetExplorePosts();
             posts.RemoveAll(p => p.User == currentUser);
-            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
-            //return View(posts);
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber , AuthorizedUserId = loginUserId});
+            var model = new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort)
+            {
+                CurrentPageNumber = pageNumber,
+                AuthorizedUserId = loginUserId
+            };
+            return View(model);
         }
 
         [Authorize]
@@ -48,16 +49,18 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult RecommendedPosts(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             List<ExplorePost> explorePostsWithoutRating;
             Dictionary<Hobby, int> postRatingByHobbies;
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
-            //var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
-
-            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber, AuthorizedUserId = loginUserId });
-            //return View(recommendedPostsByPage);
+            var model = new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, 
+                pageNumber, locationRadius, sort)
+            {
+                CurrentPageNumber = pageNumber,
+                AuthorizedUserId = loginUserId
+            };
+            return View(model);
         }
 
         [Authorize]
@@ -80,7 +83,6 @@ namespace HOBBYNetMVC.Controllers
             return Redirect(url);
         }
 
-
         [Authorize]
         [HttpGet]
         public IActionResult SetCommentToPost(int postId)
@@ -99,7 +101,6 @@ namespace HOBBYNetMVC.Controllers
             var post = _explorePostsService.GetExplorePost(postId);
             string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
-            //return View("PostComments", post);
         }
 
         [Authorize]
@@ -111,7 +112,6 @@ namespace HOBBYNetMVC.Controllers
             var post = _explorePostsService.GetExplorePost(postId);
             string url = "RecommendedPosts?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
-            //return View("PostComments", post);
         }
 
         [Authorize]
@@ -123,9 +123,6 @@ namespace HOBBYNetMVC.Controllers
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
             string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
-            //return RedirectToAction("Index");
-            //return View("PostComments", post);
-
         }
 
         [Authorize]
@@ -137,9 +134,6 @@ namespace HOBBYNetMVC.Controllers
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
             string url = "RecommendedPosts?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
-            //return RedirectToAction("Index");
-            //return View("PostComments", post);
-
         }
     }
 }
