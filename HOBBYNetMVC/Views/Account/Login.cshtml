@@ -18,7 +18,7 @@
             </div>
         </form>
         <form id="login" class="input-group" method="post" 
-              asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.loginViewModel.ReturnUrl">
+              asp-controller="Account" asp-action="Login" >
             <input type="text" class="input-field" placeholder="Email" required asp-for="loginViewModel.Email">
             <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="loginViewModel.Password">
             <div class="show-password">

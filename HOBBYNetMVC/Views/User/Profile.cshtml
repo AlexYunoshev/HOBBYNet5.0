@@ -278,14 +278,14 @@
         </div>
 
         <div class="user-info-body">
-            @*<p class="address"><a>Kharkiv, Krychevsky street</a></p>*@
-            <p class="address">@Model.CurrentUser.Location.Name</p>
+            <p class="address"><a>Kharkiv, Krychevsky street</a></p>
+            @*<p class="address">@Model.CurrentUser.Location.Name</p>
             @{
                 string hrefLocationGoogle = "https://www.google.com.ua/maps/@";
                 hrefLocationGoogle += @Model.CurrentUser.Location.Latitude + ",";
                 hrefLocationGoogle += @Model.CurrentUser.Location.Longitude + ",";
                 hrefLocationGoogle += "18z";
-            }
+            }*@
 
             <div class="social-actions">
                 @if (@Model.CurrentUser.TelegramUsername != null)
@@ -312,10 +312,10 @@
                     </a>
                 }
 
-                <a class="location-google" href="@hrefLocationGoogle" target="_blank">
+                @*<a class="location-google" href="@hrefLocationGoogle" target="_blank">
                     <img class="map-pic" src="~/images/google_map.png" />
                     <span>@Model.CurrentUser.Location.Latitude @Model.CurrentUser.Location.Longitude</span>
-                </a>
+                </a>*@
 
 
             </div> 

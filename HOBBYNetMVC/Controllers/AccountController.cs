@@ -45,18 +45,19 @@ namespace HOBBYNetMVC.Controllers
                 var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "user");
+                    //await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Profile", "User");
                 }
             }
-            return View(model);
+            return RedirectToAction("Login", model);
+            return View("Login", model);
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login()
         {
-            return View(new AccountViewModel { loginViewModel = new LoginViewModel() { ReturnUrl = returnUrl } });
+            return View(new AccountViewModel { loginViewModel = new LoginViewModel() });
         }
 
         [HttpPost]
@@ -68,14 +69,8 @@ namespace HOBBYNetMVC.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.loginViewModel.Email, model.loginViewModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    if (!string.IsNullOrEmpty(model.loginViewModel.ReturnUrl) && Url.IsLocalUrl(model.loginViewModel.ReturnUrl))
-                    {
-                        return Redirect(model.loginViewModel.ReturnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Profile", "User");
-                    }
+                    return RedirectToAction("Profile", "User");
+                    
                 }
             }
             return View(model);
