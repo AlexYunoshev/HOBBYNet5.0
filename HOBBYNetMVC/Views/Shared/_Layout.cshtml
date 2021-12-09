@@ -3,12 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HOBBYNetMVC</title>
+    <title>@ViewData["Title"] - HOBBYNet</title>
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/post.css" />
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />*@
-    
 
 </head>
 <body>
@@ -23,106 +20,57 @@
                     </div>
                 </div>
 
-
-               
                 <ul class="menu">
+                    <li>
+                        <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
+                            <input type="text" name="searchText" placeholder="Find user" />
+                            <button type="submit">
+                                <img class="search-img" src="~/images/search.png" />
+                            </button>
+                        </form>
+                    </li>
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
+                    <li>
+                        <a asp-controller="User" asp-action="Profile">Profile</a>
+                        <ul class="submenu">
+                            <li><a asp-controller="User" asp-action="Profile">Home</a></li>
+                            <li><a asp-controller="User" asp-action="AddPost">Add post</a></li>
+                            <li><a asp-controller="User" asp-action="Friends">Friends</a></li>
+                            <li><a asp-controller="Hobby" asp-action="Index">My hobbies</a></li>
+                        </ul>
+                    </li>
 
-                        <li>
-                            <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
-                                <input type="text" name="searchText" placeholder="Find user" />
-                                <button type="submit">
-                                    <img class="search-img" src="~/images/search.png" />
-                                </button>
-                            </form>
+                    <li>
+                        <a asp-controller="ExplorePosts" asp-action="Index">Explore</a>
+                        <ul class="submenu">
+                            <li><a asp-controller="ExplorePosts" asp-action="Index">Posts</a></li>
+                            <li><a asp-controller="ExplorePosts" asp-action="RecommendedPosts">Recommendations</a></li>
+                        </ul>
+                    </li>
 
-                        </li>
+                    <li>
+                        <a asp-controller="Advert" asp-action="Index">Adverts</a>
+                        <ul class="submenu">
+                            <li><a asp-controller="Advert" asp-action="Index">All adverts</a></li>
+                            <li><a asp-controller="Advert" asp-action="UserAdverts">Your adverts</a></li>
+                            <li><a asp-controller="Advert" asp-action="AddAdvert">Add advert</a></li>
+                        </ul>
+                    </li>
 
+                    <li>
+                        <a asp-controller="UserSettings" asp-action="Index">Settings</a>
+                    </li>
 
-                        <li>
-                            <a asp-controller="User" asp-action="Profile">Profile</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a asp-controller="User" asp-action="Profile">Home</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="User" asp-action="AddPost">Add post</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="User" asp-action="Friends">Friends</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Hobby" asp-action="Index">My hobbies</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a asp-controller="ExplorePosts" asp-action="Index">Explore</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a asp-controller="ExplorePosts" asp-action="Index">Posts</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="ExplorePosts" asp-action="RecommendedPosts">Recommendations</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a asp-controller="Advert" asp-action="Index">Adverts</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a asp-controller="Advert" asp-action="Index">All adverts</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Advert" asp-action="UserAdverts">Your adverts</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Advert" asp-action="AddAdvert">Add advert</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a asp-controller="UserSettings" asp-action="Index">Settings</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a asp-controller="UserSettings" asp-action="Index">User Settings</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <form method="post" asp-controller="Account" asp-action="Logout">
-                                @*<input type="submit" value="Logout" />*@
-                                <button type="submit">
-                                    <img class="logout-img" src="~/images/logout.png" />
-                                </button>
-                            </form>
-
-                        </li>
-
-                    }
-                    else
-                    {
-                        @*<li> <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a></li>*@
-                        @*<li> <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a></li>*@
-                    }
-
-                </ul>
-
-
-                    @*<ul class="menu">
-                            <li> <a><input type="submit" value="Logout" /></a></li>
-                        </ul>*@
-               
+                    <li>
+                        <form method="post" asp-controller="Account" asp-action="Logout">
+                            <button type="submit">
+                                <img class="logout-img" src="~/images/logout.png" />
+                            </button>
+                        </form>
+                    </li>
+                </ul>               
             </nav>
         </div>
-
-
 
     </header>
     <main role="main">
@@ -131,9 +79,9 @@
         </div>
     </main>
 
-    <footer>
-        @*© 2021 HOBBYNet*@
-    </footer>
+    @*<footer>
+        © 2021 HOBBYNet
+    </footer>*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
