@@ -40,7 +40,14 @@ namespace HOBBYNetMVC
             services.AddScoped<LocationService>();
             services.AddScoped<AdvertService>();
             services.AddRazorPages();
-            services.AddDefaultIdentity<User>()
+
+            services.AddDefaultIdentity<User>(opt => {
+                opt.Password.RequiredLength = 8;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false; 
+            })
             .AddEntityFrameworkStores<HobbyNetContext>();
             services.AddControllersWithViews();
 

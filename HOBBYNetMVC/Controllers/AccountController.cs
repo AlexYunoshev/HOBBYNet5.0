@@ -45,13 +45,21 @@ namespace HOBBYNetMVC.Controllers
                 var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
-                    //await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Profile", "User");
                 }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
             }
-            return RedirectToAction("Login", model);
+            //ModelState.AddModelError("", "You entered incorrect data");
+            model.currentView = "register";
             return View("Login", model);
+            //return RedirectToAction("Login", model);
         }
 
         [HttpGet]
@@ -69,10 +77,14 @@ namespace HOBBYNetMVC.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.loginViewModel.Email, model.loginViewModel.Password, false, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Profile", "User");
-                    
+                    return RedirectToAction("Profile", "User");   
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Incorrect username and/or password");
                 }
             }
+            model.currentView = "login";
             return View(model);
         }
 

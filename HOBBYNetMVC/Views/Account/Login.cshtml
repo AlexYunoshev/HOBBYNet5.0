@@ -2,13 +2,16 @@
 
 <div class="hero">
     <div class="form-box" id="form-box">
+        @*<span>@Model.currentView</span>*@
+        <input type="hidden" id="currentView" name="currentView" value="@Model.currentView" />
         <div class="button-box">
             <div id="btn"></div>
             <button type="button" class="toggle-btn" onclick="login()">Log In</button>
             <button type="button" class="toggle-btn" onclick="register()">Register</button>
         </div>
         @*<form asp-controller="Identity" asp-action="Login" method="get">*@
-        <form  asp-area="Identity"  asp-page="/Account/ExternalLogin"  method="post">
+
+        <form asp-area="Identity" asp-page="/Account/ExternalLogin" method="post">
             <div class="social-icons">
                 @*<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
                 <button type="submit" name="provider" value="Google">
@@ -17,29 +20,36 @@
 
             </div>
         </form>
-        <form id="login" class="input-group" method="post" 
-              asp-controller="Account" asp-action="Login" >
+        <form id="login" class="input-group" method="post"
+              asp-controller="Account" asp-action="Login">
             <input type="text" class="input-field" placeholder="Email" required asp-for="loginViewModel.Email">
             <input type="password" class="input-field" id="login-password" placeholder="Password" required asp-for="loginViewModel.Password">
             <div class="show-password">
                 <input type="checkbox" class="check-box" onclick="ShowPassword()">
                 <span>Show password</span>
             </div>
+            <div id="validation-login" asp-validation-summary="ModelOnly" style="color:red; margin: 10px auto 0; text-align:center;"></div>
             <button type="submit" class="submit-btn">Login</button>
         </form>
 
-        <form id="register" class="input-group" method="post" 
+        <form id="register" class="input-group" method="post"
               asp-controller="Account" asp-action="Register">
             <input type="text" class="input-field" placeholder="First name" required asp-for="registerViewModel.FirstName">
             <input type="text" class="input-field" placeholder="Last name" required asp-for="registerViewModel.LastName">
             <input type="text" class="input-field" placeholder="Username" required asp-for="registerViewModel.UserName">
             <input type="email" class="input-field" placeholder="Email" required asp-for="registerViewModel.Email">
+            <span asp-validation-for="registerViewModel.Email"></span>
             <input type="password" class="input-field" placeholder="Enter password" required asp-for="registerViewModel.Password">
+            <span asp-validation-for="registerViewModel.Password"></span>
             <input type="password" class="input-field" placeholder="Password confirm" required asp-for="registerViewModel.PasswordConfirm">
+            <span asp-validation-for="registerViewModel.PasswordConfirm"></span>
+            <div id="validation-register" asp-validation-summary="ModelOnly" style="color:red; margin: 10px auto 0;"></div>
             <button type="submit" class="submit-btn">Register</button>
         </form>
     </div>
 </div>
+
+
 
 <script>
     var x = document.getElementById("login");
@@ -47,18 +57,29 @@
     var z = document.getElementById("btn");
     var p = document.getElementById("form-box");
 
+    var loginHeight = "370px";
+    var registerHeight = "555px";
+
+    function updateLoginHeight() {
+        loginHeight = "400px";
+    }
+
+    function updateRegisterHeight() {
+        registerHeight = "600px";
+    }
+
     function login() {
         x.style.left = "50px";
         y.style.left = "450px";
         z.style.left = "0";
-        p.style.height = "360px";
+        p.style.height = loginHeight;
     }
 
     function register() {
         x.style.left = "-400px";
         y.style.left = "50px";
         z.style.left = "110px";
-        p.style.height = "530px";
+        p.style.height = registerHeight;
     }
 
     function ShowPassword() {
@@ -71,6 +92,32 @@
     }
 
 </script>
+
+<script async>
+
+   
+
+    var currentView = document.getElementById("currentView").value;
+  
+    if (currentView == "login") {
+        var validation = document.getElementById('validation-register');
+        if (validation != null) {
+            validation.remove();
+        }
+        updateLoginHeight();
+        login();
+    }
+    else if (currentView == "register") {
+        var validation = document.getElementById('validation-login');
+        if (validation != null) {
+            validation.remove();
+        }
+        updateRegisterHeight();
+        register();
+    }
+
+</script>
+
 
 <style>
 
@@ -89,7 +136,7 @@
 
     .form-box {
         width: 380px;
-        height: 360px;
+        height: 370px;
         position: relative;
         margin: 6% auto 0;
         padding: 5px;

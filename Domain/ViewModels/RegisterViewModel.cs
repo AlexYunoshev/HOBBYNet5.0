@@ -10,11 +10,11 @@ namespace Domain.ViewModels
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "Имя")]
+        [Display(Name = "Name")]
         public string FirstName { get; set; }
 
         [Required]
-        [Display(Name = "Фамилия")]
+        [Display(Name = "Lastname")]
         public string LastName { get; set; }
 
         [Required]
@@ -25,17 +25,15 @@ namespace Domain.ViewModels
         [Display(Name = "Username")]
         public string UserName { get; set; }
 
-
-
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Required]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Compare("Password")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
+        [Display(Name = "Password confirm")]
         public string PasswordConfirm { get; set; }
     }
 }
