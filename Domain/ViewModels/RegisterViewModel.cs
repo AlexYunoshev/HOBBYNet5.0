@@ -22,6 +22,7 @@ namespace Domain.ViewModels
         public string Email { get; set; }
 
         [Required]
+        [StringLength(12, ErrorMessage = "The username must be at least {2} characters and at most {1} characters.", MinimumLength = 4)]
         [Display(Name = "Username")]
         public string UserName { get; set; }
 
