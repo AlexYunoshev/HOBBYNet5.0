@@ -92,13 +92,6 @@
                                 <li>
                                     <a asp-controller="UserSettings" asp-action="Index">User Settings</a>
                                 </li>
-
-                                @if (User.IsInRole("admin"))
-                                {
-                                    <li>
-                                        <a asp-controller="Admin" asp-action="Index">Admin panel</a>
-                                    </li>
-                                }
                             </ul>
                         </li>
 
