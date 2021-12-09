@@ -32,8 +32,6 @@ namespace HOBBYNetMVC
         {
             services.AddDbContext<HobbyNetContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DBConnection"));
-                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                //options.EnableSensitiveDataLogging(true);
                });
 
             services.AddScoped<UserService>();
@@ -44,30 +42,6 @@ namespace HOBBYNetMVC
             services.AddRazorPages();
             services.AddDefaultIdentity<User>()
             .AddEntityFrameworkStores<HobbyNetContext>();
-
-            //services.AddIdentity<User, IdentityRole>(opt =>
-            //{
-            //    opt.Password.RequiredLength = 5;
-            //    opt.Password.RequireNonAlphanumeric = false;
-            //    opt.Password.RequireLowercase = false;
-            //    opt.Password.RequireUppercase = false;
-            //    opt.Password.RequireDigit = false;               
-            //})
-            //.AddEntityFrameworkStores<HobbyNetContext>();
-            // services.AddAuthorization(options =>
-            //options.AddPolicy("admin",
-            //    policy => policy.RequireClaim("Manager")));
-
-            ////////////// auth
-
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //     .AddCookie(options => //CookieAuthenticationOptions
-            //    {
-            //         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            //     });
-
-
-
             services.AddControllersWithViews();
 
             services.AddAuthentication()
@@ -77,17 +51,9 @@ namespace HOBBYNetMVC
                  options.ClientSecret = "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";
              });
 
-            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
-            //.AddRazorPagesOptions(options =>
-            //{
-            //    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-            //    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-            //});
-
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Account/Login";
-                //options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Account/AccessDenied";
                
             });
@@ -97,10 +63,8 @@ namespace HOBBYNetMVC
                     .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
                 loggingBuilder.AddDebug();
             });
-
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -110,7 +74,6 @@ namespace HOBBYNetMVC
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
