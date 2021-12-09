@@ -145,7 +145,8 @@
                                 <img class="comment-user-pic" src="@comment.User.PhotoPath" />
                                 <div class="comment-content">
                                     <span><a class="comment-username">@comment.User.UserName</a></span>
-                                    <span class="comment-date">10 hours ago</span>
+                                    @*<span class="comment-date">10 hours ago</span>*@
+                                    <span class="comment-date">@comment.CreatedDate</span>
                                     <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
                                         <span>
                                             <button type="submit" name="postId" value="@post.Id">
@@ -182,7 +183,8 @@
 
 
             <div class="footer">
-                <p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>
+                @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
+                <p style="color: #8e8e8e; text-transform:uppercase;">@post.CreatedDate</p>
             </div>
 
         </div>

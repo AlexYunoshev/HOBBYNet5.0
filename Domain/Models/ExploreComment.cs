@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Models
@@ -17,5 +18,7 @@ namespace Domain.Models
         public ExplorePost Post { get; set; }
 
         public string Text { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }
