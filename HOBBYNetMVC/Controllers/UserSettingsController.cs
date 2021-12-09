@@ -2,6 +2,7 @@
 using Domain.Models;
 using Domain.Models.DTO;
 using HOBBYNetMVC.Models.UserSettings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,10 +31,11 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Index()
         {
             var output = _userManager.Users.Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath)).ToList();
-            return View(output.FirstOrDefault(u => u.Username == User.Identity.Name));
-            //return View(_userManager.Users.FirstOrDefault(u => u.Email == User.Identity.Name));
+            var user = output.FirstOrDefault(u => u.Username == User.Identity.Name);
+            return View(user);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Telegram(string id)
         {
@@ -47,6 +49,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Telegram(MessengerViewModel model)
         {
@@ -58,12 +61,12 @@ namespace HOBBYNetMVC.Controllers
                 {
                         _userService.SetTelegramUsername(loginUserId, model.MessengerUsername);
                         return RedirectToAction("Index");
-                    
                 }
             }
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Viber(string id)
         {
@@ -77,6 +80,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Viber(MessengerViewModel model)
         {
@@ -88,13 +92,12 @@ namespace HOBBYNetMVC.Controllers
                 {
                     _userService.SetViberUsername(loginUserId, model.MessengerUsername);
                     return RedirectToAction("Index");
-
                 }
             }
             return View(model);
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> WhatsApp(string id)
         {
@@ -108,6 +111,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> WhatsApp(MessengerViewModel model)
         {
@@ -119,13 +123,12 @@ namespace HOBBYNetMVC.Controllers
                 {
                     _userService.SetWhatsAppUsername(loginUserId, model.MessengerUsername);
                     return RedirectToAction("Index");
-
                 }
             }
             return View(model);
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Location(string id, int change = 0)
         {
@@ -143,6 +146,7 @@ namespace HOBBYNetMVC.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult LocationResultByGeolocation(string latitude, string longitude)
         {
@@ -150,6 +154,7 @@ namespace HOBBYNetMVC.Controllers
             return View(locations);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult LocationResultByAddress(string address)
         {
@@ -157,7 +162,7 @@ namespace HOBBYNetMVC.Controllers
             return View(locations);
         }
 
-
+        [Authorize]
         [HttpPost]
         public IActionResult SaveLocation(string latitude, string longitude, string name, long placeId, string address) { 
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -171,10 +176,9 @@ namespace HOBBYNetMVC.Controllers
             };
             _locationService.SaveLocation(location, loginUserId);
             return View(location);
-            //return View();
-
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ChangePassword(string id)
         {
@@ -188,6 +192,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
@@ -208,6 +213,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ChangePhoneNumber(string id)
         {
@@ -221,6 +227,7 @@ namespace HOBBYNetMVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePhoneNumber(ChangePhoneNumberViewModel model)
         {
