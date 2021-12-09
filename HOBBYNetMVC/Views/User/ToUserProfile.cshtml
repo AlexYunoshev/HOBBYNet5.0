@@ -155,16 +155,20 @@
                                     <div class="comment-content">
                                         <span><a class="comment-username">@comment.User.UserName</a></span>
                                         <span class="comment-date">10 hours ago</span>
-                                        <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
-                                            <span>
-                                                <button type="submit" name="postId" value="@post.Id">
-                                                    <img class="remove-img" src="~/images/delete.png" />
-                                                </button>
-                                                <input type="hidden" name="commentId" value="@comment.Id" />
-                                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                                                <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
-                                            </span>
-                                        </form>
+                                        @if(comment.UserId == Model.AuthorizedUserId)
+                                        {
+                                            <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
+                                                <span>
+                                                    <button type="submit" name="postId" value="@post.Id">
+                                                        <img class="remove-img" src="~/images/delete.png" />
+                                                    </button>
+                                                    <input type="hidden" name="commentId" value="@comment.Id" />
+                                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                                    <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                                                </span>
+                                            </form>
+                                        }
+                                        
                                         <p class="comment-text">@comment.Text</p>
                                     </div>
                                 </div>
@@ -325,15 +329,19 @@
 
 <div class="pages">
     <span>
+       
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
+            string href = "ToUserProfile?id=" + Model.CurrentUser.Id
+                + "&pageNumber=" + i;
+
             if (i == Model.CurrentPageNumber)
             {
-                <a style="color:red" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:red" href="@href">@i</a>
             }
             else
             {
-                <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
+                <a style="color:black" href="@href">@i</a>
             }
         }
 
