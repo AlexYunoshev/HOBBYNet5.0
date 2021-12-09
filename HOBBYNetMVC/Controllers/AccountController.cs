@@ -94,7 +94,7 @@ namespace HOBBYNetMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.loginViewModel.Email, model.loginViewModel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(model.loginViewModel.Username, model.loginViewModel.Password, false, false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Profile", "User");   
