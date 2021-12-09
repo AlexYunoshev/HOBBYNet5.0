@@ -107,6 +107,17 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
                     {
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
+
+                    ////////////////////////////
+                    var userByEmail = await _userManager.FindByEmailAsync(Input.Email);
+                    if (userByEmail != null)
+                    {
+                        ModelState.AddModelError("", "This email is already taken");
+                        ProviderDisplayName = info.ProviderDisplayName;
+                        return RedirectToAction("Login", "Account", new { error = "This email is already taken" });
+                        //return Page();
+                    }
+                    ///////////////////////
                 }
                 return Page();
             }
@@ -125,12 +136,34 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                //var userByUsername = await _userManager.FindByNameAsync(Input.Username);
+                //if (userByUsername != null)
+                //{
+                //    ModelState.AddModelError("", "This username is already taken");
+                //    ProviderDisplayName = info.ProviderDisplayName;
+                //    ReturnUrl = returnUrl;
+                //    return Page();
+                //}
+
+
+                var userByEmail = await _userManager.FindByEmailAsync(Input.Email);
+                if (userByEmail != null)
+                {
+                    ModelState.AddModelError("", "This email is already taken");
+                    ProviderDisplayName = info.ProviderDisplayName;
+                    ReturnUrl = returnUrl;
+                    return Page();
+                }
+
                 //var username = Input.Email;
                 var username = Input.Username;
                 //int startIndex = username.IndexOf('@');
                 //int length = username.Length - startIndex;
                 //username = username.Remove(startIndex);
                 var user = new User { UserName = username, Email = Input.Email };
+
+
+
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

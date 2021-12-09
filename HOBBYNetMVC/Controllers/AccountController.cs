@@ -78,8 +78,13 @@ namespace HOBBYNetMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string error = null)
         {
+            if (error != null)
+            {
+                ModelState.AddModelError("", error);
+                return View(new AccountViewModel { loginViewModel = new LoginViewModel(), currentView = "login"});
+            }
             return View(new AccountViewModel { loginViewModel = new LoginViewModel() });
         }
 
