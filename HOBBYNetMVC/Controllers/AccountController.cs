@@ -22,7 +22,7 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return View("Login", new AccountViewModel { loginViewModel = new LoginViewModel(), currentView = "register" });
         }
 
         [HttpGet]
@@ -59,10 +59,6 @@ namespace HOBBYNetMVC.Controllers
                     return View("Login", model);
                 }
 
-             
-
-
-
                 var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
@@ -77,10 +73,8 @@ namespace HOBBYNetMVC.Controllers
                     }
                 }
             }
-            //ModelState.AddModelError("", "You entered incorrect data");
             model.currentView = "register";
             return View("Login", model);
-            //return RedirectToAction("Login", model);
         }
 
         [HttpGet]
