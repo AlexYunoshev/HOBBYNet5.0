@@ -308,16 +308,7 @@ namespace HOBBYNetMVC.Controllers
             return RedirectToAction("Friends");
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult FriendRequests()
-        {
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var friendsRequestsList = new List<List<FriendsList>>();
-            friendsRequestsList.Add(_userService.GetFriendRequestsToUser(loginUserId));
-            friendsRequestsList.Add(_userService.GetFriendRequestsFromUser(loginUserId));
-            return View(friendsRequestsList);
-        }
+       
 
         [Authorize]
         [HttpPost]
