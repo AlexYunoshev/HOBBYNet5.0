@@ -24,27 +24,19 @@ namespace HOBBYNetMVC.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly UserService _userService;
         private readonly ExplorePostsService _explorePostsService;
-        private readonly ILogger<UserController> _logger;
         private readonly IWebHostEnvironment _appEnvironment;
         private readonly HobbyService _hobbyService;
 
-
-        public UserController(
-            UserManager<User> userManager, SignInManager<User> signInManager, 
-            UserService userService, ExplorePostsService explorePostsService,
-            HobbyService hobbyService,
-            ILogger<UserController> logger, IWebHostEnvironment appEnvironment)
+        public UserController(UserManager<User> userManager, IWebHostEnvironment appEnvironment,
+            UserService userService, ExplorePostsService explorePostsService, HobbyService hobbyService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
+            _appEnvironment = appEnvironment;
             _userService = userService;
             _explorePostsService = explorePostsService;
             _hobbyService = hobbyService;
-            _logger = logger;
-            _appEnvironment = appEnvironment;
         }
 
         [Authorize]
@@ -54,13 +46,16 @@ namespace HOBBYNetMVC.Controllers
 
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var posts = _explorePostsService.GetExplorePostsByUser(loginUserId);
-            //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             User currentUser = _userService.GetUserById(loginUserId);
             var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
-            var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
+            var viewModel = new ExplorePostsViewModel(posts.Count, currentUser,
                 posts, pageNumber, 0, "newest")
-            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount, AuthorizedUserId = loginUserId };
-            return View(viewModele);
+            { 
+                CurrentPageNumber = pageNumber, 
+                UserFriendsCount = userFriendsCount, 
+                AuthorizedUserId = loginUserId 
+            };
+            return View(viewModel);
         }
 
         [Authorize]
@@ -68,27 +63,27 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult ToUserProfile(string id, int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (id == loginUserId) { return RedirectToAction("Profile"); }
-
+            if (id == loginUserId) { 
+                return RedirectToAction("Profile"); 
+            }
             var posts = _explorePostsService.GetExplorePostsByUser(id);
             User currentUser = _userManager.FindByIdAsync(id).Result;
-
             var userFriendsCount = _userService.GetFriendsList(loginUserId).Count;
             var viewModele = new ExplorePostsViewModel(posts.Count, currentUser,
                 posts, pageNumber, 0, "newest")
-            { CurrentPageNumber = pageNumber, UserFriendsCount = userFriendsCount, AuthorizedUserId = loginUserId };
+            { 
+                CurrentPageNumber = pageNumber, 
+                UserFriendsCount = userFriendsCount, 
+                AuthorizedUserId = loginUserId 
+            };
             return View(viewModele);
         }
-
-
 
         [Authorize]
         [HttpPost]
         public IActionResult RemovePost(int postId, int pageNumber)
         {
-            
             var rootPath = _appEnvironment.WebRootPath;
-           
             _explorePostsService.RemovePost(postId, rootPath);
             string url = "Profile?pageNumber=" + pageNumber;
             return Redirect(url);
@@ -98,12 +93,8 @@ namespace HOBBYNetMVC.Controllers
         [HttpGet]
         public IActionResult AddPost()
         {
-           
-
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
-
-
             var allHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
             var viewModel = new HobbyViewModel();
             var hobbiesToAdd = new List<AddHobbiesModel>();
@@ -114,13 +105,12 @@ namespace HOBBYNetMVC.Controllers
                     Id = hobby.Id, 
                     Name = hobby.Name, 
                     IsSelected = false });
-
             }
             viewModel.addHobbiesList = hobbiesToAdd;
-          
             return View(viewModel);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddPost(string postText, IFormFile file, HobbyViewModel hobbiesModel)
         {
@@ -142,8 +132,6 @@ namespace HOBBYNetMVC.Controllers
             await _explorePostsService.AddPost(currentUser, postText, file, startFilePath, hobbies);
             return RedirectToAction("Profile");
         }
-
-
 
         [Authorize]
         [HttpGet]
@@ -174,20 +162,14 @@ namespace HOBBYNetMVC.Controllers
             }
 
             viewModel.addHobbiesList = hobbiesToAdd;
-
-
-
             var editPostViewModel = new EditPostViewModel();
-
-
-
             editPostViewModel.Post = post;
             editPostViewModel.HobbyViewModel = viewModel;
 
             return View(editPostViewModel);
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditPost(int postId, string postText, IFormFile file, EditPostViewModel editPostViewModel)
         {
@@ -198,7 +180,6 @@ namespace HOBBYNetMVC.Controllers
             startFilePath = Path.Combine(startFilePath, currentUser.UserName);
 
             var hobbies = new List<Hobby>();
-            //var allUserHobbies = new List<Hobby>();
             var allUserHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
             foreach (var hobby in editPostViewModel.HobbyViewModel.addHobbiesList)
             {
@@ -206,15 +187,11 @@ namespace HOBBYNetMVC.Controllers
                 {
                     hobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
                 }
-                //allUserHobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
             }
 
             await _explorePostsService.EditPost(postId, postText, file, startFilePath, hobbies, allUserHobbies);
             return RedirectToAction("Profile");
         }
-
-
-
 
         [Authorize]
         [HttpPost]
@@ -232,7 +209,6 @@ namespace HOBBYNetMVC.Controllers
             return Redirect(url);
         }
 
-
         [Authorize]
         [HttpPost]
         public IActionResult AddCommentToPost(string commentText, int postId, int pageNumber, string profileUserId = null)
@@ -248,8 +224,6 @@ namespace HOBBYNetMVC.Controllers
             }
             url = "ToUserProfile?id=" + profileUserId + "&pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
-            //return RedirectToAction("Profile");
-            //return View("PostComments", post);
         }
 
         [Authorize]
@@ -267,21 +241,7 @@ namespace HOBBYNetMVC.Controllers
             }
             url = "ToUserProfile?id=" + profileUserId + "&pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url); ;
-            //return View("PostComments", post);
         }
-
-
-
-
-
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
 
         [Authorize]
         [HttpGet]
@@ -307,8 +267,6 @@ namespace HOBBYNetMVC.Controllers
             }
             return RedirectToAction("Friends");
         }
-
-       
 
         [Authorize]
         [HttpPost]
@@ -350,11 +308,6 @@ namespace HOBBYNetMVC.Controllers
             return RedirectToAction("Friends");
         }
 
-
-
- 
-
-
         [Authorize]
         [HttpPost]
         public IActionResult SearchUser(string searchText)
@@ -362,6 +315,12 @@ namespace HOBBYNetMVC.Controllers
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var users = _userService.GetUsersBySearch(searchText);
             return View(users);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
