@@ -14,14 +14,10 @@ namespace HOBBYNetMVC.Controllers
 {
     public class HobbyController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly HobbyService _hobbyService;
 
-        public HobbyController(UserManager<User> userManager, SignInManager<User> signInManager, HobbyService hobbyService)
+        public HobbyController(HobbyService hobbyService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _hobbyService = hobbyService;
         }
 
@@ -75,6 +71,5 @@ namespace HOBBYNetMVC.Controllers
             if (_hobbyService.RemoveHobbyFromList(loginUserId, hobbyId) == false) return View("~/Views/Shared/ErrorPage.cshtml");
             return RedirectToAction("Index");
         }
-
     }
 }
