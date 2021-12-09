@@ -11,65 +11,71 @@
 <body>
     <header class="header">
         <div class="container">
-            <nav class="nav">
-                <div class="logo">
-                    <img src="~/images/site_icon.png" alt="HobbyNet" class="logo" height="64" width="64" />
-                    <div class="tagline">
-                        <h2>HOBBYNet</h2>
-                        <h3>To be active!</h3>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <nav class="nav">
+                    <div class="logo">
+                        <img src="~/images/site_icon.png" alt="HobbyNet" class="logo" height="64" width="64" />
+                        <div class="tagline">
+                            <h2>HOBBYNet</h2>
+                            <h3>To be active!</h3>
+                        </div>
                     </div>
-                </div>
 
-                <ul class="menu">
-                    <li>
-                        <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
-                            <input type="text" name="searchText" placeholder="Find user" />
-                            <button type="submit">
-                                <img class="search-img" src="~/images/search.png" />
-                            </button>
-                        </form>
-                    </li>
+                    <ul class="menu">
+                        <li>
+                            <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
+                                <input type="text" name="searchText" placeholder="Find user" />
+                                <button type="submit">
+                                    <img class="search-img" src="~/images/search.png" />
+                                </button>
+                            </form>
+                        </li>
 
-                    <li>
-                        <a asp-controller="User" asp-action="Profile">Profile</a>
-                        <ul class="submenu">
-                            <li><a asp-controller="User" asp-action="Profile">Home</a></li>
-                            <li><a asp-controller="User" asp-action="AddPost">Add post</a></li>
-                            <li><a asp-controller="User" asp-action="Friends">Friends</a></li>
-                            <li><a asp-controller="Hobby" asp-action="Index">My hobbies</a></li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a asp-controller="User" asp-action="Profile">Profile</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="User" asp-action="Profile">Home</a></li>
+                                <li><a asp-controller="User" asp-action="AddPost">Add post</a></li>
+                                <li><a asp-controller="User" asp-action="Friends">Friends</a></li>
+                                <li><a asp-controller="Hobby" asp-action="Index">My hobbies</a></li>
+                            </ul>
+                        </li>
 
-                    <li>
-                        <a asp-controller="ExplorePosts" asp-action="Index">Explore</a>
-                        <ul class="submenu">
-                            <li><a asp-controller="ExplorePosts" asp-action="Index">Posts</a></li>
-                            <li><a asp-controller="ExplorePosts" asp-action="RecommendedPosts">Recommendations</a></li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a asp-controller="ExplorePosts" asp-action="Index">Explore</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="ExplorePosts" asp-action="Index">Posts</a></li>
+                                <li><a asp-controller="ExplorePosts" asp-action="RecommendedPosts">Recommendations</a></li>
+                            </ul>
+                        </li>
 
-                    <li>
-                        <a asp-controller="Advert" asp-action="Index">Adverts</a>
-                        <ul class="submenu">
-                            <li><a asp-controller="Advert" asp-action="Index">All adverts</a></li>
-                            <li><a asp-controller="Advert" asp-action="UserAdverts">Your adverts</a></li>
-                            <li><a asp-controller="Advert" asp-action="AddAdvert">Add advert</a></li>
-                        </ul>
-                    </li>
+                        <li>
+                            <a asp-controller="Advert" asp-action="Index">Adverts</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="Advert" asp-action="Index">All adverts</a></li>
+                                <li><a asp-controller="Advert" asp-action="UserAdverts">Your adverts</a></li>
+                                <li><a asp-controller="Advert" asp-action="AddAdvert">Add advert</a></li>
+                            </ul>
+                        </li>
 
-                    <li>
-                        <a asp-controller="UserSettings" asp-action="Index">Settings</a>
-                    </li>
+                        <li>
+                            <a asp-controller="UserSettings" asp-action="Index">Settings</a>
+                        </li>
 
-                    <li>
-                        <form method="post" asp-controller="Account" asp-action="Logout">
-                            <button type="submit">
-                                <img class="logout-img" src="~/images/logout.png" />
-                            </button>
-                        </form>
-                    </li>
-                </ul>               
-            </nav>
+                        <li>
+                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit">
+                                    <img class="logout-img" src="~/images/logout.png" />
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </nav>
+            }
+
+
+
         </div>
 
     </header>
