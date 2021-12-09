@@ -352,13 +352,7 @@ namespace HOBBYNetMVC.Controllers
 
 
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult UsersList()
-        {
-            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View(_userService.GetUsersList(loginUserId));
-        }
+ 
 
 
         [Authorize]
