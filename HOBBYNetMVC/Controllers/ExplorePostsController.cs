@@ -40,12 +40,12 @@ namespace HOBBYNetMVC.Controllers
             posts.RemoveAll(p => p.User == currentUser);
             //var postsByPage = _explorePostsService.GetPostsByPage(posts, pageNumber);
             //return View(posts);
-            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber , AuthorizedUserId = loginUserId});
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult RecommendedPosts(int pageNumber = 1)
+        public IActionResult RecommendedPosts(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -56,7 +56,7 @@ namespace HOBBYNetMVC.Controllers
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
             //var recommendedPostsByPage = _explorePostsService.GetPostsByPage(recommendedPostsList, pageNumber);
 
-            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, 0, "newest") { CurrentPageNumber = pageNumber });
+            return View(new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, pageNumber, locationRadius, sort) { CurrentPageNumber = pageNumber, AuthorizedUserId = loginUserId });
             //return View(recommendedPostsByPage);
         }
 
@@ -69,6 +69,17 @@ namespace HOBBYNetMVC.Controllers
             string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
         }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult SetLikeToRecommendedPost(int postId, int pageNumber)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _explorePostsService.SetLikeToPost(postId, loginUserId);
+            string url = "RecommendedPosts?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
+        }
+
 
         [Authorize]
         [HttpGet]
@@ -93,12 +104,38 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpPost]
+        public IActionResult AddCommentToRecommendedPost(string commentText, int postId, int pageNumber)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _explorePostsService.AddCommentToPost(postId, loginUserId, commentText);
+            var post = _explorePostsService.GetExplorePost(postId);
+            string url = "RecommendedPosts?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
+            //return View("PostComments", post);
+        }
+
+        [Authorize]
+        [HttpPost]
         public IActionResult RemoveCommentFromPost(int commentId, int postId, int pageNumber)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = _explorePostsService.GetExplorePost(postId);
             _explorePostsService.RemoveCommentFromPost(postId, commentId);
             string url = "Index?pageNumber=" + pageNumber + "#post-" + postId;
+            return Redirect(url);
+            //return RedirectToAction("Index");
+            //return View("PostComments", post);
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemoveCommentFromRecommendedPost(int commentId, int postId, int pageNumber)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var post = _explorePostsService.GetExplorePost(postId);
+            _explorePostsService.RemoveCommentFromPost(postId, commentId);
+            string url = "RecommendedPosts?pageNumber=" + pageNumber + "#post-" + postId;
             return Redirect(url);
             //return RedirectToAction("Index");
             //return View("PostComments", post);

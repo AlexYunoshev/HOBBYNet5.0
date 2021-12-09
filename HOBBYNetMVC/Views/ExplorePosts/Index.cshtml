@@ -147,15 +147,19 @@
                                     <span><a class="comment-username">@comment.User.UserName</a></span>
                                     @*<span class="comment-date">10 hours ago</span>*@
                                     <span class="comment-date">@comment.CreatedDate</span>
-                                    <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
-                                        <span>
-                                            <button type="submit" name="postId" value="@post.Id">
-                                                <img class="remove-img" src="~/images/delete.png" />
-                                            </button>
-                                            <input type="hidden" name="commentId" value="@comment.Id" />
-                                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
-                                        </span>
-                                    </form>
+                                    @if (comment.UserId == Model.AuthorizedUserId)
+                                    {
+                                        <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
+                                            <span>
+                                                <button type="submit" name="postId" value="@post.Id">
+                                                    <img class="remove-img" src="~/images/delete.png" />
+                                                </button>
+                                                <input type="hidden" name="commentId" value="@comment.Id" />
+                                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                                <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                                            </span>
+                                        </form>
+                                    }
                                     <p class="comment-text">@comment.Text</p>
                                 </div>
                             </div>
