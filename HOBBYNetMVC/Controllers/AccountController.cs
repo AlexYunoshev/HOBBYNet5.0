@@ -42,6 +42,27 @@ namespace HOBBYNetMVC.Controllers
                     Email = model.registerViewModel.Email, 
                     UserName = model.registerViewModel.UserName 
                 };
+
+                var userByUsername = await _userManager.FindByNameAsync(user.UserName);
+                if (userByUsername != null)
+                {
+                    ModelState.AddModelError("", "This username is already taken");
+                    model.currentView = "register";
+                    return View("Login", model);
+                }
+
+                var userByEmail = await _userManager.FindByEmailAsync(user.Email);
+                if (userByEmail != null)
+                {
+                    ModelState.AddModelError("", "This email is already taken");
+                    model.currentView = "register";
+                    return View("Login", model);
+                }
+
+             
+
+
+
                 var result = await _userManager.CreateAsync(user, model.registerViewModel.Password);
                 if (result.Succeeded)
                 {
