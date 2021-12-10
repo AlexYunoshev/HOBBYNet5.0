@@ -27,7 +27,9 @@ namespace BusinessLogic.Services
 
         public List<Hobby> GetAllHobbies()
         {
-            var hobbies = _context.Hobbies.OrderBy(h => h.Name).ToList();
+            var hobbies = _context.Hobbies
+                .OrderBy(h => h.Name)
+                .ToList();
             return hobbies;
         }
 

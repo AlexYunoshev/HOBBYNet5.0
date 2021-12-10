@@ -14,7 +14,7 @@ namespace DataAccess.Context
     {
 
 
-        public DbSet<Hobby> Hobbies { get; set; }
+        public virtual DbSet<Hobby> Hobbies { get; set; }
         public DbSet<Friends> FriendsList { get; set; }
         public DbSet<ExplorePost> ExplorePosts { get; set; }
         public DbSet<ExploreLike> ExploreLikes { get; set; }
@@ -34,6 +34,11 @@ namespace DataAccess.Context
         {
            //Database.EnsureDeleted();
            //Database.EnsureCreated();
+        }
+
+        public HobbyNetContext()
+        {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
