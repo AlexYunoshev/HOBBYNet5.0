@@ -56,6 +56,51 @@ namespace BusinessLogic.Tests.Services
         }
 
 
+        [Fact]
+        public void GetUserHobbiesList_ShouldReturnList_WhenUserAndHobbiesExists()
+        {
+            var allHobbies = new List<Hobby>
+            {
+                 new Hobby() { Name = "Football"},
+                 new Hobby() { Name = "Tennis"},
+                 new Hobby() { Name = "Aerobics"},
+                 new Hobby() { Name = "Boxing"},
+                 new Hobby() { Name = "Fishing"},
+            }.AsQueryable();
+
+            var userHobbies = new List<Hobby>(allHobbies.Take(3));
+
+            var users = new List<User>
+            {
+                 new User() { Id = "id1", UserName = "User1", Hobbies = new List<Hobby>(userHobbies)},
+            }.AsQueryable();
+
+            var mockSetHobby = new Mock<DbSet<Hobby>>();
+            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.Provider).Returns(allHobbies.Provider);
+            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.Expression).Returns(allHobbies.Expression);
+            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.ElementType).Returns(allHobbies.ElementType);
+            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.GetEnumerator()).Returns(allHobbies.GetEnumerator());
+
+            var mockSetUser = new Mock<DbSet<User>>();
+            mockSetUser.As<IQueryable<User>>().Setup(m => m.Provider).Returns(users.Provider);
+            mockSetUser.As<IQueryable<User>>().Setup(m => m.Expression).Returns(users.Expression);
+            mockSetUser.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(users.ElementType);
+            mockSetUser.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
+
+            var mockContext = new Mock<HobbyNetContext>();
+            mockContext.Setup(c => c.Hobbies).Returns(mockSetHobby.Object);
+            mockContext.Setup(c => c.Users).Returns(mockSetUser.Object);
+
+            var service = new HobbyService(mockContext.Object);
+            var userHobbiesResult = service.GetUserHobbiesList("id1");
+
+            Assert.Equal(3, userHobbiesResult.Count);
+            Assert.Equal("Aerobics", userHobbiesResult[0].Name);
+            Assert.Equal("Football", userHobbiesResult[1].Name);
+            Assert.Equal("Tennis", userHobbiesResult[2].Name);
+        }
+
+
 
         //Assert.AreEqual("AAA", blogs[0].Name);
         //Assert.AreEqual("BBB", blogs[1].Name);
