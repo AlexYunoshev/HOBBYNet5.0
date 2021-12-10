@@ -46,7 +46,5 @@ namespace BusinessLogic.Services
             user.Hobbies.AddRange(hobbies);
             _context.SaveChanges();
         }
-
-
     }
 }
