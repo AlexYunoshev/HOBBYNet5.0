@@ -18,13 +18,6 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-        public List<Hobby> GetUserHobbiesList(string currentUserId)
-        {
-            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
-            var hobbies = user.Hobbies.OrderBy(h=>h.Name).ToList();
-            return hobbies;
-        }
-
         public List<Hobby> GetAllHobbies()
         {
             var hobbies = _context.Hobbies
@@ -33,19 +26,26 @@ namespace BusinessLogic.Services
             return hobbies;
         }
 
+        public List<Hobby> GetUserHobbiesList(string currentUserId)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
+            var hobbies = user.Hobbies.OrderBy(h=>h.Name).ToList();
+            return hobbies;
+        }
+
         public bool RemoveHobbyFromList(string currentUserId, int hobbyId)
         {
             var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
-            var hobby = user.Hobbies.Where(h => h.Id == hobbyId).FirstOrDefault();
-            user.Hobbies.Remove(hobby);
+            var hobby = user?.Hobbies.Where(h => h.Id == hobbyId).FirstOrDefault();
+            var result = user?.Hobbies.Remove(hobby);
             _context.SaveChanges();
-            return true;
+            return result ?? false;
         }
 
         public void AddHobbiesToUser(string currentUserId, List<Hobby> hobbies)
         {
             var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
-            user.Hobbies.AddRange(hobbies);
+            user?.Hobbies.AddRange(hobbies);
             _context.SaveChanges();
         }
     }

@@ -8,7 +8,6 @@ using Domain.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-//using System.Data.Entity;
 using System.Collections.ObjectModel;
 
 namespace BusinessLogic.Tests.Services
@@ -17,14 +16,161 @@ namespace BusinessLogic.Tests.Services
     {
         private readonly Mock<HobbyNetContext> _contextMock;
         private readonly HobbyService _service;
-        
+
         public HobbyServiceTests()
         {
             _contextMock = new Mock<HobbyNetContext>();
             _service = new HobbyService(_contextMock.Object);
         }
 
-        private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> soucreList) where T: class
+        [Fact]
+        public void GetAllHobbies_List_HobbiesExists_OrderByHobbyName()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+
+            // Act
+            var hobbiesActual = _service.GetAllHobbies();
+
+            // Assert
+            Assert.Equal(5, hobbiesActual.Count);
+            Assert.Equal("Aerobics", hobbiesActual[0].Name);
+            Assert.Equal("Diving", hobbiesActual[1].Name);
+            Assert.Equal("Drawing", hobbiesActual[2].Name);
+            Assert.Equal("Football", hobbiesActual[3].Name);
+            Assert.Equal("Tennis", hobbiesActual[4].Name);
+        }
+
+        [Fact]
+        public void GetUserHobbiesList_List_UserAndHobbiesExists_OrderByHobbyName()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            var userHobbiesActual = _service.GetUserHobbiesList("id1");
+
+            // Assert
+            Assert.Equal(3, userHobbiesActual.Count);
+            Assert.Equal("Aerobics", userHobbiesActual[0].Name);
+            Assert.Equal("Football", userHobbiesActual[1].Name);
+            Assert.Equal("Tennis", userHobbiesActual[2].Name);
+        }
+
+        [Fact]
+        public void RemoveHobbyFromList_True_UserAndHobbyExists()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            var resultActual = _service.RemoveHobbyFromList("id3", 4);
+
+            // Assert
+            Assert.True(resultActual);
+        }
+
+        [Fact]
+        public void RemoveHobbyFromList_False_HobbyNotExist()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            var resultActual = _service.RemoveHobbyFromList("id3", 6);
+
+            // Assert
+            Assert.False(resultActual);
+        }
+
+        [Fact]
+        public void RemoveHobbyFromList_False_UserNotExist()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            var resultActual = _service.RemoveHobbyFromList("id4", 2);
+
+            // Assert
+            Assert.False(resultActual);     
+        }
+
+        [Fact]
+        public void AddHobiesToUser_UserAndHobbiesExists()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            var hobbiesToAdd = new List<Hobby>(allHobbies.Take(2));
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            _service.AddHobbiesToUser("id2", hobbiesToAdd);
+
+            // Assert
+            Assert.Equal(2, _service.GetUserHobbiesList("id2").Count);
+        }
+
+        [Fact]
+        public void AddHobiesToUser_HobbiesNotExists()
+        {
+            // Arrange
+            var allHobbies = GetAllHobbies();
+            var mockSetAllHobbies = GetQueryableMockDbSet<Hobby>(allHobbies);
+
+            var allUsers = GetAllUsers(allHobbies);
+            var mockSetAllUsers = GetQueryableMockDbSet<User>(allUsers);
+
+            var hobbiesToAdd = new List<Hobby>();
+
+            _contextMock.Setup(db => db.Hobbies).Returns(mockSetAllHobbies.Object);
+            _contextMock.Setup(db => db.Users).Returns(mockSetAllUsers.Object);
+
+            // Act
+            _service.AddHobbiesToUser("id2", hobbiesToAdd);
+
+            // Assert
+            Assert.Empty(_service.GetUserHobbiesList("id2"));
+        }
+
+        private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> soucreList) where T : class
         {
             var queryable = soucreList.AsQueryable();
             var mockSet = new Mock<DbSet<T>>();
@@ -39,225 +185,59 @@ namespace BusinessLogic.Tests.Services
         {
             var hobbies = new List<Hobby>
             {
-                 new Hobby() { Name = "Football"},
-                 new Hobby() { Name = "Tennis"},
-                 new Hobby() { Name = "Aerobics"},
-                 new Hobby() { Name = "Diving"},
-                 new Hobby() { Name = "Drawing"},
+                 new Hobby() 
+                 {
+                     Id = 1, 
+                     Name = "Football"
+                 },
+                 new Hobby() 
+                 {
+                     Id = 2,
+                     Name = "Tennis"
+                 },
+                 new Hobby() 
+                 {
+                     Id = 3,
+                     Name = "Aerobics"
+                 },
+                 new Hobby() 
+                 {
+                     Id = 4,
+                     Name = "Diving"
+                 },
+                 new Hobby() 
+                 {
+                     Id = 5,
+                     Name = "Drawing"
+                 },
             };
             return hobbies;
         }
 
-
-        [Fact]
-        public void GetAllHobbies_ShouldReturnList_WhenHobbiesExists()
+        private static List<User> GetAllUsers(List<Hobby> allHobbies)
         {
-            var allHobbies = GetAllHobbies();
-            var mockSet = GetQueryableMockDbSet<Hobby>(allHobbies);
-            var mockContext = new Mock<HobbyNetContext>();
-            mockContext.Setup(c => c.Hobbies).Returns(mockSet.Object);
-            var service = new HobbyService(mockContext.Object);
-
-
-            var hobbies = service.GetAllHobbies();
-
-            Assert.Equal(5, hobbies.Count);
-            Assert.Equal("Aerobics", hobbies[0].Name);
-            Assert.Equal("Diving", hobbies[1].Name);
-            Assert.Equal("Drawing", hobbies[2].Name);
-            Assert.Equal("Football", hobbies[3].Name);
-            Assert.Equal("Tennis", hobbies[4].Name);
-       
-        }
-
-
-        [Fact]
-        public void GetUserHobbiesList_ShouldReturnList_WhenUserAndHobbiesExists()
-        {
-            var allHobbies = new List<Hobby>
-            {
-                 new Hobby() { Name = "Football"},
-                 new Hobby() { Name = "Tennis"},
-                 new Hobby() { Name = "Aerobics"},
-                 new Hobby() { Name = "Boxing"},
-                 new Hobby() { Name = "Fishing"},
-            }.AsQueryable();
-
-            var userHobbies = new List<Hobby>(allHobbies.Take(3));
-
             var users = new List<User>
             {
-                 new User() { Id = "id1", UserName = "User1", Hobbies = new List<Hobby>(userHobbies)},
-            }.AsQueryable();
-
-            var mockSetHobby = new Mock<DbSet<Hobby>>();
-            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.Provider).Returns(allHobbies.Provider);
-            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.Expression).Returns(allHobbies.Expression);
-            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.ElementType).Returns(allHobbies.ElementType);
-            mockSetHobby.As<IQueryable<Hobby>>().Setup(m => m.GetEnumerator()).Returns(allHobbies.GetEnumerator());
-
-            var mockSetUser = new Mock<DbSet<User>>();
-            mockSetUser.As<IQueryable<User>>().Setup(m => m.Provider).Returns(users.Provider);
-            mockSetUser.As<IQueryable<User>>().Setup(m => m.Expression).Returns(users.Expression);
-            mockSetUser.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(users.ElementType);
-            mockSetUser.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
-
-            var mockContext = new Mock<HobbyNetContext>();
-            mockContext.Setup(c => c.Hobbies).Returns(mockSetHobby.Object);
-            mockContext.Setup(c => c.Users).Returns(mockSetUser.Object);
-
-            var service = new HobbyService(mockContext.Object);
-            var userHobbiesResult = service.GetUserHobbiesList("id1");
-
-            Assert.Equal(3, userHobbiesResult.Count);
-            Assert.Equal("Aerobics", userHobbiesResult[0].Name);
-            Assert.Equal("Football", userHobbiesResult[1].Name);
-            Assert.Equal("Tennis", userHobbiesResult[2].Name);
+                 new User()
+                 {
+                     Id = "id1",
+                     UserName = "User1",
+                     Hobbies = new List<Hobby>(allHobbies.Take(3))
+                 },
+                 new User()
+                 {
+                     Id = "id2",
+                     UserName = "User2",
+                     Hobbies = new List<Hobby>()
+                 },
+                 new User()
+                 {
+                     Id = "id3",
+                     UserName = "User3",
+                     Hobbies = new List<Hobby>(allHobbies.Take(4))
+                 }
+            };
+            return users;
         }
-
-
-
-        //Assert.AreEqual("AAA", blogs[0].Name);
-        //Assert.AreEqual("BBB", blogs[1].Name);
-        //Assert.AreEqual("ZZZ", blogs[2].Name);
-        //[Fact]
-        //public void TestCreateNewDocument()
-        //{
-        //    var mockContext = new Mock<HobbyNetContext>();
-
-        //    var mockDocumentDbSet = GetQueryableMockDocumentDbSet();
-
-        //    mockContext.Setup(m => m.Hobbies).Returns(mockDocumentDbSet.Object);
-
-        //    var documentManager = new HobbyService(mockContext.Object);
-
-        //    var hobbies = documentManager.GetAllHobbies();
-
-        //    // This line doesn't get hit as the .First falls over before here
-        //    Assert.Equal(hobbies, GetAllHobbies());
-        //}
-
-        //private static Mock<DbSet<Hobby>> GetQueryableMockDocumentDbSet()
-        //{
-        //    var data = new List<Hobby>(GetAllHobbies());
-
-        //    var mockDocumentDbSet = new Mock<DbSet<Hobby>>();
-        //    mockDocumentDbSet.As<IQueryable<Hobby>>().Setup(m => m.Provider).Returns(data.AsQueryable().Provider);
-        //    mockDocumentDbSet.As<IQueryable<Hobby>>().Setup(m => m.Expression).Returns(data.AsQueryable().Expression);
-        //    mockDocumentDbSet.As<IQueryable<Hobby>>().Setup(m => m.ElementType).Returns(data.AsQueryable().ElementType);
-        //    mockDocumentDbSet.As<IQueryable<Hobby>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-        //    mockDocumentDbSet.Setup(m => m.Add(It.IsAny<Hobby>())).Callback<Hobby>(data.Add);
-        //    return mockDocumentDbSet;
-        //}
-
-
-
-        //private static List<Hobby> GetAllHobbies()
-        //{
-        //    var hobbies = new List<Hobby>
-        //        {
-        //            new Hobby() { Name = "Football"},
-        //            new Hobby() { Name = "Tennis"}
-        //        };
-        //    return hobbies;
-        //}
-
-        //[Fact]
-        //public void GetAllHobbies_ShouldReturnList_WhenHobbiesExists()
-        //{
-
-        //    var hobbies = _sut.GetAllHobbies();
-
-
-        //    _contextMock.Setup(x => x.Hobbies).Returns(GetAllHobbies());
-        //    var _service = new HobbyService(_contextMock.Object);
-
-        //    var result = _service.GetAllHobbies();
-
-        //    Assert.Equal(GetAllHobbies().Count, result.Count);
-        //}
-
     }
-
-
-    //public class FakeDbSet<T> : IDbSet<T> where T : class
-    //{
-    //    ObservableCollection<T> _data;
-    //    IQueryable _query;
-
-    //    public FakeDbSet()
-    //    {
-    //        _data = new ObservableCollection<T>();
-    //        _query = _data.AsQueryable();
-    //    }
-
-    //    public virtual T Find(params object[] keyValues)
-    //    {
-    //        throw new NotImplementedException("Derive from FakeDbSet<T> and override Find");
-    //    }
-
-    //    public T Add(T item)
-    //    {
-    //        _data.Add(item);
-    //        return item;
-    //    }
-
-    //    public T Remove(T item)
-    //    {
-    //        _data.Remove(item);
-    //        return item;
-    //    }
-
-    //    public T Attach(T item)
-    //    {
-    //        _data.Add(item);
-    //        return item;
-    //    }
-
-    //    public T Detach(T item)
-    //    {
-    //        _data.Remove(item);
-    //        return item;
-    //    }
-
-    //    public T Create()
-    //    {
-    //        return Activator.CreateInstance<T>();
-    //    }
-
-    //    public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, T
-    //    {
-    //        return Activator.CreateInstance<TDerivedEntity>();
-    //    }
-
-    //    public ObservableCollection<T> Local
-    //    {
-    //        get { return _data; }
-    //    }
-
-    //    Type IQueryable.ElementType
-    //    {
-    //        get { return _query.ElementType; }
-    //    }
-
-    //    System.Linq.Expressions.Expression IQueryable.Expression
-    //    {
-    //        get { return _query.Expression; }
-    //    }
-
-    //    IQueryProvider IQueryable.Provider
-    //    {
-    //        get { return _query.Provider; }
-    //    }
-
-    //    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    //    {
-    //        return _data.GetEnumerator();
-    //    }
-
-    //    IEnumerator<T> IEnumerable<T>.GetEnumerator()
-    //    {
-    //        return _data.GetEnumerator();
-    //    }
-    //}
 }
