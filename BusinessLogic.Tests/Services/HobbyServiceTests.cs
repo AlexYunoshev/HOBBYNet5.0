@@ -15,44 +15,59 @@ namespace BusinessLogic.Tests.Services
 {
     public class HobbyServiceTests
     {
-        private readonly HobbyService _sut;
-        private readonly Mock<HobbyNetContext> _contextMock = new Mock<HobbyNetContext>();
-      
-
-
+        private readonly Mock<HobbyNetContext> _contextMock;
+        private readonly HobbyService _service;
+        
         public HobbyServiceTests()
         {
-            _sut = new HobbyService(_contextMock.Object);
+            _contextMock = new Mock<HobbyNetContext>();
+            _service = new HobbyService(_contextMock.Object);
+        }
+
+        private static Mock<DbSet<T>> GetQueryableMockDbSet<T>(List<T> soucreList) where T: class
+        {
+            var queryable = soucreList.AsQueryable();
+            var mockSet = new Mock<DbSet<T>>();
+            mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
+            return mockSet;
+        }
+
+        private static List<Hobby> GetAllHobbies()
+        {
+            var hobbies = new List<Hobby>
+            {
+                 new Hobby() { Name = "Football"},
+                 new Hobby() { Name = "Tennis"},
+                 new Hobby() { Name = "Aerobics"},
+                 new Hobby() { Name = "Diving"},
+                 new Hobby() { Name = "Drawing"},
+            };
+            return hobbies;
         }
 
 
         [Fact]
         public void GetAllHobbies_ShouldReturnList_WhenHobbiesExists()
-        {  
-            var data = new List<Hobby>
-            {
-                 new Hobby() { Name = "Football"},
-                 new Hobby() { Name = "Tennis"},
-                 new Hobby() { Name = "Aerobics"}
-
-            }.AsQueryable();
-
-            var mockSet = new Mock<DbSet<Hobby>>();
-            mockSet.As<IQueryable<Hobby>>().Setup(m => m.Provider).Returns(data.Provider);
-            mockSet.As<IQueryable<Hobby>>().Setup(m => m.Expression).Returns(data.Expression);
-            mockSet.As<IQueryable<Hobby>>().Setup(m => m.ElementType).Returns(data.ElementType);
-            mockSet.As<IQueryable<Hobby>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
-
+        {
+            var allHobbies = GetAllHobbies();
+            var mockSet = GetQueryableMockDbSet<Hobby>(allHobbies);
             var mockContext = new Mock<HobbyNetContext>();
             mockContext.Setup(c => c.Hobbies).Returns(mockSet.Object);
-
             var service = new HobbyService(mockContext.Object);
+
+
             var hobbies = service.GetAllHobbies();
 
-            Assert.Equal(3, hobbies.Count);
+            Assert.Equal(5, hobbies.Count);
             Assert.Equal("Aerobics", hobbies[0].Name);
-            Assert.Equal("Football", hobbies[1].Name);
-            Assert.Equal("Tennis", hobbies[2].Name);
+            Assert.Equal("Diving", hobbies[1].Name);
+            Assert.Equal("Drawing", hobbies[2].Name);
+            Assert.Equal("Football", hobbies[3].Name);
+            Assert.Equal("Tennis", hobbies[4].Name);
+       
         }
 
 
