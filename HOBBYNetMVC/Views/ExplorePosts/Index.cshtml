@@ -1,6 +1,6 @@
 ﻿@model Domain.ViewModels.ExplorePostsViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
 }
 
 <style>
@@ -12,8 +12,6 @@
         height: 75vh;
     }
 </style>
-
-
 
 <div class="settings">
     <form asp-action="Index" method="get">
@@ -50,18 +48,14 @@
     @foreach (var post in Model.Posts)
     {
         <div class="explore-post" id="post-@post.Id">
-
             <div class="explore-post-header">
-                @*<img class="user-pic" src="~/images/i.jpg" />*@
                 <img class="user-pic" src="@post.User.PhotoPath" />
                 <div class="user-info">
                     <p class="username"><a>@post.User.UserName</a></p>
-                    @*<p class="address"><a>Kharkiv, Krychevsky street</a></p>*@
-                    @*<p class="address"><a>@post.User.Location.Latitude</a></p>*@
                     @if (@post.User.Location != null)
                     {
                         <p class="address"><a>@post.User.Location.Name</a></p>
-                        <p class="address">Dist: @Model.distanceToUser[post.User] km</p>
+                        <p class="address">Distance to user from you: @Model.distanceToUser[post.User] km</p>
                     }
 
                 </div>
@@ -76,7 +70,6 @@
                         </span>
                     }
 
-
                     @if (post.User.ViberUsername != null)
                     {
                         string link = "viber://chat?number=" + @post.User.ViberUsername;
@@ -86,6 +79,7 @@
                             </a>
                         </span>
                     }
+
                     @if (post.User.WhatsAppUsername != null)
                     {
                         string link = "whatsapp://send?phone=" + @post.User.WhatsAppUsername;
@@ -137,7 +131,6 @@
                     <p id="p-@post.Id">
                         @post.Text
                     </p>
-                    @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)" />*@
                     <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
                     <p>
                         @foreach (var hobby in post.Hobbies)
@@ -149,19 +142,15 @@
 
                 <hr style="margin:10px" />
 
-
-
                 <div class="comments">
 
                     <div class="comments-area" id="commentsPost-@post.Id">
                         @foreach (var comment in post.ExploreComments)
                         {
                             <div class="explore-post-comment">
-                                @*<img class="comment-user-pic" src="~/images/i.jpg" />*@
                                 <img class="comment-user-pic" src="@comment.User.PhotoPath" />
                                 <div class="comment-content">
                                     <span><a class="comment-username">@comment.User.UserName</a></span>
-                                    @*<span class="comment-date">10 hours ago</span>*@
                                     <span class="comment-date">@comment.CreatedDate</span>
                                     @if (comment.UserId == Model.AuthorizedUserId)
                                     {
@@ -180,42 +169,30 @@
                                 </div>
                             </div>
                         }
-
                     </div>
-
 
                     <div class="comment-add-input">
                         <form asp-action="AddCommentToPost" method="post">
                             <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
                             <button type="submit">
                                 <img id="submit-btn" src="~/images/send.png" />
-
                             </button>
                             <input type="hidden" name="postId" value="@post.Id" />
                             <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
                         </form>
                     </div>
                 </div>
-
-
-
             </div>
-
 
             <div class="footer">
-                @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
                 <p style="color: #8e8e8e; text-transform:uppercase;">@post.CreatedDate</p>
             </div>
-
         </div>
     }
-
 </div>
 
 <div class="pages">
     <span>
-        @*<span>@Model.Sort</span>
-        <span>@Model.LocationRadius </span>*@
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
             string href = "Index?sort=" + Model.Sort 
@@ -231,7 +208,6 @@
                 <a style="color:black" href="@href">@i</a>
             }
         }
-
     </span>
 </div>
 
