@@ -121,7 +121,7 @@
                     <p id="p-@post.Id">
                         @post.Text
                     </p>
-                    <img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)" />
+                    <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
                     <p>
                         @foreach (var hobby in post.Hobbies)
                         {
