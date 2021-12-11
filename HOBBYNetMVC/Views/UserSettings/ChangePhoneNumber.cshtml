@@ -1,18 +1,34 @@
 ﻿@model HOBBYNetMVC.Models.UserSettings.ChangePhoneNumberViewModel
 @{
-    ViewBag.Title = "Изменение номера телефона";
+    ViewBag.Title = "Change phone number";
 }
-<h2>Изменение номера телефона для пользователя @Model.Email</h2>
-<form asp-action="ChangePhoneNumber" asp-controller="UserSettings">
-    <div asp-validation-summary="All" class="text-danger"></div>
 
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="Email" />
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="control-label">Номер телефона</label>
-        <input type="text" asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+<style>
+    .canvas {
+        padding: 20px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin: 10px auto;
+        text-align: center;
+    }
+</style>
+
+<div class="content">
+    <div class="canvas">
+        <form asp-action="ChangePhoneNumber" asp-controller="UserSettings">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Email" />
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label">Phone number</label>
+                <input type="text" asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-default" />
-    </div>
-</form>
+</div>

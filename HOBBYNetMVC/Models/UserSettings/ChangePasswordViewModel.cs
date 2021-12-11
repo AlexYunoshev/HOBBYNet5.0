@@ -12,14 +12,14 @@ namespace HOBBYNetMVC.Models.UserSettings
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Старый пароль")]
+        [Display(Name = "Old password")]
         [DataType(DataType.Password)]
         public string OldPassword { get; set; }
 
         [Required]
-        [Display(Name = "Новый пароль")]
+        [Display(Name = "New password")]
         [DataType(DataType.Password)]
-        [StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 5)]
+        [StringLength(100, ErrorMessage = "The {0} field  must have at least {2} symbols", MinimumLength = 8)]
         public string NewPassword { get; set; } 
     }
 }
