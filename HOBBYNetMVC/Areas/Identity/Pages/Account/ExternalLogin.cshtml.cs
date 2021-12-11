@@ -14,23 +14,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HOBBYNetMVC.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
+        private readonly IWebHostEnvironment _appEnvironment;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
+            IWebHostEnvironment appEnvironment,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender)
         {
+            _appEnvironment = appEnvironment;
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
@@ -142,16 +147,6 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                //var userByUsername = await _userManager.FindByNameAsync(Input.Username);
-                //if (userByUsername != null)
-                //{
-                //    ModelState.AddModelError("", "This username is already taken");
-                //    ProviderDisplayName = info.ProviderDisplayName;
-                //    ReturnUrl = returnUrl;
-                //    return Page();
-                //}
-
-
                 var userByEmail = await _userManager.FindByEmailAsync(Input.Email);
                 if (userByEmail != null)
                 {
@@ -161,16 +156,20 @@ namespace HOBBYNetMVC.Areas.Identity.Pages.Account
                     return Page();
                 }
 
-                //var username = Input.Email;
                 var username = Input.Username;
-                //int startIndex = username.IndexOf('@');
-                //int length = username.Length - startIndex;
-                //username = username.Remove(startIndex);
-                var user = new User { 
-                    UserName = username, 
-                    Email = Input.Email, 
-                    FirstName = Input.Firstname, 
-                    LastName = Input.Lastname
+
+                var rootPath = _appEnvironment.WebRootPath;
+                var PhotoPath = Path.Combine(rootPath, "images");
+                PhotoPath = Path.Combine(PhotoPath, "userPic.png");
+                int index = PhotoPath.IndexOf("images");
+                PhotoPath = PhotoPath.Remove(0, index - 1);
+
+                var user = new User {
+                    UserName = username,
+                    Email = Input.Email,
+                    FirstName = Input.Firstname,
+                    LastName = Input.Lastname,
+                    PhotoPath = PhotoPath
                 };
 
 
