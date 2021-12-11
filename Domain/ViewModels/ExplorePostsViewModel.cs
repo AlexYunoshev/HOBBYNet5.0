@@ -28,11 +28,9 @@ namespace Domain.ViewModels
         [BindProperty]
         public int LocationRadius { get; set; }
 
-
         [BindProperty]
         public string Sort { get; set; }
       
-
         public List<ExplorePost> GetPostsByPage(List<ExplorePost> allPosts, int pageNumber)
         {
             var postsOut = new List<ExplorePost>();
@@ -48,36 +46,36 @@ namespace Domain.ViewModels
             return postsOut;
         }
 
-
         public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius, string sort)
         {
             LocationRadius = locationRadius;
             Sort = sort;
             CurrentUser = user;
 
-            //posts.RemoveAll(p => p.User == user);
-
-            foreach (var post in posts)
+            if (CurrentUser.Location != null)
             {
-                if (post.User.Location != null)
+                foreach (var post in posts)
                 {
-                    if (!distanceToUser.ContainsKey(post.User))
+                    if (post.User.Location != null)
                     {
-                        double originLatitude = Convert.ToDouble(CurrentUser.Location.Latitude);
-                        double originLongitude = Convert.ToDouble(CurrentUser.Location.Longitude);
+                        if (!distanceToUser.ContainsKey(post.User))
+                        {
+                            double originLatitude = Convert.ToDouble(CurrentUser.Location.Latitude);
+                            double originLongitude = Convert.ToDouble(CurrentUser.Location.Longitude);
 
-                        double destinationLatitude = Convert.ToDouble(post.User.Location.Latitude);
-                        double destinationLongitude = Convert.ToDouble(post.User.Location.Longitude);
+                            double destinationLatitude = Convert.ToDouble(post.User.Location.Latitude);
+                            double destinationLongitude = Convert.ToDouble(post.User.Location.Longitude);
 
-                        Coordinate originCoordinate = new Coordinate(originLatitude, originLongitude);
-                        Coordinate destinationCoordinate = new Coordinate(destinationLatitude, destinationLongitude);
+                            Coordinate originCoordinate = new Coordinate(originLatitude, originLongitude);
+                            Coordinate destinationCoordinate = new Coordinate(destinationLatitude, destinationLongitude);
 
-                        double distance = GeoCalculator.GetDistance(originCoordinate, destinationCoordinate, 2, DistanceUnit.Kilometers);
-                        distanceToUser.Add(post.User, distance);
+                            double distance = GeoCalculator.GetDistance(originCoordinate, destinationCoordinate, 2, DistanceUnit.Kilometers);
+                            distanceToUser.Add(post.User, distance);
+                        }
                     }
                 }
             }
-
+           
             if (locationRadius != 0)
             {
                 foreach (var key in distanceToUser.Keys)
@@ -115,11 +113,9 @@ namespace Domain.ViewModels
                 posts.AddRange(sortedPosts);
             }
 
-
             PostsByPage = GetPostsByPage(posts, pageNumber);
             Posts = PostsByPage;
-           
-            //AllPostsCount = allPostsCount;
+
             AllPostsCount = posts.Count;
             if (AllPostsCount % 10 == 0)
             {
@@ -129,11 +125,6 @@ namespace Domain.ViewModels
             {
                 PagesCount = AllPostsCount / 10 + 1;
             }
-
         }
-
-     
-
-
     }
 }

@@ -49,7 +49,7 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult RecommendedPosts(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            User currentUser = _userService.GetUserById(loginUserId);
             List<ExplorePost> explorePostsWithoutRating;
             Dictionary<Hobby, int> postRatingByHobbies;
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);

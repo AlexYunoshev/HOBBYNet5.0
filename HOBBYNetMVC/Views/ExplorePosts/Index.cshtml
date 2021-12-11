@@ -55,7 +55,10 @@
                     @if (@post.User.Location != null)
                     {
                         <p class="address"><a>@post.User.Location.Name</a></p>
-                        <p class="address">Distance to user from you: @Model.distanceToUser[post.User] km</p>
+                        if (Model.CurrentUser.Location != null)
+                        {
+                            <p class="address">Distance to user from you: @Model.distanceToUser[post.User] km</p>
+                        }
                     }
 
                 </div>
