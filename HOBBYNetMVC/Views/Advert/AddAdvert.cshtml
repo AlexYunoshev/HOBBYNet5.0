@@ -1,6 +1,6 @@
 ﻿@model Domain.ViewModels.HobbyViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Add an advert";
 }
 
 <style>
@@ -13,7 +13,6 @@
         display: block;
         width: 95%;
     }
-
 
     textarea {
         resize: none;
@@ -29,7 +28,6 @@
         cursor: pointer;
         display: block;
     }
-
 
     .hobbies-list::-webkit-scrollbar {
         display: none;
@@ -60,15 +58,11 @@
     <div class="explore-post">
         <form asp-action="AddAdvert" method="post">
             <textarea class="input" rows="10" name="messageText" placeholder="Message text. Maximum length is 100 characters." maxlength="100"></textarea>
-         
             <p class="input">You need to choose at least 1 hobby from the list below:</p>
-
             <div class="canvas">
                 <h4>Hobbies to add</h4>
                 <div class="hobbies-list">
-
                     <table border="0" cellpadding="0" cellspacing="0">
-
                         @for (int i = 0; i < Model.addHobbiesList.Count; i++)
                         {
                             <tr>
@@ -80,19 +74,13 @@
                                 </td>
                             </tr>
                         }
-
                     </table>
-
                 </div>
-
             </div>
             <p class="input">
                 Didn`t find your hobby? Add it to the hobbies list now.
                 <a asp-action="Index" asp-controller="Hobby" target="_blank">Just click here</a>
             </p>
-
-
-
             <input class="input" type="submit" value="Submit" />
         </form>
     </div>

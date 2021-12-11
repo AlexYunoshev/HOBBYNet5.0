@@ -7,7 +7,6 @@
         max-height: 40px;
         max-width: 40px;
         vertical-align: middle;
-        /* margin: 10px 10px 10px 0;*/
     }
 
     .request-action-img {
@@ -25,43 +24,25 @@
     table {
         margin: 0;
         width: 100%;
-        /*border: 1px solid black;*/
-    }
-
-    th {
-        /*border: 1px solid black;*/
     }
 
     td {
         padding: 5px;
-        /* border: 1px solid black;*/
-        /*    border-left: 0;
-        border-right: 0;
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;*/
     }
 
     tr {
         padding: 5px 0;
     }
 
-
     .hobbies-list::-webkit-scrollbar {
         display: none;
     }
-
-
-
 
     .users-list {
         max-height: 300px;
         overflow: auto;
         margin: 5px 0;
     }
-
-
-
-
 
     .canvas button[type="submit"] {
         padding: 0;
@@ -93,7 +74,6 @@
         width: 95%;
     }
 
-
     textarea {
         resize: none;
         border-radius: 15px;
@@ -108,7 +88,6 @@
         cursor: pointer;
         display: block;
     }
-
 
     .hobbies-list::-webkit-scrollbar {
         display: none;
@@ -136,16 +115,13 @@
 </style>
 
 
-
 @model List<Domain.Models.Advert>
 @{
-    ViewData["Title"] = "Adverts";
+    ViewData["Title"] = "Your adverts";
 }
-
 
 <div class="content">
     <div class="canvas">
-
         @if (Model.Count > 0)
         {
             <form asp-action="RemoveAdvert" method="post">
@@ -159,43 +135,42 @@
                         <th></th>
                         @foreach (var advert in Model)
                         {
-                    <tr>
-                        <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
-                        <td align="center">@advert.User.UserName</td>
-                        <td align="center">
-                            <span>
-                                @advert.User.Location.Name
-                            </span>
-                            <span>
-                                @advert.User.Location.Latitude @advert.User.Location.Longitude
-                            </span>
-                        </td>
-                        <td width="140" align="center">
-                            @foreach (var hobby in advert.Hobbies)
-                            {
-                                <span>@hobby.Name</span>
-                            }
-                        </td>
+                            <tr>
+                                <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
+                                <td align="center">@advert.User.UserName</td>
+                                <td align="center">
+                                    <span>
+                                        @advert.User.Location.Name
+                                    </span>
+                                    <span>
+                                        @advert.User.Location.Latitude @advert.User.Location.Longitude
+                                    </span>
+                                </td>
+                                <td width="140" align="center">
+                                    @foreach (var hobby in advert.Hobbies)
+                                    {
+                                        <span>@hobby.Name</span>
+                                    }
+                                </td>
 
-                        <td width="240" align="center">
-                            @advert.Message
-                        </td>
+                                <td width="240" align="center">
+                                    @advert.Message
+                                </td>
 
-                        <td width="100">
-                            @advert.CreatedDate.ToShortDateString()
-                        </td>
+                                <td width="100">
+                                    @advert.CreatedDate.ToShortDateString()
+                                </td>
 
-                        <td width="30">
+                                <td width="30">
 
-                            <button type="submit" name="advertId" value="@advert.Id">
-                                <img class="request-action-img" src="~/images/delete.png" />
-                            </button>
-                        </td>
-                    </tr>
+                                    <button type="submit" name="advertId" value="@advert.Id">
+                                        <img class="request-action-img" src="~/images/delete.png" />
+                                    </button>
+                                </td>
+                            </tr>
                         }
                     </table>
                 </div>
-
             </form>
         }
         else
@@ -204,11 +179,4 @@
         }
 
     </div>
-
-
-
-
 </div>
-
-
-
