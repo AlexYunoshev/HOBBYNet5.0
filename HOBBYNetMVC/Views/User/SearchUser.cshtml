@@ -125,13 +125,20 @@
                 @foreach (var user in Model)
                 {
                     <tr>
-                        <td width="60"><img src="@user.PhotoPath" alt="User pic" class="user-pic" /></td>
+                        <td width="60">
+                            <a asp-controller="User" asp-action="ToUserProfile" asp-route-id="@user.Id" target="_blank"> 
+                                <img src="@user.PhotoPath" alt="User pic" class="user-pic" />
+                            </a>
+                        </td>
                         <td align="left">@user.Username</td>
                         <td align="left">@user.Firstname @user.Lastname</td>
                         <td width="60">
-                            <button type="submit" name="userId" value="@user.Id">
-                                Add as friend
-                            </button>
+                            @if (user.RelationShip == Domain.Models.RelationShips.None)
+                            {
+                                <button type="submit" name="userId" value="@user.Id">
+                                    Add as friend
+                                </button>
+                            }
                         </td>
                     </tr>
                 }

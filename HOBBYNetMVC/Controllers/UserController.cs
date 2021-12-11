@@ -248,9 +248,9 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Friends()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var friendsList = _userService.GetFriendsList(loginUserId);
+            //var friendsList = _userService.GetFriendsList(loginUserId);
             FriendsDTO friendsDTO = new FriendsDTO();
-            friendsDTO.Friends = friendsList;
+            friendsDTO.Friends = _userService.GetFriendsList(loginUserId);
             friendsDTO.RequestsToUser = _userService.GetFriendRequestsToUser(loginUserId);
             friendsDTO.RequestsFromUser = _userService.GetFriendRequestsFromUser(loginUserId);
             return View(friendsDTO);
@@ -313,7 +313,16 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult SearchUser(string searchText)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var users = _userService.GetUsersBySearch(searchText);
+            var users = _userService.GetUsersBySearch(searchText, loginUserId);
+            var currentUserFriends = _userService.GetFriendsList(loginUserId);
+            var currentUserRequestsFrom = _userService.GetFriendRequestsFromUser(loginUserId);
+            var currentUserRequestsTo = _userService.GetFriendRequestsToUser(loginUserId);
+            foreach (var user in users)
+            {
+                if (currentUserFriends.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Friend; }
+                else if (currentUserRequestsFrom.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Waiting; }
+                else if (currentUserRequestsTo.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Waiting; }
+            }
             return View(users);
         }
 

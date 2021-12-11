@@ -20,10 +20,7 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-
-      
-
-        public List<UsersList> GetUsersBySearch(string searchString)
+        public List<UsersList> GetUsersBySearch(string searchString, string currentUserId)
         {
             var users = _context.Users
                 .Where(u => u.UserName.Contains(searchString))
@@ -36,11 +33,10 @@ namespace BusinessLogic.Services
             users.AddRange(_context.Users
                 .Where(u => u.LastName.Contains(searchString))
                 .Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath) { Firstname = x.FirstName, Lastname = x.LastName })
-                .ToList());    
+                .ToList());
+            users.RemoveAll(u => u.Id == currentUserId);
             return users.DistinctBy(u => u.Id).ToList();     
         }
-
-  
 
         public User GetUserById(string userId)
         {
@@ -81,28 +77,6 @@ namespace BusinessLogic.Services
             users.RemoveAll(x => x.Id == currentUserId);
             return users;
         }
-
-        //public List<FriendsList> GetFriendsList(string currentUserId)
-        //{
-        //    var mainUsers = _context.FriendsList
-        //        .Include(x => x.MainUser)
-        //        .Where(x => x.FriendUserId == currentUserId && x.RelationShips == RelationShips.Friend)
-        //        .ToList();
-
-        //    var friendUsers = _context.FriendsList
-        //        .Include(x => x.FriendUser)
-        //        .Where(x => x.MainUserId == currentUserId && x.RelationShips == RelationShips.Friend)
-        //        .ToList();
-
-        //    var friendsList = mainUsers
-        //        .Select(x => new FriendsList(x.MainUser.FirstName, x.MainUser.LastName, x.MainUserId))
-        //        .ToList();
-
-        //    friendsList
-        //        .AddRange(friendUsers.Select(x => new FriendsList(x.FriendUser.FirstName, x.FriendUser.LastName, x.FriendUserId))
-        //        .ToList());
-        //    return friendsList;
-        //}
 
         public List<FriendsList> GetFriendsList(string currentUserId)
         {
@@ -218,7 +192,6 @@ namespace BusinessLogic.Services
                 return false;
             }
             _context.FriendsList.Remove(friends);
-            //_context.Remove(friends);
             _context.SaveChanges();
             return true;
         }
