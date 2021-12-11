@@ -21,7 +21,6 @@
         cursor: pointer;
     }
 
-
     .aside-info {
         width: 450px;
         border: 1px solid black;
@@ -77,8 +76,6 @@
         margin: 0 20px 0 0;
     }
 
-   
-
     .location-google span {
         margin: 0 5px;
     }
@@ -94,8 +91,6 @@
     }
 
     .statistic-data {
-        /*display: flex;
-        align-items: center;*/
         color: black;
         font-size: 26px;
     }
@@ -103,7 +98,6 @@
     .statistic-data-field {
         text-decoration: underline;
         text-align: center;
-        /* margin-left: 10px;*/
     }
 
     .statistic-data-img{
@@ -128,9 +122,6 @@
         max-width: 400px;
         max-height: 400px;   
     }
-
-
-
 </style>
 
 <div class="content-body" style="display:inline-block; width: 1200px;">
@@ -158,7 +149,6 @@
                     <hr style="margin:10px" />
 
                     <div class="comments">
-
                         <div class="comments-area" id="commentsPost-@post.Id">
                             @foreach (var comment in post.ExploreComments)
                             {
@@ -180,7 +170,6 @@
                                     </div>
                                 </div>
                             }
-
                         </div>
 
                         <div class="comment-add-input">
@@ -195,7 +184,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="footer">
                     <div class="footer-left">
@@ -256,8 +244,7 @@
                     </div>
                 </div>
             </div>
-                                        }
-
+        }
     </div>
 
     <div class="aside-info">
@@ -317,7 +304,6 @@
                         <span>@Model.CurrentUser.Location.Latitude @Model.CurrentUser.Location.Longitude</span>
                     </a>
                 }
-
             </div>
 
             <div class="statistic">
@@ -345,13 +331,9 @@
                     <p class="statistic-data-field">@Model.UserFriendsCount</p>
                 </div>
             </div>
-        </div>
-
-       
+        </div> 
     </div>
 </div>
-
-
 
 <div class="pages">
     <span>
@@ -366,7 +348,6 @@
                 <a style="color:black" href="/User/Profile?pageNumber=@i">@i</a>
             }
         }
-
     </span>
 </div>
 
