@@ -63,6 +63,7 @@ namespace HOBBYNetMVC.Controllers
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             var allHobbies = _hobbyService.GetUserHobbiesList(loginUserId);
             var viewModel = new HobbyViewModel();
+            viewModel.addHobbiesList = new List<AddHobbiesModel>();
             var hobbiesToAdd = new List<AddHobbiesModel>();
 
             foreach (var hobby in allHobbies)
@@ -73,7 +74,6 @@ namespace HOBBYNetMVC.Controllers
                     Name = hobby.Name,
                     IsSelected = false
                 });
-
             }
             viewModel.addHobbiesList = hobbiesToAdd;
 
@@ -87,6 +87,14 @@ namespace HOBBYNetMVC.Controllers
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
             var hobbies = new List<Hobby>();
+
+            if (hobbiesModel.addHobbiesList == null)
+            {
+                hobbiesModel.addHobbiesList = new List<AddHobbiesModel>();
+                ModelState.AddModelError("", "You need to choose at least 1 hobby");
+                return View(hobbiesModel);
+            }
+
             foreach (var hobby in hobbiesModel.addHobbiesList)
             {
                 if (hobby.IsSelected)
@@ -94,6 +102,13 @@ namespace HOBBYNetMVC.Controllers
                     hobbies.Add(new Hobby() { Id = hobby.Id, Name = hobby.Name });
                 }
             }
+
+            if (hobbies.Count == 0)
+            {
+                ModelState.AddModelError("", "You need to choose at least 1 hobby");
+                return View(hobbiesModel);
+            }
+
             _advertService.AddAdvert(currentUser, messageText, hobbies);
             return RedirectToAction("UserAdverts");
         }
