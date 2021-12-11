@@ -28,20 +28,20 @@ namespace HOBBYNetMVC.Controllers
             _locationService = locationService;
         }
 
-        public IActionResult Index()
-        {
-            var output = _userManager.Users.Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath)).ToList();
-            var user = output.FirstOrDefault(u => u.Username == User.Identity.Name);
-            return View(user);
-        }
+        //public IActionResult Index()
+        //{
+        //    var output = _userManager.Users.Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath)).ToList();
+        //    var user = output.FirstOrDefault(u => u.Username == User.Identity.Name);
+        //    return View(user);
+        //}
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Telegram(string id)
+        public async Task<IActionResult> Telegram()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -68,11 +68,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Viber(string id)
+        public async Task<IActionResult> Viber()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -99,11 +99,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> WhatsApp(string id)
+        public async Task<IActionResult> WhatsApp()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -130,11 +130,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Location(string id, int change = 0)
+        public async Task<IActionResult> Location(int change = 0)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -180,11 +180,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> ChangePassword(string id)
+        public async Task<IActionResult> ChangePassword()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -215,11 +215,11 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> ChangePhoneNumber(string id)
+        public async Task<IActionResult> ChangePhoneNumber()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            User user = await _userManager.FindByIdAsync(id);
-            if (user == null || loginUserId != id)
+            User user = await _userManager.FindByIdAsync(loginUserId);
+            if (user == null)
             {
                 return NotFound();
             }
