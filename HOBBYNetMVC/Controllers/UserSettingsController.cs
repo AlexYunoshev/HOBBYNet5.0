@@ -52,8 +52,8 @@ namespace HOBBYNetMVC.Controllers
                 User user = await _userManager.FindByIdAsync(model.Id);
                 if (user != null)
                 {
-                        _userService.SetTelegramUsername(loginUserId, model.MessengerUsername);
-                        return RedirectToAction("Index");
+                    _userService.SetTelegramUsername(loginUserId, model.MessengerUsername);
+                    return RedirectToAction("Profile", "User");
                 }
             }
             return View(model);
@@ -84,7 +84,7 @@ namespace HOBBYNetMVC.Controllers
                 if (user != null)
                 {
                     _userService.SetViberUsername(loginUserId, model.MessengerUsername);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Profile", "User");
                 }
             }
             return View(model);
@@ -115,7 +115,7 @@ namespace HOBBYNetMVC.Controllers
                 if (user != null)
                 {
                     _userService.SetWhatsAppUsername(loginUserId, model.MessengerUsername);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Profile", "User");
                 }
             }
             return View(model);
@@ -199,7 +199,7 @@ namespace HOBBYNetMVC.Controllers
                         await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Profile","User");
                     }
                 }
             }
@@ -233,7 +233,7 @@ namespace HOBBYNetMVC.Controllers
                     IdentityResult result = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Profile", "User");
                     }
                 }
             }
