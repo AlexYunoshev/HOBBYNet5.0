@@ -7,7 +7,6 @@
         max-height: 40px;
         max-width: 40px;
         vertical-align: middle;
-        /* margin: 10px 10px 10px 0;*/
     }
 
     .request-action-img {
@@ -25,13 +24,10 @@
     table {
         margin: 0;
         width: 100%;
-        /*border: 1px solid black;*/
     }
 
     td {
         padding: 5px;
-       /* border: 1px solid black;*/
-
     }
 
     tr {
@@ -42,38 +38,31 @@
         display: none;
     }
 
-
-
-
     .users-list {
         max-height: 300px;
         overflow: auto;
         margin: 5px 0;
     }
 
+    .canvas button[type="submit"] {
+        padding: 0;
+        padding-top: 3px;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
 
-
-
-
-        .canvas button[type="submit"] {
-            padding: 0;
-            padding-top: 3px;
-            border: none;
-            background: inherit;
-            cursor: pointer;
-        }
-
-        .canvas input[type="submit"] {
-            padding: 10px;
-            border-radius: 30px;
-            width: 85%;
-            padding: 10px 30px;
-            border: none;
-            background: linear-gradient(to right, #ff105f, #ffaf06);
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-        }
+    .canvas input[type="submit"] {
+        padding: 10px;
+        border-radius: 30px;
+        width: 85%;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
+    }
 
     .remove-img {
         margin-top: 3px;
@@ -84,7 +73,6 @@
         display: block;
         width: 95%;
     }
-
 
     textarea {
         resize: none;
@@ -100,7 +88,6 @@
         cursor: pointer;
         display: block;
     }
-
 
     .hobbies-list::-webkit-scrollbar {
         display: none;
@@ -121,11 +108,7 @@
         margin: 10px auto;
         text-align: center;
     }
-
-
-
 </style>
-
 
 
 @model Domain.Models.DTO.FriendsDTO
@@ -136,24 +119,19 @@
 
 <div class="content">
     <div class="canvas">
-        @*<h1>Hi, @User.Identity.Name</h1>*@
-
         @if (Model.Friends.Count != 0)
         {
             <h3>Friends list:</h3>
             <form asp-action="RemoveFriend" method="post">
                 <div class="users-list">
                     <table>
-
                         @foreach (var user in Model.Friends)
                         {
                             <tr>
-
                                 <td width="60"><img src="@user.PhotoPath" alt="User pic" class="user-pic" /></td>
                                 <td align="left">@user.UserName</td>
 
                                 <td width="30">
-
                                     <button type="submit" name="userId" value="@user.Id">
                                         <img class="request-action-img" src="~/images/delete.png" />
                                     </button>
@@ -162,15 +140,12 @@
                         }
                     </table>
                 </div>
-               
             </form>
         }
         else
         {
             <h3>Friends list is empty</h3>
         }
-
-
     </div>
 
     <div class="canvas">
@@ -178,11 +153,8 @@
         {
             <h3>Users to add:</h3>
             <form asp-action="FriendRequests" method="post">
-
                 <div class="users-list">
-                    <table>
-                     
-
+                    <table>                 
                         @foreach (var user in Model.RequestsToUser)
                         {
                             <tr>
@@ -192,21 +164,16 @@
                                 <td width="30">
                                     <button type="submit" name="acceptUserId" value="@user.Id">
                                         <img src="~/images/accept.png" alt="accept" class="request-action-img" />
-                                    </button>
-                                    
+                                    </button> 
                                 </td>
-                                 <td width="30">
-                                    
+                                 <td width="30">    
                                     <button type="submit" name="declineUserId" value="@user.Id">
                                         <img src="~/images/decline.png" alt="decline" class="request-action-img" />
                                     </button>
                                 </td>
-
                             </tr>
                         }
                     </table>
-
-
                 </div>
             </form>
         }
@@ -214,8 +181,6 @@
         {
             <h3>Friend requests list is empty</h3>
         }
-
-
     </div>
 
     <div class="canvas">
@@ -223,19 +188,14 @@
         {
             <h3>Requests from you to users:</h3>
             <form asp-action="CancelRequestFromUser" method="post">
-
                 <div class="users-list">
-
                     <table>
-
                         @foreach (var user in Model.RequestsFromUser)
                         {
                             <tr>
-
                                 <td width="60"><img src="@user.PhotoPath" alt="User pic" class="user-pic" /></td>
                                 <td align="left">@user.UserName</td>
                                 <td width="30">
-
                                     <button type="submit" name="userId" value="@user.Id">
                                         <img class="request-action-img" src="~/images/delete.png" />
                                     </button>
@@ -243,7 +203,6 @@
                             </tr>
                         }
                     </table>
-
                 </div>
             </form>
         }
@@ -251,12 +210,5 @@
         {
             <h3>The user does not waiting to be added as a friend</h3>
         }
-     
-
     </div>
-
-
 </div>
-
-
-
