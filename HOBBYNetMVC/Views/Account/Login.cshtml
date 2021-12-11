@@ -2,24 +2,22 @@
 
 <div class="hero">
     <div class="form-box" id="form-box">
-        @*<span>@Model.currentView</span>*@
         <input type="hidden" id="currentView" name="currentView" value="@Model.currentView" />
         <div class="button-box">
             <div id="btn"></div>
             <button type="button" class="toggle-btn" onclick="login()">Log In</button>
             <button type="button" class="toggle-btn" onclick="register()">Register</button>
         </div>
-        @*<form asp-controller="Identity" asp-action="Login" method="get">*@
 
         <form asp-area="Identity" asp-page="/Account/ExternalLogin" method="post">
             <div class="social-icons">
-                @*<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
                 <button type="submit" name="provider" value="Google">
                     <img src="~/images/gp.png" />
                 </button>
 
             </div>
         </form>
+
         <form id="login" class="input-group" method="post"
               asp-controller="Account" asp-action="Login">
             <input type="text" class="input-field" placeholder="Username" required asp-for="loginViewModel.Username">
@@ -48,8 +46,6 @@
         </form>
     </div>
 </div>
-
-
 
 <script>
     var x = document.getElementById("login");
@@ -90,13 +86,9 @@
             x.type = "password";
         }
     }
-
 </script>
 
 <script async>
-
-   
-
     var currentView = document.getElementById("currentView").value;
   
     if (currentView == "login") {
@@ -118,21 +110,11 @@
 
 </script>
 
-
 <style>
 
     body {
         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/login.jpg);
     }
-    /* .hero {
-        height: 100%;
-        width: 100%;
-        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/banner.jpg);
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        position: absolute;
-    }*/
 
     .form-box {
         width: 380px;
@@ -187,13 +169,13 @@
         text-align: center;
     }
 
-        .social-icons img {
-            width: 30px;
-            margin: 0 12px;
-            box-shadow: 0 0 20px 0 #7f7f7f3d;
-            cursor: pointer;
-            border-radius: 50%;
-        }
+     .social-icons img {
+        width: 30px;
+        margin: 0 12px;
+        box-shadow: 0 0 20px 0 #7f7f7f3d;
+        cursor: pointer;
+        border-radius: 50%;
+     }
 
     .input-group {
         top: 155px;
