@@ -28,13 +28,6 @@ namespace HOBBYNetMVC.Controllers
             _locationService = locationService;
         }
 
-        //public IActionResult Index()
-        //{
-        //    var output = _userManager.Users.Select(x => new UsersList(x.Id, x.UserName, x.PhotoPath)).ToList();
-        //    var user = output.FirstOrDefault(u => u.Username == User.Identity.Name);
-        //    return View(user);
-        //}
-
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Telegram()
