@@ -51,11 +51,15 @@ namespace HOBBYNetMVC
             .AddEntityFrameworkStores<HobbyNetContext>();
             services.AddControllersWithViews();
 
+            var googleClientData = Configuration.GetSection("GoogleClientData");
+            var clientId = googleClientData.GetSection("ClientID").Value;
+            var clientSecret = googleClientData.GetSection("ClientSecret").Value;
+
             services.AddAuthentication()
              .AddGoogle(options =>
              {
-                 options.ClientId = "309671515965-npac8tm527ok5amva1d95op6j1lim0bc.apps.googleusercontent.com";
-                 options.ClientSecret = "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";
+                 options.ClientId = clientId;
+                 options.ClientSecret = clientSecret;
              });
 
             services.ConfigureApplicationCookie(options =>
