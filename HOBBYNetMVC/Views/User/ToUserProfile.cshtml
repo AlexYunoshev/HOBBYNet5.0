@@ -1,6 +1,6 @@
 ﻿@model Domain.ViewModels.ExplorePostsViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Profile";
 }
 
 <style>
@@ -20,7 +20,6 @@
         background: inherit;
         cursor: pointer;
     }
-
 
     .aside-info {
         width: 450px;
@@ -77,11 +76,9 @@
         margin: 0 20px 0 0;
     }
 
-
-
-        .location-google span {
-            margin: 0 5px;
-        }
+    .location-google span {
+        margin: 0 5px;
+    }
 
     .social-actions {
         margin: 0;
@@ -94,8 +91,6 @@
     }
 
     .statistic-data {
-        /*display: flex;
-        align-items: center;*/
         color: black;
         font-size: 26px;
     }
@@ -103,7 +98,6 @@
     .statistic-data-field {
         text-decoration: underline;
         text-align: center;
-        /* margin-left: 10px;*/
     }
 
     .statistic-data-img {
@@ -136,12 +130,11 @@
         {
             <div class="explore-post" id="post-@post.Id">
                 <div class="body">
-
                     <div class="explore-post-content">
                         <p id="p-@post.Id">
                             @post.Text
                         </p>
-                        @*<img id="image-@post.Id" class="hobby-pic" src="~/images/other/u9m7IJ1xiPQ.jpg" onclick="imageZoom(@post.Id)"/>*@
+
                         @if (@post.PhotoPath != null)
                         {
                             <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
@@ -157,19 +150,15 @@
 
                     <hr style="margin:10px" />
 
-
-
                     <div class="comments">
 
                         <div class="comments-area" id="commentsPost-@post.Id">
                             @foreach (var comment in post.ExploreComments)
                             {
                                 <div class="explore-post-comment">
-                                    @*<img class="comment-user-pic" src="~/images/i.jpg" />*@
                                     <img class="comment-user-pic" src="@comment.User.PhotoPath" />
                                     <div class="comment-content">
                                         <span><a class="comment-username">@comment.User.UserName</a></span>
-                                        @*<span class="comment-date">10 hours ago</span>*@
                                         <span class="comment-date">@comment.CreatedDate</span>
                                         @if(comment.UserId == Model.AuthorizedUserId)
                                         {
@@ -189,32 +178,23 @@
                                     </div>
                                 </div>
                             }
-
                         </div>
-
 
                         <div class="comment-add-input">
                             <form asp-action="AddCommentToPost" method="post">
                                 <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
                                 <button type="submit">
                                     <img id="submit-btn" src="~/images/send.png" />
-
                                 </button>
                                 <input type="hidden" name="postId" value="@post.Id" />
                                 <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
                                 <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
-
                             </form>
                         </div>
                     </div>
-
-
-
                 </div>
 
-
                 <div class="footer">
-
                     <div class="footer-left">
                         <div class="social-actions">
                             <form asp-action="SetLikeToPost" method="post">
@@ -256,15 +236,11 @@
 
                         </div>
 
-                        @*<p style="color: #8e8e8e; text-transform:uppercase">10 hours ago</p>*@
                         <p style="color: #8e8e8e; text-transform:uppercase; margin: 15px 0 0 5px;">@post.CreatedDate</p>
                     </div>
-
                 </div>
-
             </div>
         }
-
     </div>
 
     <div class="aside-info">
@@ -274,14 +250,10 @@
                 <p class="username" style="letter-spacing: 0.15em; font-size: 22px;">@Model.CurrentUser.UserName</p>
                 <p class="username" style="font-weight: 400; color:#4e4e4e;">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</p>
                 <p class="username" style="font-weight: 400; color: #4e4e4e; font-size: 18px; margin-top:5px;">@Model.CurrentUser.Email</p>
-                @*<p class="username">yunoshev4380</p>
-        <p class="username">Oleksandr Yunoshev</p>
-        <p class="username">yunoshev.alex@gmail.com</p>*@
             </div>
         </div>
 
         <div class="user-info-body">
-            @*<p class="address"><a>Kharkiv, Krychevsky street</a></p>*@
             <p class="address">@Model.CurrentUser.Location.Name</p>
             @{
                 string hrefLocationGoogle = "https://www.google.com.ua/maps/@";
@@ -299,7 +271,6 @@
                     </a>
                 }
 
-
                 @if (@Model.CurrentUser.ViberUsername != null)
                 {
                     string link = "viber://chat?number=" + @Model.CurrentUser.ViberUsername;
@@ -307,6 +278,7 @@
                         <img class="chat-img" src="/images/Viber.png" />
                     </a>
                 }
+
                 @if (@Model.CurrentUser.WhatsAppUsername != null)
                 {
                     string link = "whatsapp://send?phone=" + @Model.CurrentUser.WhatsAppUsername;
@@ -319,8 +291,6 @@
                     <img class="map-pic" src="~/images/google_map.png" />
                     <span>@Model.CurrentUser.Location.Latitude @Model.CurrentUser.Location.Longitude</span>
                 </a>
-
-
             </div>
 
             <div class="statistic">
@@ -337,11 +307,11 @@
                     <div class="statistic-data-img"><img class="social-img" src="~/images/like1.png" /></div>
                     <p class="statistic-data-field">@allLikes</p>
                 </div>
+
                 <div class="statistic-data">
                     <div class="statistic-data-img"><img class="social-img" src="~/images/comment1.png" /></div>
                     <p class="statistic-data-field">@allComments</p>
                 </div>
-
 
                 <div class="statistic-data">
                     <div class="statistic-data-img"><img class="social-img" src="~/images/friends.png" /></div>
@@ -349,16 +319,11 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
-
-
 <div class="pages">
     <span>
-       
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
             string href = "ToUserProfile?id=" + Model.CurrentUser.Id
@@ -373,7 +338,6 @@
                 <a style="color:black" href="@href">@i</a>
             }
         }
-
     </span>
 </div>
 
@@ -390,5 +354,3 @@
         }
     }
 </script>
-
-
