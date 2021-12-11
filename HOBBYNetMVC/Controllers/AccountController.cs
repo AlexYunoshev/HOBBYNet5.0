@@ -1,9 +1,11 @@
 ﻿using Domain.Models;
 using Domain.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,11 +13,13 @@ namespace HOBBYNetMVC.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IWebHostEnvironment _appEnvironment;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(IWebHostEnvironment appEnvironment, UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _appEnvironment = appEnvironment;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -36,11 +40,18 @@ namespace HOBBYNetMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                var rootPath = _appEnvironment.WebRootPath;
+                var PhotoPath = Path.Combine(rootPath, "images");
+                PhotoPath = Path.Combine(PhotoPath, "userPic.png");
+                int index = PhotoPath.IndexOf("images");
+                PhotoPath = PhotoPath.Remove(0, index - 1);
+
                 User user = new User {
                     FirstName = model.registerViewModel.FirstName, 
                     LastName = model.registerViewModel.LastName, 
                     Email = model.registerViewModel.Email, 
-                    UserName = model.registerViewModel.UserName 
+                    UserName = model.registerViewModel.UserName,
+                    PhotoPath = PhotoPath
                 };
 
                 var userByUsername = await _userManager.FindByNameAsync(user.UserName);
