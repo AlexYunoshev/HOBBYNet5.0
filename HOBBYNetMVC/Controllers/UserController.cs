@@ -248,7 +248,6 @@ namespace HOBBYNetMVC.Controllers
         public IActionResult Friends()
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //var friendsList = _userService.GetFriendsList(loginUserId);
             FriendsDTO friendsDTO = new FriendsDTO();
             friendsDTO.Friends = _userService.GetFriendsList(loginUserId);
             friendsDTO.RequestsToUser = _userService.GetFriendRequestsToUser(loginUserId);
@@ -298,7 +297,7 @@ namespace HOBBYNetMVC.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> AddFriendRequest(string userId)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -314,15 +313,12 @@ namespace HOBBYNetMVC.Controllers
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var users = _userService.GetUsersBySearch(searchText, loginUserId);
-            var currentUserFriends = _userService.GetFriendsList(loginUserId);
-            var currentUserRequestsFrom = _userService.GetFriendRequestsFromUser(loginUserId);
-            var currentUserRequestsTo = _userService.GetFriendRequestsToUser(loginUserId);
-            foreach (var user in users)
-            {
-                if (currentUserFriends.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Friend; }
-                else if (currentUserRequestsFrom.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Waiting; }
-                else if (currentUserRequestsTo.Any(u => u.Id == user.Id)) { user.RelationShip = RelationShips.Waiting; }
-            }
+
+            UsersList.CurrentUserFriends = new FriendsDTO();
+            UsersList.CurrentUserFriends.Friends = _userService.GetFriendsList(loginUserId); ;
+            UsersList.CurrentUserFriends.RequestsToUser = _userService.GetFriendRequestsToUser(loginUserId);
+            UsersList.CurrentUserFriends.RequestsFromUser = _userService.GetFriendRequestsFromUser(loginUserId);
+   
             return View(users);
         }
 

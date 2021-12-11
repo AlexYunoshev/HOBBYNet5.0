@@ -120,7 +120,7 @@
 
 <div class="content">
     <div class="canvas">
-        <form asp-action="AddFriendRequest" method="get">
+        <form method="post">
             <table>
                 @foreach (var user in Model)
                 {
@@ -132,10 +132,32 @@
                         </td>
                         <td align="left">@user.Username</td>
                         <td align="left">@user.Firstname @user.Lastname</td>
-                        <td width="60">
-                            @if (user.RelationShip == Domain.Models.RelationShips.None)
+                        <td>
+                            @if (Domain.Models.DTO.UsersList.CurrentUserFriends.Friends.Any(u => u.Id == user.Id))
                             {
-                                <button type="submit" name="userId" value="@user.Id">
+                                <button type="submit" name="userId" value="@user.Id" asp-action="RemoveFriend">
+                                    Remove from friend
+                                </button>
+                            }
+                            else if (Domain.Models.DTO.UsersList.CurrentUserFriends.RequestsFromUser.Any(u => u.Id == user.Id))
+                            {
+                                <button type="submit" name="userId" value="@user.Id" asp-action="CancelRequestFromUser">
+                                    Cancel request
+                                </button>  
+                            }
+                            else if (Domain.Models.DTO.UsersList.CurrentUserFriends.RequestsToUser.Any(u => u.Id == user.Id))
+                            {
+                                <button type="submit" name="acceptUserId" value="@user.Id" asp-action="FriendRequests">
+                                    Accept request
+                                </button>
+                                <span>/</span>
+                                <button type="submit" name="declineUserId" value="@user.Id" asp-action="FriendRequests">
+                                    Decline request
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" name="userId" value="@user.Id" asp-action="AddFriendRequest">
                                     Add as friend
                                 </button>
                             }

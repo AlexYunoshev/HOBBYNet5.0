@@ -21,6 +21,6 @@ namespace Domain.Models.DTO
         public string Lastname { get; set; }
         public string PhotoPath { get; set; }
 
-        public RelationShips RelationShip { get; set; } = RelationShips.None;
+        public static FriendsDTO CurrentUserFriends { get; set; }
     }
 }
