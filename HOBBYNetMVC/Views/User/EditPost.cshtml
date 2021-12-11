@@ -1,6 +1,6 @@
 ﻿@model Domain.ViewModels.EditPostViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Edit post";
 }
 
 <style>
@@ -13,7 +13,6 @@
         display: block;
         width: 95%;
     }
-
 
     textarea {
         resize: none;
@@ -29,7 +28,6 @@
         cursor: pointer;
         display: block;
     }
-
 
     .hobbies-list::-webkit-scrollbar {
         display: none;
@@ -68,18 +66,14 @@
                 You can upload one photo. Correct file types are <b>.jpg</b> or <b>.png</b>.
             </p>
             
-
             <input class="input" type="file" accept="image/jpeg, image/png" name="file" />
-
 
             <p class="input">You need to choose at least 1 hobby from the list below:</p>
 
             <div class="canvas">
                 <h4>Hobbies to add</h4>
                 <div class="hobbies-list">
-
                     <table border="0" cellpadding="0" cellspacing="0">
-
                         @for (int i = 0; i < Model.HobbyViewModel.addHobbiesList.Count; i++)
                         {
                             <tr>
@@ -91,17 +85,13 @@
                                 </td>
                             </tr>
                         }
-
                     </table>
-
                 </div>
-
             </div>
             <p class="input">
                 Didn`t find your hobby? Add it to the hobbies list now.
                 <a asp-action="Index" asp-controller="Hobby" target="_blank">Just click here</a>
             </p>
-
 
             <input type="hidden" name="postId" value="@Model.Post.Id" />
             <input class="input" type="submit" value="Submit" />
