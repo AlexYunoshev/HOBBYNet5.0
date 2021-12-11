@@ -2,9 +2,11 @@
 using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Extentions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -194,6 +196,68 @@ namespace BusinessLogic.Services
             _context.FriendsList.Remove(friends);
             _context.SaveChanges();
             return true;
+        }
+
+        public async Task AddPhoto(string userId, IFormFile file, string filePath)
+        {
+            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            if (user == null) return;
+
+            if (file == null)
+            {
+                if (user.PhotoPath != null && !user.PhotoPath.EndsWith("userPic.png"))
+                {
+                    var deletePath = filePath + user.PhotoPath;
+                    try
+                    {
+                        File.Delete(deletePath);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                filePath = Path.Combine(filePath, "images");
+                filePath = Path.Combine(filePath, "userPic.png");
+                int index = filePath.IndexOf("images");
+                filePath = filePath.Remove(0, index - 1);
+                user.PhotoPath = filePath;
+                _context.SaveChanges();
+                return;
+            }
+
+            filePath = Path.Combine(filePath, "images");
+            filePath = Path.Combine(filePath, user.UserName);
+
+            if (file.FileName.ToUpper().EndsWith(".JPG") || file.FileName.ToUpper().EndsWith(".PNG"))
+            {
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fileName = "userPhoto";
+
+                filePath = Path.Combine(filePath, fileName);
+                if (file.FileName.ToUpper().EndsWith(".JPG"))
+                {
+                    filePath += ".jpg";
+                }
+                else if (file.FileName.ToUpper().EndsWith(".PNG"))
+                {
+                    filePath += ".png";
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                int index = filePath.IndexOf("images");
+                filePath = filePath.Remove(0, index - 1);
+                user.PhotoPath = filePath;
+                _context.SaveChanges();
+            }
         }
     }
 }

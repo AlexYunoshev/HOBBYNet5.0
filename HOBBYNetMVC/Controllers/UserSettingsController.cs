@@ -3,10 +3,13 @@ using Domain.Models;
 using Domain.Models.DTO;
 using HOBBYNetMVC.Models.UserSettings;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,11 +22,13 @@ namespace HOBBYNetMVC.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserService _userService;
         private readonly LocationService _locationService;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public UserSettingsController(UserManager<User> userManager, UserService userService, SignInManager<User> signInManager, LocationService locationService)
+        public UserSettingsController(UserManager<User> userManager, IWebHostEnvironment appEnvironment, UserService userService, SignInManager<User> signInManager, LocationService locationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _appEnvironment = appEnvironment;
             _userService = userService;
             _locationService = locationService;
         }
@@ -238,6 +243,26 @@ namespace HOBBYNetMVC.Controllers
                 }
             }
             return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangeUserPhoto()
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserPhoto(IFormFile file)
+        {
+            var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            User currentUser = _userManager.FindByIdAsync(loginUserId).Result;
+            var rootPath = _appEnvironment.WebRootPath;
+            await _userService.AddPhoto(currentUser.Id, file, rootPath);
+            return RedirectToAction("Profile", "User");
         }
     }
 }
