@@ -1,13 +1,7 @@
 ﻿@model Domain.ViewModels.HobbyViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Hobbies";
 }
-
-
-
-
-
-
 
 <style>
     body {
@@ -17,7 +11,6 @@
     table {
         margin: 0;
     }
-
 
     .content {
         position: relative;
@@ -33,18 +26,14 @@
         scrollbar-width: none; /*Firefox */
     }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .content::-webkit-scrollbar {
-            display: none;
-        }
-
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .content::-webkit-scrollbar {
+        display: none;
+    }
 
     .hobbies-list::-webkit-scrollbar {
         display: none;
     }
-
-
-
 
     .hobbies-list {
         border-radius: 15px;
@@ -61,9 +50,6 @@
         transition: .5s;
         margin-bottom: 10px;
     }
-
-
-
 
     .canvas button[type="submit"] {
         padding: 0;
@@ -101,17 +87,14 @@
                     <table border="0" cellpadding="5" cellspacing="2">
                         @foreach (var hobby in Model.userHobbiesList)
                         {
-                        <tr>
-                            <td>@hobby.Name</td>
-                            <td>
-                                <button type="submit" name="hobbyId" value="@hobby.Id">
-                                    <img class="remove-img" src="~/images/delete.png" />
-                                </button>
-                            </td>
-
-
-
-                        </tr>
+                            <tr>
+                                <td>@hobby.Name</td>
+                                <td>
+                                    <button type="submit" name="hobbyId" value="@hobby.Id">
+                                        <img class="remove-img" src="~/images/delete.png" />
+                                    </button>
+                                </td>
+                            </tr>
                         }
                     </table>
                 </form>
@@ -121,17 +104,13 @@
         {
             <h3>You don't have any hobby</h3>
         }
-
     </div>
-
 
     <div class="canvas">
         <h3>Hobbies to add:</h3>
         <form asp-action="AddHobbies" method="post">
             <div class="hobbies-list">
-
                 <table border="0" cellpadding="5" cellspacing="2">
-
                     @for (int i = 0; i < Model.addHobbiesList.Count; i++)
                     {
                         <tr>
@@ -143,15 +122,9 @@
                             </td>
                         </tr>
                     }
-
                 </table>
-
             </div>
             <input type="submit" value="Submit" />
-        </form>
-            
+        </form>      
     </div>
-
-
 </div>
-
