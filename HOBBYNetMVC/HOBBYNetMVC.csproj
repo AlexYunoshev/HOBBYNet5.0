@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\admin%40gmail.com\**" />
+    <Content Remove="wwwroot\images\admin%40gmail.com\**" />
+    <EmbeddedResource Remove="wwwroot\images\admin%40gmail.com\**" />
+    <None Remove="wwwroot\images\admin%40gmail.com\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\postPhoto.png" />
     <Content Remove="wwwroot\userPic.png" />
   </ItemGroup>
@@ -32,10 +39,6 @@
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\images\admin%40gmail.com\" />
   </ItemGroup>
 
 </Project>

@@ -75,7 +75,6 @@ namespace BusinessLogic.Services
         public List<User> GetUsersList(string currentUserId)
         {
             var users = _context.Users.ToList();
-            //users.Remove(_context.Users.Where(x => x.Id == currentUserId).First());
             users.RemoveAll(x => x.Id == currentUserId);
             return users;
         }
@@ -159,7 +158,6 @@ namespace BusinessLogic.Services
 
         public bool SendFriendRequest(User currentUser, User friendUser)
         {
-     
             Friends friends = new Friends { MainUser = currentUser, FriendUser = friendUser, RelationShips = RelationShips.Waiting };
             _context.FriendsList.Add(friends);
             _context.SaveChanges();
