@@ -25,6 +25,8 @@ namespace Domain.ViewModels
 
         public bool IsCurrentUserPage = false;
 
+        public bool IsRecommendations = false;
+
         [BindProperty]
         public int LocationRadius { get; set; }
 
@@ -46,11 +48,12 @@ namespace Domain.ViewModels
             return postsOut;
         }
 
-        public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius, string sort)
+        public ExplorePostsViewModel(int allPostsCount, User user, List<ExplorePost> posts, int pageNumber, int locationRadius, string sort, bool isRecommendation)
         {
             LocationRadius = locationRadius;
             Sort = sort;
             CurrentUser = user;
+            IsRecommendations = isRecommendation;
 
             if (CurrentUser.Location != null)
             {
@@ -87,31 +90,37 @@ namespace Domain.ViewModels
                 }
             }
             
-            if(sort == "newest") { posts = posts.OrderByDescending(p => p.CreatedDate).ToList(); }
-            else if(sort == "older") { posts = posts.OrderBy(p => p.CreatedDate).ToList(); }
-
-            else if(sort == "distanceAsc") {
-                distanceToUser = distanceToUser.OrderBy(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
-                var sortedPosts = new List<ExplorePost>();
-                foreach (var userKey in distanceToUser.Keys)
-                {
-                    sortedPosts.AddRange(posts.Where(p => p.User == userKey));
-                }
-                posts.Clear();
-                posts.AddRange(sortedPosts);
-            }
-
-            else
+            if (IsRecommendations == false)
             {
-                distanceToUser = distanceToUser.OrderByDescending(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
-                var sortedPosts = new List<ExplorePost>();
-                foreach (var userKey in distanceToUser.Keys)
+                if (sort == "newest") { posts = posts.OrderByDescending(p => p.CreatedDate).ToList(); }
+                else if (sort == "older") { posts = posts.OrderBy(p => p.CreatedDate).ToList(); }
+
+                else if (sort == "distanceAsc")
                 {
-                    sortedPosts.AddRange(posts.Where(p => p.User== userKey));
+                    distanceToUser = distanceToUser.OrderBy(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
+                    var sortedPosts = new List<ExplorePost>();
+                    foreach (var userKey in distanceToUser.Keys)
+                    {
+                        sortedPosts.AddRange(posts.Where(p => p.User == userKey));
+                    }
+                    posts.Clear();
+                    posts.AddRange(sortedPosts);
                 }
-                posts.Clear();
-                posts.AddRange(sortedPosts);
+
+                else
+                {
+                    distanceToUser = distanceToUser.OrderByDescending(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
+                    var sortedPosts = new List<ExplorePost>();
+                    foreach (var userKey in distanceToUser.Keys)
+                    {
+                        sortedPosts.AddRange(posts.Where(p => p.User == userKey));
+                    }
+                    posts.Clear();
+                    posts.AddRange(sortedPosts);
+                }
             }
+
+            
 
             PostsByPage = GetPostsByPage(posts, pageNumber);
             Posts = PostsByPage;

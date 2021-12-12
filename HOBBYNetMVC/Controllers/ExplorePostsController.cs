@@ -36,7 +36,7 @@ namespace HOBBYNetMVC.Controllers
             User currentUser = _userService.GetUserById(loginUserId);
             var posts = _explorePostsService.GetExplorePosts();
             posts.RemoveAll(p => p.User == currentUser);
-            var model = new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort)
+            var model = new ExplorePostsViewModel(posts.Count, currentUser, posts, pageNumber, locationRadius, sort, false)
             {
                 CurrentPageNumber = pageNumber,
                 AuthorizedUserId = loginUserId
@@ -55,10 +55,10 @@ namespace HOBBYNetMVC.Controllers
             var recommendedPosts = _explorePostsService.GetRecommendedPostsList(loginUserId, out explorePostsWithoutRating, out postRatingByHobbies);
             var recommendedPostsList = _explorePostsService.GetPostsForRecommendations(explorePostsWithoutRating, postRatingByHobbies, recommendedPosts);
             var model = new ExplorePostsViewModel(recommendedPostsList.Count, currentUser, recommendedPostsList, 
-                pageNumber, locationRadius, sort)
+                pageNumber, locationRadius, sort, true)
             {
                 CurrentPageNumber = pageNumber,
-                AuthorizedUserId = loginUserId
+                AuthorizedUserId = loginUserId,
             };
             return View(model);
         }

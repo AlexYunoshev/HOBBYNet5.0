@@ -57,8 +57,9 @@ namespace BusinessLogic.Services
                     {
                         Directory.CreateDirectory(filePath);
                     }
-
-                    int id = lastPost.Id + 1;
+                    int id;
+                    if (lastPost != null) {id = lastPost.Id + 1; }
+                    else { id = 1; }
                     string fileName = "post-" + id.ToString();
 
 
@@ -261,7 +262,9 @@ namespace BusinessLogic.Services
         // отримуємо пріорітети хобі у балах. Наприклад: 24, 19, 17, 2
         public Dictionary<Hobby, int> GetHobbyScores(List<ExploreLike> likes, List<ExploreComment> comments, string userId)
         {
-            var user = _context.Users.Where(u => u.Id == userId).FirstOrDefault();
+            var user = _context.Users.Where(u => u.Id == userId)
+                .Include(u => u.Hobbies)
+                .FirstOrDefault();
             var hobbyScores = new Dictionary<Hobby, int>();
 
             foreach (ExploreLike like in likes)
@@ -298,12 +301,16 @@ namespace BusinessLogic.Services
                 }
             }
 
-            foreach (Hobby hobby in hobbyScores.Keys)
+            var userHobby = user.Hobbies.OrderBy(h => h.Name).ToList();
+            foreach (Hobby hobby in userHobby)
             {
-
-                if (user.Hobbies.Contains(hobby))
+                if (hobbyScores.ContainsKey(hobby))
                 {
                     hobbyScores[hobby] += 15;
+                }
+                else
+                {
+                    hobbyScores.Add(hobby, 15);
                 }
             }
             return hobbyScores;
