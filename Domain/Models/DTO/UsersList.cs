@@ -8,15 +8,19 @@ namespace Domain.Models.DTO
 {
     public class UsersList
     {
-        public UsersList(int Year, string Email, string Id)
+        public UsersList(string id, string username, string photoPath)
         {
-            this.Year = Year;
-            this.Email = Email;
-            this.Id = Id;
+            Id = id;
+            Username = username;
+            PhotoPath = photoPath;
         }
 
-        public int Year { get; set; }
-        public string Email { get; set; }
         public string Id { get; set; }
+        public string Username { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string PhotoPath { get; set; }
+
+        public static FriendsDTO CurrentUserFriends { get; set; }
     }
 }

@@ -12,13 +12,17 @@ namespace DataAccess.Context
 {
     public class HobbyNetContext : IdentityDbContext<User>
     {
-      
 
 
-        public DbSet<Location> Locations { get; set; }
+        public virtual DbSet<Hobby> Hobbies { get; set; }
         public DbSet<Friends> FriendsList { get; set; }
-        public DbSet<Hobby> Hobbies { get; set; }
-        public DbSet<SubHobby> SubHobbies { get; set; }
+        public DbSet<ExplorePost> ExplorePosts { get; set; }
+        public DbSet<ExploreLike> ExploreLikes { get; set; }
+        public DbSet<ExploreComment> ExploreComments { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Advert> Adverts { get; set; }
+
+
         //public DbSet<SubHobbyUser> SubHobbyUser { get; set; }
 
         // public DbSet<Hobby> Hobbies { get; set; }
@@ -30,6 +34,11 @@ namespace DataAccess.Context
         {
            //Database.EnsureDeleted();
            //Database.EnsureCreated();
+        }
+
+        public HobbyNetContext()
+        {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +58,32 @@ namespace DataAccess.Context
                 .WithMany(mu => mu.Friends)
                 .HasForeignKey(f => f.FriendUserId).OnDelete(DeleteBehavior.Restrict);
 
+
+            modelBuilder.Entity<ExploreLike>().HasKey(f => new { f.UserId, f.PostId });
+
+            modelBuilder.Entity<ExploreLike>()
+                .HasOne<ExplorePost>(p => p.Post)
+                .WithMany(u => u.ExploreLikes)
+                .HasForeignKey(p => p.PostId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ExploreLike>()
+               .HasOne<User>(p => p.User)
+               .WithMany(u => u.ExploreLikes)
+               .HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ExploreComment>().HasKey(f => new { f.UserId, f.PostId });
+            modelBuilder.Entity<ExploreComment>().HasKey(c => c.Id);
+
+
+            modelBuilder.Entity<ExploreComment>()
+                .HasOne<ExplorePost>(p => p.Post)
+                .WithMany(u => u.ExploreComments)
+                .HasForeignKey(p => p.PostId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ExploreComment>()
+               .HasOne<User>(p => p.User)
+               .WithMany(u => u.ExploreComments)
+               .HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Restrict);
 
 
             //modelBuilder.Entity<SubHobbyUser>()

@@ -3,100 +3,100 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HOBBYNetMVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <title>@ViewData["Title"] - HOBBYNet</title>
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/post.css" />
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HOBBYNetMVC</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-
-
-                    </ul>
-
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin panel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="UserSettings" asp-action="Index">User Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users list</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Friends">Friends</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="FriendRequests">Friend requests</a>
-                    </li>
-                </ul>
-                      
-
-                        <form method="post" asp-controller="Account" asp-action="Logout">
-                            <ul class="navbar-nav flex-grow-1">
-                                @*<li> <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>*@
-                                <li> <input class="nav-link text-dark" type="submit" value="Logout" /></li>
-                            </ul>
-
-                        </form>
-                    }
-                    else
-                    {
-                        <ul class="navbar-nav flex-grow-1">
-                            <li> <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a></li>
-                            <li> <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a></li>
-                        </ul>
-                    }
-                </div>
-
-               
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @*@if (User.Identity.IsAuthenticated)
-            {
-                <p>@User.Identity.Name</p>
-
-                <form method="post" asp-controller="Account" asp-action="Logout">
-                    <input type="submit" value="Выход" />
-                </form>
-            }
-            else
-            {
-                <a asp-controller="Account" asp-action="Login">Вход</a>
-                <a asp-controller="Account" asp-action="Register">Регистрация</a>
-            }*@
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+    <header class="header">
         <div class="container">
-            &copy; 2021 - HOBBYNetMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <nav class="nav">
+                    <div class="logo">
+                        <img src="~/images/site_icon.png" alt="HobbyNet" class="logo" height="64" width="64" />
+                        <div class="tagline">
+                            <h2>HOBBYNet</h2>
+                            <h3>To be active!</h3>
+                        </div>
+                    </div>
+
+                    <ul class="menu">
+                        <li>
+                            <form class="search-area" asp-action="SearchUser" asp-controller="User" method="post">
+                                <input type="text" name="searchText" placeholder="Find user" />
+                                <button type="submit">
+                                    <img class="search-img" src="~/images/search.png" />
+                                </button>
+                            </form>
+                        </li>
+
+                        <li>
+                            <a asp-controller="User" asp-action="Profile">Profile</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="User" asp-action="Profile">Home</a></li>
+                                <li><a asp-controller="User" asp-action="AddPost">Add post</a></li>
+                                <li><a asp-controller="User" asp-action="Friends">Friends</a></li>
+                                <li><a asp-controller="Hobby" asp-action="Index">My hobbies</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a asp-controller="ExplorePosts" asp-action="Index">Explore</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="ExplorePosts" asp-action="Index">Posts</a></li>
+                                <li><a asp-controller="ExplorePosts" asp-action="RecommendedPosts">Recommendations</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Advert" asp-action="Index">Adverts</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="Advert" asp-action="Index">All adverts</a></li>
+                                <li><a asp-controller="Advert" asp-action="UserAdverts">Your adverts</a></li>
+                                <li><a asp-controller="Advert" asp-action="AddAdvert">Add advert</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="#">Settings</a>
+                            <ul class="submenu">
+                                <li><a asp-controller="UserSettings" asp-action="ChangePassword">Password</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="ChangePhoneNumber">Phone number</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="ChangeUserPhoto">User photo</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="Telegram">Telegram</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="Viber">Viber</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="WhatsApp">WhatsApp</a></li>
+                                <li><a asp-controller="UserSettings" asp-action="Location">Location</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit">
+                                    <img class="logout-img" src="~/images/logout.png" />
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </nav>
+            }
+
+
+
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    </header>
+    <main role="main">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    @*<footer>
+        © 2021 HOBBYNet
+    </footer>*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

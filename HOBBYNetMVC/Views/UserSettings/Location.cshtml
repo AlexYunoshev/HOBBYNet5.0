@@ -1,0 +1,174 @@
+﻿@model Domain.Models.Location
+
+@{
+    ViewBag.Title = "Изменение локации";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
+    }
+
+
+
+    .content-body {
+        padding: 10px;
+        border: solid black 1px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
+        max-height: 105px;
+        justify-content: center;
+        display: flex;
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 1200px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+        overflow: auto;
+    }
+
+    .geolocation {
+        display: inline-block;
+        float: left;
+        max-width: 900px;
+        margin-left: 5px;
+        padding-right: 15px;
+        border-right: solid black 1px;
+    }
+
+    .manually-location {
+        display: inline-block;
+        margin: 0 15px;
+    }
+
+    .location-info p {
+  /*      max-width: 700px;*/
+        text-align: left;
+    }
+</style>
+
+<div class="content">
+    @if (Model == null)
+    {
+        <div class="content-body">
+            <div class="geolocation">
+
+                <h4>You can try to get your current location.</h4>
+                <form id="form1" asp-action="LocationResultByGeolocation" method="post">
+                    <input id="latitude" type="hidden" name="latitude" value="" />
+                    <input id="longitude" type="hidden" name="longitude" value="" />
+                </form>
+                <input style="margin: 10px;" type="submit" id="locationButton" value="Get my current location" />
+            </div>
+
+
+
+            <div class="manually-location">
+                <h4>Or you can input location manually...</h4>
+                <form asp-action="LocationResultByAddress" method="post">
+                    <input style="margin-top: 10px; width:350px;" type="text" name="address" placeholder="Address" />
+                    <input type="submit" value="Search..." />
+                </form>
+            </div>
+
+        </div>
+
+        <div style="width: 1200px; height: 80%; position: absolute; top:120px; border:solid white 1px; border-radius:15px;" id="map"></div>
+
+    }
+
+    else
+    {
+        <div class="content-body">
+
+            <div class="location-info">
+                <p>Your current location is:</p>
+                @if (Model.Address != null)
+                {
+                    <p>@Model.Address</p>
+                }
+
+                <p>@Model.Latitude @Model.Longitude</p>
+
+
+                <p>@Model.Name</p>
+
+                <form asp-action="Location" method="get">
+                    <input type="hidden" name="change" value="1" />
+                    <input type="submit" value="Click, if you want to change your location" />
+                </form>
+
+                
+            </div>
+            
+
+        </div>
+    }
+</div>
+
+
+
+
+
+
+
+<script>
+
+    let map, infoWindow;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 49.0734487, lng: 33.2565712 },
+            zoom: 5.74,
+        });
+        infoWindow = new google.maps.InfoWindow();
+
+
+        const locationButton = document.getElementById("locationButton");
+
+
+        locationButton.addEventListener("click", () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+
+                        document.getElementById("latitude").value = pos.lat;
+                        document.getElementById("longitude").value = pos.lng;
+                        document.getElementById("form1").submit();
+                    },
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    }
+                );
+            } else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(
+            browserHasGeolocation
+                ? "Error: The Geolocation service failed."
+                : "Error: Your browser doesn't support geolocation."
+        );
+        infoWindow.open(map);
+    }
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async></script>

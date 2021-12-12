@@ -10,11 +10,11 @@ namespace Domain.ViewModels
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "Имя")]
+        [Display(Name = "Name")]
         public string FirstName { get; set; }
 
         [Required]
-        [Display(Name = "Фамилия")]
+        [Display(Name = "Lastname")]
         public string LastName { get; set; }
 
         [Required]
@@ -22,18 +22,19 @@ namespace Domain.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Год рождения")]
-        public int Year { get; set; }
+        [StringLength(12, ErrorMessage = "The username must be at least {2} characters and at most {1} characters.", MinimumLength = 4)]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Required]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Compare("Password")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
+        [Display(Name = "Password confirm")]
         public string PasswordConfirm { get; set; }
     }
 }

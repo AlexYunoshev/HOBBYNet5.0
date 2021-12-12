@@ -14,42 +14,9 @@ namespace HOBBYNetMVC
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            //var config = new ConfigurationBuilder()
-            //.AddJsonFile("appsettings.json", optional: false)
-            //.Build();
-            var config = new ConfigurationBuilder()
-            .AddJsonFile("C:\\Users\\Administrator\\AppData\\Roaming\\Microsoft\\UserSecrets\\" +
-            "563c3cb7-ffd0-4f50-ac76-5ee72aac3811\\secrets.json", optional: false)
-            .Build();
-            //var config = new ConfigurationBuilder().Build();
-          
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                
-                try
-                {
-                    IConfigurationSection adminData = config.GetSection("AdminData");
-                    string adminEmail = adminData["Email"];
-                    string adminPassword = adminData["Password"];
-                    
-                    //string adminEmail = config.GetValue<string>("AdminData:Email");
-                    //string adminPassword = config.GetValue<string>("AdminData:Password");
-                    var userManager = services.GetRequiredService<UserManager<User>>();
-                    var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await RoleInitializer.InitializeAsync(userManager, rolesManager, adminEmail, adminPassword);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding the database.");
-                }
-            }
-
-            host.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
 

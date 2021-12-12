@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,58 +28,54 @@ namespace HOBBYNetMVC
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<HobbyNetContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            services.AddDbContext<HobbyNetContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("DBConnection"));
+               });
 
             services.AddScoped<UserService>();
             services.AddScoped<HobbyService>();
-            services.AddIdentity<User, IdentityRole>(opt =>
-            {
-                opt.Password.RequiredLength = 5;
+            services.AddScoped<ExplorePostsService>();
+            services.AddScoped<LocationService>();
+            services.AddScoped<AdvertService>();
+            services.AddRazorPages();
+
+            services.AddDefaultIdentity<User>(opt => {
+                opt.Password.RequiredLength = 8;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireLowercase = false;
                 opt.Password.RequireUppercase = false;
-                opt.Password.RequireDigit = false;               
+                opt.Password.RequireDigit = false; 
             })
-                .AddEntityFrameworkStores<HobbyNetContext>();
-            // services.AddAuthorization(options =>
-            //options.AddPolicy("admin",
-            //    policy => policy.RequireClaim("Manager")));
-
-            ////////////// auth
-
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //     .AddCookie(options => //CookieAuthenticationOptions
-            //    {
-            //         options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            //     });
-
-
-
+            .AddEntityFrameworkStores<HobbyNetContext>();
             services.AddControllersWithViews();
 
+            var googleClientData = Configuration.GetSection("GoogleClientData");
+            var clientId = googleClientData.GetSection("ClientID").Value;
+            var clientSecret = googleClientData.GetSection("ClientSecret").Value;
 
-
-           // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
-           //.AddRazorPagesOptions(options =>
-           //{
-           //    options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-           //    options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-           //});
+            services.AddAuthentication()
+             .AddGoogle(options =>
+             {
+                 options.ClientId = clientId;
+                 options.ClientSecret = clientSecret;
+             });
 
             services.ConfigureApplicationCookie(options =>
             {
-                //options.LoginPath = $"/Identity/Account/Login";
-                //options.LogoutPath = $"/Identity/Account/Logout";
+                options.LoginPath = $"/Account/Login";
                 options.AccessDeniedPath = $"/Account/AccessDenied";
                
             });
+
+            services.AddLogging(loggingBuilder => {
+                loggingBuilder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+                loggingBuilder.AddDebug();
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -88,7 +85,6 @@ namespace HOBBYNetMVC
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -102,7 +98,8 @@ namespace HOBBYNetMVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Profile}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

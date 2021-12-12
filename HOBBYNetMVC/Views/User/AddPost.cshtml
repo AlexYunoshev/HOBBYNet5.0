@@ -1,0 +1,100 @@
+﻿@model Domain.ViewModels.HobbyViewModel
+@{
+    ViewData["Title"] = "Add post";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/Cycling1.jpg);
+    }
+
+    .input {
+        margin: 10px auto;
+        display: block;
+        width: 95%;
+    }
+
+    textarea {
+        resize: none;
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    input[type="submit"] {
+        border-radius: 30px;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        display: block;
+    }
+
+
+    .hobbies-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hobbies-list {
+        border-radius: 15px;
+        max-height: 130px;
+        overflow: auto;
+    }
+
+    .canvas {
+        padding: 10px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin: 10px auto;
+        width: 95%;
+    }
+
+    td {
+        padding: 5px 0;
+    }
+</style>
+
+<div class="content">
+    <div class="explore-post">
+        <form asp-action="AddPost" method="post" enctype="multipart/form-data">
+            <textarea class="input" rows="10" name="postText" placeholder="Post text. Maximum length is 1000 characters." maxlength="1000"></textarea>
+            <p class="input">
+                You can upload one photo. Correct file types are <b>.jpg</b> or <b>.png</b>.
+            </p>
+            <p class="input">
+                Other files will not be uploaded to the post.
+            </p>
+
+            <input class="input" type="file" name="file" />
+
+            <p class="input">You need to choose at least 1 hobby from the list below:</p>
+
+            <div class="canvas">
+                <h4>Hobbies to add</h4>
+                <div class="hobbies-list">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        @for (int i = 0; i < Model.addHobbiesList.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.CheckBoxFor(m => m.addHobbiesList[i].IsSelected)
+                                    @Model.addHobbiesList[i].Name
+                                    @Html.HiddenFor(m => m.addHobbiesList[i].Id)
+                                    @Html.HiddenFor(m => m.addHobbiesList[i].Name)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <p class="input">
+                Didn`t find your hobby? Add it to the hobbies list now.
+                <a asp-action="Index" asp-controller="Hobby" target="_blank">Just click here</a>
+            </p>
+     
+            <input class="input" type="submit" value="Submit" />
+        </form>
+    </div>
+</div>
+

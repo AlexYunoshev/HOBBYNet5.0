@@ -1,0 +1,221 @@
+﻿@model Domain.ViewModels.ExplorePostsViewModel
+@{
+    ViewData["Title"] = "Recommendations";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/guitar3.jpg);
+    }
+
+    .content {
+        height: 75vh;
+    }
+</style>
+
+<div class="settings">
+    <form asp-action="RecommendedPosts" method="get">
+        <label for="sort">Sort:</label>
+        <select asp-for="Sort" name="sort" id="sort">
+            <option value="newest">Newest</option>
+            <option value="older">Older</option>
+            <option value="distanceAsc">Distance ascending</option>
+            <option value="distanceDesc">Distance descending</option>
+        </select>
+
+        <span>Filter by distance:</span>
+
+        <input type="radio" id="radius-all" name="locationRadius" asp-for="LocationRadius" value="0">
+        <label for="radius-all">All</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="1">
+        <label for="radius-1km">1 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="3">
+        <label for="radius-3km">3 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="5">
+        <label for="radius-5km">5 km</label>
+
+        <input type="radio" id="radius-1km" name="locationRadius" asp-for="LocationRadius" value="10">
+        <label for="radius-10km">10 km</label>
+
+        <input type="submit" value="OK">
+    </form>
+</div>
+
+<div class="content">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="explore-post" id="post-@post.Id">
+            <div class="explore-post-header">
+                <img class="user-pic" src="@post.User.PhotoPath" />
+                <div class="user-info">
+                    <p class="username"><a>@post.User.UserName</a></p>
+                    @if (@post.User.Location != null)
+                    {
+                        <p class="address"><a>@post.User.Location.Name</a></p>
+                        if (Model.CurrentUser.Location != null)
+                        {
+                            <p class="address">Distance to user from you: @Model.distanceToUser[post.User] km</p>
+                        }
+                    }
+                </div>
+                <div class="social-actions">
+                    @if (post.User.TelegramUsername != null)
+                    {
+                        string link = "https://t.me/" + @post.User.TelegramUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/Telegram.png" />
+                            </a>
+                        </span>
+                    }
+
+                    @if (post.User.ViberUsername != null)
+                    {
+                        string link = "viber://chat?number=" + @post.User.ViberUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/Viber.png" />
+                            </a>
+                        </span>
+                    }
+
+                    @if (post.User.WhatsAppUsername != null)
+                    {
+                        string link = "whatsapp://send?phone=" + @post.User.WhatsAppUsername;
+                        <span class="chat">
+                            <a href="@link" target="_blank">
+                                <img class="chat-img" src="/images/WhatsApp.png" />
+                            </a>
+                        </span>
+                    }
+
+                    <form asp-action="SetLikeToRecommendedPost" method="post">
+                        <span>
+                            <button type="submit">
+                                <img class="social-img" src="~/images/like1.png" />
+                            </button>
+                            <p class="counter">@post.ExploreLikes.Count</p>
+                            <input type="hidden" name="postId" value="@post.Id" />
+                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                        </span>
+                    </form>
+                    <span>
+                        <a href="RecommendedPosts?pageNumber=@Model.CurrentPageNumber#commentsPost-@post.Id">
+                            <img class="social-img" src="~/images/comment1.png" />
+                        </a>
+                        <p class="counter">@post.ExploreComments.Count</p>
+                    </span>
+
+                </div>
+
+            </div>
+
+            <hr style="margin:0 10px" />
+
+            <div class="body">
+
+                <div class="explore-post-content">
+                    <p id="p-@post.Id">
+                        @post.Text
+                    </p>
+                    <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
+                    <p>
+                        @foreach (var hobby in post.Hobbies)
+                        {
+                            <a class="hobbies">#@hobby.Name</a>
+                        }
+                    </p>
+                </div>
+
+                <hr style="margin:10px" />
+
+                <div class="comments">
+
+                    <div class="comments-area" id="commentsPost-@post.Id">
+                        @foreach (var comment in post.ExploreComments)
+                        {
+                            <div class="explore-post-comment">
+                                <img class="comment-user-pic" src="@comment.User.PhotoPath" />
+                                <div class="comment-content">
+                                    <span><a class="comment-username">@comment.User.UserName</a></span>
+                                    <span class="comment-date">@comment.CreatedDate</span>
+                                    @if (comment.UserId == Model.AuthorizedUserId)
+                                    {
+                                        <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
+                                            <span>
+                                                <button type="submit" name="postId" value="@post.Id">
+                                                    <img class="remove-img" src="~/images/delete.png" />
+                                                </button>
+                                                <input type="hidden" name="commentId" value="@comment.Id" />
+                                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                                <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                                            </span>
+                                        </form>
+                                    }
+                                    <p class="comment-text">@comment.Text</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="comment-add-input">
+                        <form asp-action="AddCommentToRecommendedPost" method="post">
+                            <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                            <button type="submit">
+                                <img id="submit-btn" src="~/images/send.png" />
+                            </button>
+                            <input type="hidden" name="postId" value="@post.Id" />
+                            <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p style="color: #8e8e8e; text-transform:uppercase;">@post.CreatedDate</p>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="pages">
+    <span>
+        @for (int i = 1; i <= Model.PagesCount; i++)
+        {
+            string href = "RecommendedPosts?sort=" + Model.Sort
+                + "&locationRadius=" + Model.LocationRadius
+                + "&pageNumber=" + i;
+
+            if (i == Model.CurrentPageNumber)
+            {
+                <a style="color:red" href="@href">@i</a>
+            }
+            else
+            {
+                <a style="color:black" href="@href">@i</a>
+            }
+        }
+
+    </span>
+</div>
+
+<script>
+    function imageZoom(postId) {
+        var image = document.getElementById("image-" + postId);
+        if (image.style.maxWidth == '300px') {
+            image.style.maxHeight = '660px';
+            image.style.maxWidth = '660px';
+        }
+        else {
+            image.style.maxHeight = '300px';
+            image.style.maxWidth = '300px';
+        }
+    }
+</script>
+
+

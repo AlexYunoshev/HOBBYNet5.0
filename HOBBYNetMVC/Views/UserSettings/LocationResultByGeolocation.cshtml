@@ -1,0 +1,111 @@
+﻿@model List<Domain.Models.Location>
+@{
+    ViewBag.Title = "Изменение локации";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/house1.jpg);
+    }
+
+
+    .content-body {
+        padding: 10px;
+        border: solid black 1px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin-bottom: 10px;
+        max-height: 105px;
+        justify-content: center;
+        display:flex;
+
+    }
+
+
+    .content {
+        position: relative;
+        margin: 10px auto;
+        width: 1200px;
+        border-radius: 15px;
+        transition: .5s;
+        overflow: hidden;
+        height: 80vh;
+        overflow: auto;
+    }
+
+    .geolocation {
+        display: inline-block;
+        float: left;
+        max-width:900px;
+        margin-left: 5px;
+        padding-right: 15px;
+        border-right: solid black 1px;
+    }
+
+    .manually-location {
+        display: inline-block;       
+        margin: 0 15px;
+    }
+
+</style>
+
+<script>
+
+    let map;
+    function initMap() {
+        var userLocation = new google.maps.LatLng(@Model[0].Latitude,@Model[0].Longitude);
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: userLocation,
+            zoom: 15,
+        });
+
+        marker = new google.maps.Marker({
+            position: userLocation,
+            map,
+            title: "Your location",
+            animation: google.maps.Animation.BOUNCE,
+        });
+
+    }
+
+</script>
+
+<div class="content">
+    <div class="content-body">
+        <div class="geolocation">
+            <p style="max-width: 460px; text-align: left; display: inline-block; float:left; margin:0 10px;">Address: @Model[0].Name</p>
+
+            <form asp-action="SaveLocation" method="post" style="display: inline-block;">       
+                <h4>This is your current location?</h4>
+                <input type="submit" value="Yes, save it" style="margin-top:11px;"/>  
+                <input type="hidden" value="@Model[0].Latitude" name="latitude" />
+                <input type="hidden" value="@Model[0].Longitude" name="longitude" />
+                <input type="hidden" value="@Model[0].Name" name="name" />
+                <input type="hidden" value="@Model[0].PlaceId" name="placeId" />
+                <input type="hidden" value="@Model[0].Address" name="address" />
+            </form>
+        </div>
+        
+        <div class="manually-location">
+            <h4>Or you can input location manually...</h4>
+            <form asp-action="LocationResultByAddress" method="post">
+                <input style="margin-top: 10px; width:350px;" type="text" name="address" placeholder="Address"/>
+                <input type="submit" value="Search..." />
+            </form>
+        </div>
+    </div>
+
+    <div style="width: 1200px; height: 80%; position: absolute; top:120px; border:solid white 1px; border-radius:15px;" id="map"></div>
+    <form id="form1" asp-action="Location" method="post">
+        <input id="latitude" type="hidden" name="latitude" value="" />
+        <input id="longitude" type="hidden" name="longitude" value="" />
+    </form>
+</div>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async></script>
+

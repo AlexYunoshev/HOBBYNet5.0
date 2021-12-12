@@ -1,0 +1,199 @@
+﻿<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/skiing2.jpg);
+    }
+
+    .user-pic {
+        max-height: 40px;
+        max-width: 40px;
+        vertical-align: middle;
+    }
+
+    .request-action-img {
+        max-height: 20px;
+        max-width: 20px;
+    }
+
+    .footer button[type="submit"] {
+        padding: 0;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
+
+    table {
+        margin: 0;
+        width: 100%;
+    }
+
+    td {
+        padding: 5px;
+    }
+
+    tr {
+        padding: 5px 0;
+    }
+
+    .hobbies-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .users-list {
+        max-height: 300px;
+        overflow: auto;
+        margin: 5px 0;
+    }
+
+    .canvas button[type="submit"] {
+        padding: 0;
+        padding-top: 3px;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
+
+    .canvas input[type="submit"] {
+        padding: 10px;
+        border-radius: 30px;
+        width: 85%;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        margin: 20px auto;
+        display: block;
+    }
+
+    .remove-img {
+        margin-top: 3px;
+    }
+
+    .input {
+        margin: 10px auto;
+        display: block;
+        width: 95%;
+    }
+
+    textarea {
+        resize: none;
+        border-radius: 15px;
+        padding: 10px;
+    }
+
+    input[type="submit"] {
+        border-radius: 30px;
+        padding: 10px 30px;
+        border: none;
+        background: linear-gradient(to right, #ff105f, #ffaf06);
+        cursor: pointer;
+        display: block;
+    }
+
+    .hobbies-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hobbies-list {
+        border-radius: 15px;
+        max-height: 130px;
+        overflow: auto;
+    }
+
+    .canvas {
+        padding: 20px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+        transition: .5s;
+        margin: 10px auto;
+        text-align: center;
+    }
+
+    .content {
+        width: 1200px;
+    }
+</style>
+
+
+@model List<Domain.Models.Advert>
+@{
+    ViewData["Title"] = "Your adverts";
+}
+
+<div class="content">
+    <div class="canvas">
+        @if (Model.Count > 0)
+        {
+            <form asp-action="RemoveAdvert" method="post">
+                <div class="adverts-list">
+                    <table>
+                        <th colspan="2">User</th>
+                        <th>Location</th>
+                        <th>Hobbies</th>
+                        <th>Message</th>
+                        <th>Date created </th>
+                        <th></th>
+                        @foreach (var advert in Model)
+                        {
+                            <tr>
+                                <td width="60"><img src="@advert.User.PhotoPath" alt="User pic" class="user-pic" /></td>
+                                <td align="center">@advert.User.UserName</td>
+                                <td align="center">
+                                    @if (advert.User.Location != null)
+                                    {
+                                        <span>
+                                            @advert.User.Location.Name
+                                        </span>
+                                        <span>
+                                            @advert.User.Location.Latitude @advert.User.Location.Longitude
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>Location not set</span>
+                                    }
+                                </td>
+
+                                <td width="140" align="center">
+                                    @foreach (var hobby in advert.Hobbies)
+                                    {
+                                        <span>@hobby.Name</span>
+                                    }
+                                </td>
+
+                                <td width="240" align="center">
+                                    @if (advert.Message != null)
+                                    {
+                                        @advert.Message
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            No message
+                                        </span>
+                                    }
+                                </td>
+
+                                <td width="100">
+                                    @advert.CreatedDate.ToShortDateString()
+                                </td>
+
+                                <td width="30">
+
+                                    <button type="submit" name="advertId" value="@advert.Id">
+                                        <img class="request-action-img" src="~/images/delete.png" />
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </form>
+        }
+        else
+        {
+            <h4>No adverts exist</h4>
+        }
+
+    </div>
+</div>

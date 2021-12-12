@@ -18,20 +18,35 @@ namespace BusinessLogic.Services
             _context = context;
         }
 
-        public List<SubHobby> GetUserHobbiesList(string currentUserId)
+        public List<Hobby> GetAllHobbies()
         {
-            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.SubHobbies).ThenInclude(s => s.Hobby).FirstOrDefault();
-            var subHobbies = user.SubHobbies;
-            return subHobbies;
+            var hobbies = _context.Hobbies
+                .OrderBy(h => h.Name)
+                .ToList();
+            return hobbies;
         }
 
-        public bool RemoveHobbyFromList(string currentUserId, int subHobbyId)
+        public List<Hobby> GetUserHobbiesList(string currentUserId)
         {
-            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.SubHobbies).ThenInclude(s => s.Hobby).FirstOrDefault();
-            var subHobby = user.SubHobbies.Where(sh => sh.Id == subHobbyId).FirstOrDefault();
-            user.SubHobbies.Remove(subHobby);
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
+            var hobbies = user.Hobbies.OrderBy(h=>h.Name).ToList();
+            return hobbies;
+        }
+
+        public bool RemoveHobbyFromList(string currentUserId, int hobbyId)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
+            var hobby = user?.Hobbies.Where(h => h.Id == hobbyId).FirstOrDefault();
+            var result = user?.Hobbies.Remove(hobby);
             _context.SaveChanges();
-            return true;
+            return result ?? false;
+        }
+
+        public void AddHobbiesToUser(string currentUserId, List<Hobby> hobbies)
+        {
+            var user = _context.Users.Where(u => u.Id == currentUserId).Include(u => u.Hobbies).FirstOrDefault();
+            user?.Hobbies.AddRange(hobbies);
+            _context.SaveChanges();
         }
     }
 }

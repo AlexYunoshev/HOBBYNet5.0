@@ -1,0 +1,365 @@
+﻿@model Domain.ViewModels.ExplorePostsViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<style>
+    body {
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(/images/background/fishing1.jpg);
+    }
+
+    .post-action-img {
+        max-height: 35px;
+        max-width: 35px;
+        margin: 10px 10px 10px 0;
+    }
+
+    .footer button[type="submit"] {
+        padding: 0;
+        border: none;
+        background: inherit;
+        cursor: pointer;
+    }
+
+    .aside-info {
+        width: 450px;
+        border: 1px solid black;
+        float: right;
+        position: relative;
+        margin: 10px 0px 0 0;
+        padding: 10px;
+        border: solid black 1px;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 15px;
+    }
+
+    .content {
+        float: left;
+    }
+
+    .user-pic {
+        max-height: 100px;
+        max-width: 100px;
+    }
+
+    .map-pic {
+        max-height: 45px;
+        max-width: 45px;
+    }
+
+    .chat-img {
+        max-height: 40px;
+        max-width: 40px;
+    }
+
+    .user-info-header {
+        text-align: left;
+        display: flex;
+        margin: 10px;
+    }
+
+    .user-info-body {
+        text-align: left;
+        margin: 10px;
+    }
+
+    .address {
+        text-align: justify;
+    }
+
+    .location-google, .chat {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        font-size: 18px;
+        margin: 0 20px 0 0;
+    }
+
+    .location-google span {
+        margin: 0 5px;
+    }
+
+    .social-actions {
+        margin: 0;
+    }
+
+    .statistic {
+        display: flex;
+        margin: 10px 30px;
+        justify-content: space-between;
+    }
+
+    .statistic-data {
+        color: black;
+        font-size: 26px;
+    }
+
+    .statistic-data-field {
+        text-decoration: underline;
+        text-align: center;
+    }
+
+    .statistic-data-img {
+        height: 45px;
+        width: 45px;
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    .footer {
+        margin: 5px 0 10px 5px;
+        display: flex;
+    }
+
+    .footer-right {
+        float: right;
+        width: 540px;
+    }
+
+    .hobby-pic {
+        max-width: 400px;
+        max-height: 400px;
+    }
+</style>
+
+<div class="content-body" style="display:inline-block; width: 1200px;">
+    <div class="content">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="explore-post" id="post-@post.Id">
+                <div class="body">
+                    <div class="explore-post-content">
+                        <p id="p-@post.Id">
+                            @post.Text
+                        </p>
+
+                        @if (@post.PhotoPath != null)
+                        {
+                            <img id="image-@post.Id" class="hobby-pic" src="@post.PhotoPath" onclick="imageZoom(@post.Id)" />
+                        }
+
+                        <p>
+                            @foreach (var hobby in post.Hobbies)
+                            {
+                                <a class="hobbies">#@hobby.Name</a>
+                            }
+                        </p>
+                    </div>
+
+                    <hr style="margin:10px" />
+
+                    <div class="comments">
+
+                        <div class="comments-area" id="commentsPost-@post.Id">
+                            @foreach (var comment in post.ExploreComments)
+                            {
+                                <div class="explore-post-comment">
+                                    <img class="comment-user-pic" src="@comment.User.PhotoPath" />
+                                    <div class="comment-content">
+                                        <span><a class="comment-username">@comment.User.UserName</a></span>
+                                        <span class="comment-date">@comment.CreatedDate</span>
+                                        @if(comment.UserId == Model.AuthorizedUserId)
+                                        {
+                                            <form class="form-delete-comment" asp-action="RemoveCommentFromPost" method="post">
+                                                <span>
+                                                    <button type="submit" name="postId" value="@post.Id">
+                                                        <img class="remove-img" src="~/images/delete.png" />
+                                                    </button>
+                                                    <input type="hidden" name="commentId" value="@comment.Id" />
+                                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                                    <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                                                </span>
+                                            </form>
+                                        }
+                                        
+                                        <p class="comment-text">@comment.Text</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="comment-add-input">
+                            <form asp-action="AddCommentToPost" method="post">
+                                <input class="input-field" type="text" placeholder="Add comment" name="commentText" required>
+                                <button type="submit">
+                                    <img id="submit-btn" src="~/images/send.png" />
+                                </button>
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="footer-left">
+                        <div class="social-actions">
+                            <form asp-action="SetLikeToPost" method="post">
+                                <div>
+                                    @{
+                                        bool contains = post.ExploreLikes.Any(l => l.UserId == Model.AuthorizedUserId);
+                                    }
+                                    @if (contains)
+                                    {
+                                        <button type="submit">
+                                            <img class="social-img" src="~/images/like1red.png" />
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit">
+                                            <img class="social-img" src="~/images/like1.png" />
+                                        </button>
+                                    }
+                                    <p class="counter">@post.ExploreLikes.Count</p>
+                                    <input type="hidden" name="postId" value="@post.Id" />
+                                    <input type="hidden" name="pageNumber" value="@Model.CurrentPageNumber" />
+                                    <input type="hidden" name="profileUserId" value="@Model.CurrentUser.Id" />
+                                </div>
+                            </form>
+                            <div>
+                                @{ 
+                                    string href = "ToUserProfile?id=" + Model.CurrentUser.Id 
+                                        + "&pageNumber=" + Model.CurrentPageNumber 
+                                        + "#commentsPost-" + @post.Id;
+                                }
+                                <a href="@href">
+                                    <img class="social-img" src="~/images/comment1.png" />
+                                </a>
+                                <p class="counter">@post.ExploreComments.Count</p>
+                            </div>
+
+
+
+                        </div>
+
+                        <p style="color: #8e8e8e; text-transform:uppercase; margin: 15px 0 0 5px;">@post.CreatedDate</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="aside-info">
+        <div class="user-info-header">
+            <img class="user-pic" src="@Model.CurrentUser.PhotoPath" />
+            <div class="user-info">
+                <p class="username" style="letter-spacing: 0.15em; font-size: 22px;">@Model.CurrentUser.UserName</p>
+                <p class="username" style="font-weight: 400; color:#4e4e4e;">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</p>
+                <p class="username" style="font-weight: 400; color: #4e4e4e; font-size: 18px; margin-top:5px;">@Model.CurrentUser.Email</p>
+            </div>
+        </div>
+
+        <div class="user-info-body">
+            @{
+                string hrefLocationGoogle = "";
+            }
+            @if (Model.CurrentUser.Location != null)
+            {
+                <p class="address">@Model.CurrentUser.Location.Name</p>
+                {
+                    hrefLocationGoogle = "https://www.google.com.ua/maps/@";
+                    hrefLocationGoogle += @Model.CurrentUser.Location.Latitude + ",";
+                    hrefLocationGoogle += @Model.CurrentUser.Location.Longitude + ",";
+                    hrefLocationGoogle += "18z";
+                }
+            }
+
+            <div class="social-actions">
+                @if (@Model.CurrentUser.TelegramUsername != null)
+                {
+                    string link = "https://t.me/" + @Model.CurrentUser.TelegramUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/Telegram.png" />
+                    </a>
+                }
+
+                @if (@Model.CurrentUser.ViberUsername != null)
+                {
+                    string link = "viber://chat?number=" + @Model.CurrentUser.ViberUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/Viber.png" />
+                    </a>
+                }
+
+                @if (@Model.CurrentUser.WhatsAppUsername != null)
+                {
+                    string link = "whatsapp://send?phone=" + @Model.CurrentUser.WhatsAppUsername;
+                    <a class="chat" href="@link" target="_blank">
+                        <img class="chat-img" src="/images/WhatsApp.png" />
+                    </a>
+                }
+
+                @if (Model.CurrentUser.Location != null)
+                {
+                    <a class="location-google" href="@hrefLocationGoogle" target="_blank">
+                        <img class="map-pic" src="~/images/google_map.png" />
+                        <span>@Model.CurrentUser.Location.Latitude @Model.CurrentUser.Location.Longitude</span>
+                    </a>
+                }
+            </div>
+
+            <div class="statistic">
+                @{
+                    long allLikes = 0, allComments = 0;
+                    foreach (var post in Model.Posts)
+                    {
+                        allLikes += post.ExploreLikes.Count;
+                        allComments += post.ExploreComments.Count;
+                    }
+                }
+
+                <div class="statistic-data">
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/like1.png" /></div>
+                    <p class="statistic-data-field">@allLikes</p>
+                </div>
+
+                <div class="statistic-data">
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/comment1.png" /></div>
+                    <p class="statistic-data-field">@allComments</p>
+                </div>
+
+                <div class="statistic-data">
+                    <div class="statistic-data-img"><img class="social-img" src="~/images/friends.png" /></div>
+                    <p class="statistic-data-field">@Model.UserFriendsCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pages">
+    <span>
+        @for (int i = 1; i <= Model.PagesCount; i++)
+        {
+            string href = "ToUserProfile?id=" + Model.CurrentUser.Id
+                + "&pageNumber=" + i;
+
+            if (i == Model.CurrentPageNumber)
+            {
+                <a style="color:red" href="@href">@i</a>
+            }
+            else
+            {
+                <a style="color:black" href="@href">@i</a>
+            }
+        }
+    </span>
+</div>
+
+<script>
+    function imageZoom(postId) {
+        var image = document.getElementById("image-" + postId);
+        if (image.style.maxWidth == '400px') {
+            image.style.maxHeight = '660px';
+            image.style.maxWidth = '660px';
+        }
+        else {
+            image.style.maxHeight = '400px';
+            image.style.maxWidth = '400px';
+        }
+    }
+</script>
