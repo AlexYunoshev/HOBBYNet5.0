@@ -46,7 +46,7 @@ namespace HOBBYNetMVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult RecommendedPosts(int locationRadius = 0, string sort = "newest", int pageNumber = 1)
+        public IActionResult RecommendedPosts(int locationRadius = 0, string sort = "none", int pageNumber = 1)
         {
             var loginUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             User currentUser = _userService.GetUserById(loginUserId);

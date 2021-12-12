@@ -187,8 +187,8 @@
     <span>
         @for (int i = 1; i <= Model.PagesCount; i++)
         {
-            string href = "RecommendedPosts?sort=" + Model.Sort
-                + "&locationRadius=" + Model.LocationRadius
+            string href = "RecommendedPosts?sort=none&locationRadius=" 
+                + Model.LocationRadius
                 + "&pageNumber=" + i;
 
             if (i == Model.CurrentPageNumber)

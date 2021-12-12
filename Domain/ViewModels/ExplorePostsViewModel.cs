@@ -107,7 +107,7 @@ namespace Domain.ViewModels
                     posts.AddRange(sortedPosts);
                 }
 
-                else
+                else if (sort == "distanceDesc")
                 {
                     distanceToUser = distanceToUser.OrderByDescending(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
                     var sortedPosts = new List<ExplorePost>();

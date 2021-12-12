@@ -360,6 +360,9 @@ namespace BusinessLogic.Services
             // видаляємо пости, які вже лайкнув юзер
             posts.RemoveAll(p => p.ExploreLikes.Any(l => l.UserId == userId));
 
+
+            // видалити пости, які вже прокоментував юзер!!!
+
             for (int i = 0; i < hobbyRatio.Count; i++)
             {
                 recommendedPosts.Add(new List<ExplorePost>());
@@ -435,7 +438,7 @@ namespace BusinessLogic.Services
                     }
                     indexRecommendedHobbyPostsList++;
                 }
-                recommendedPostsPage.Reverse();
+                //recommendedPostsPage.Reverse();
                 recommendedPostsOut.AddRange(recommendedPostsPage);
                 recommendedPostsPage.Clear();
             }
